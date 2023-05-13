@@ -1,14 +1,6 @@
-from flask import Flask, request, jsonify, make_response, Response
-from flask_sqlalchemy import SQLAlchemy
+from flask import request, jsonify, Response
 from sqlalchemy import *
-import jwt
 from flask_cors import CORS
-import urllib.request
-import random as rnd
-import datetime
-import bcrypt
-import glob
-import os
 
 from classes.armors import armors
 from classes.characters import characters
@@ -43,6 +35,7 @@ def get_route():
 
     list_types = types.query.all()
     list = []
+    type: types
     for type in list_types:
         list.append({
             'type_id': type.id,
@@ -59,6 +52,7 @@ def get_status():
 
     list_status = statuses.query.all()
     list = []
+    status: statuses
     for status in list_status:
         list.append({
             'status_id': status.id,
@@ -73,6 +67,7 @@ def get_status():
 def get_passive():
     list_passives = passives.query.all()
     list = []
+    passive: passives
     for passive in list_passives:
         list.append({
             'passive_id': passive.id,
@@ -88,6 +83,7 @@ def get_passive():
 def get_armor():
     list_armors = armors.query.join(passives, armors.passives, isouter=True).all()
     list = []
+    armor: armors
     for armor in list_armors:        
         list.append({
             'armor_id': armor.id,
@@ -103,6 +99,7 @@ def get_armor():
 def get_weapon():
     list_weapons = weapons.query.join(passives, weapons.passives, isouter=True).all()
     list = []
+    weapon: weapons
     for weapon in list_weapons:
         list.append({
             'weapon_id': weapon.id,
@@ -124,6 +121,7 @@ def get_weapon():
 def get_class():
     list_classes = classes.query.join(passives, classes.passives, isouter=True).all()
     list = []
+    classe: classes
     for classe in list_classes:
         list.append({
             'class_id': classe.id,
@@ -148,6 +146,7 @@ def get_class():
 def get_classic_class():
     list_classes = classes.query.filter(classes.predecessor == 'None').join(passives, classes.passives, isouter=True).all()
     list = []
+    classe: classes
     for classe in list_classes:
         list.append({
             'class_id': classe.id,
@@ -173,6 +172,7 @@ def get_classic_class():
 def get_skill():
     list_skills = skills.query.join(passives, skills.passives, isouter=True).all()
     list = []
+    skill: skills
     for skill in list_skills:
         list.append({
             'skill_id': skill.id,
@@ -200,6 +200,7 @@ def get_characters():
         list_characters = characters.query.join(types, characters.types, isouter=True).join(statuses, characters.statuses, isouter=True).join(skills, characters.skills, isouter=True).join(passives, characters.passives, isouter=True).all()
         print(list_characters)
         list = []
+        character: characters
         for character in list_characters:
             list.append(character.get())
     
@@ -223,6 +224,7 @@ def create_character():
         data = request.get_json(force=True)
 
         character = characters(data['name'], data['race'], data['class_id'], data['img'])
+        type: int
         for type in str(data['types']).split(';'):
             character.types.append(types.query.filter(types.id == type).first())
         db.session.add(character)
