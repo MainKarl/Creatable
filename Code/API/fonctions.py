@@ -7,25 +7,25 @@ from classes.statuses import statuses as st
 from classes.passives import passives as pa
 from classes.types import types as ty
 
-def get_join_passive(passives: pa):
+def get_join_passive(passives):
     list = []
     passive: pa
     for passive in passives:
         list.append(passive.get())
     return list
-def get_join_type(types: ty):
+def get_join_type(types):
     list = []
     type: ty
     for type in types:
         list.append(type.get())
     return list
-def get_join_status(statuses: st):
+def get_join_status(statuses):
     list = []
     status: st
     for status in statuses:
         list.append(status.get())
     return list
-def get_join_skill(skills: sk):
+def get_join_skill(skills):
     list = []
     skill: sk
     for skill in skills:

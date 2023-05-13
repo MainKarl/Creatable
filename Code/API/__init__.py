@@ -4,7 +4,7 @@ from flask_cors import CORS
 
 from classes.armors import armors
 from classes.characters import characters
-from classes.classes import classes
+from classes.classe import classe as Classes
 from classes.passives import passives
 from classes.skills import skills
 from classes.statuses import statuses
@@ -119,9 +119,9 @@ def get_weapon():
 
 @app.route("/class/get", methods=['GET'])
 def get_class():
-    list_classes = classes.query.join(passives, classes.passives, isouter=True).all()
+    list_classes = Classes.query.join(passives, Classes.passives, isouter=True).all()
     list = []
-    classe: classes
+    classe: Classes
     for classe in list_classes:
         list.append({
             'class_id': classe.id,
@@ -144,9 +144,9 @@ def get_class():
     return response
 @app.route("/class/get_basic", methods=['GET'])
 def get_classic_class():
-    list_classes = classes.query.filter(classes.predecessor == 'None').join(passives, classes.passives, isouter=True).all()
+    list_classes = Classes.query.filter(Classes.predecessor == 'None').join(passives, Classes.passives, isouter=True).all()
     list = []
-    classe: classes
+    classe: Classes
     for classe in list_classes:
         list.append({
             'class_id': classe.id,

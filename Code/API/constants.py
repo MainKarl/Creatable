@@ -12,38 +12,46 @@ __app.secret_key = "Tjaf3MEr8i6xEm4VxQxlLNx4uCAN5tbxr0sle9GUKciebWEtpcb0NTvbXmoe
 __db = SQLAlchemy()
 __db.init_app(__app)
 
-__armors_passives_table = Table('ArmorPassives', 
+__armors_passives_table = __db.Table('ArmorPassives',
                                 Column('armor_id', Integer, ForeignKey('armors.armor_id'), nullable = False),
                                 Column('passive_id', Integer, ForeignKey('passives.passive_id'), nullable = False),
-                                PrimaryKeyConstraint('armor_id', 'passive_id'))
-__weapons_passives_table = Table('WeaponPassives',
+                                PrimaryKeyConstraint('armor_id', 'passive_id')
+                            )
+__weapons_passives_table = __db.Table('WeaponPassives',
                                 Column('weapon_id', Integer, ForeignKey('weapons.weapon_id'), nullable = False),
                                 Column('passive_id', Integer, ForeignKey('passives.passive_id'), nullable = False),
-                                PrimaryKeyConstraint('weapon_id', 'passive_id'))
-__classes_passives_tables = Table('ClassPassives',
+                                PrimaryKeyConstraint('weapon_id', 'passive_id'),
+                            )
+__classes_passives_tables = __db.Table('ClassPassives',
                                 Column('class_id', Integer, ForeignKey('classes.class_id'), nullable = False),
                                 Column('passive_id', Integer, ForeignKey('passives.passive_id'), nullable = False),
-                                PrimaryKeyConstraint('class_id', 'passive_id'))
-__skills_passives_table = Table('SkillPassives',
+                                PrimaryKeyConstraint('class_id', 'passive_id')
+                            )
+__skills_passives_table = __db.Table('SkillPassives',
                                 Column('skill_id', Integer, ForeignKey('skills.skill_id'), nullable = False),
                                 Column('passive_id', Integer, ForeignKey('passives.passive_id'), nullable = False),
-                                PrimaryKeyConstraint('skill_id', 'passive_id'))
-__characters_passives_table = Table('CharacterPassives', 
+                                PrimaryKeyConstraint('skill_id', 'passive_id'),
+                            )
+__characters_passives_table = __db.Table('CharacterPassives', 
                                     Column('character_id', Integer, ForeignKey('characters.character_id'), nullable = False),
                                     Column('passive_id', Integer, ForeignKey('passives.passive_id'), nullable = False),
-                                    PrimaryKeyConstraint('character_id', 'passive_id'))
-__characters_types_table = Table('CharacterTypes',
+                                    PrimaryKeyConstraint('character_id', 'passive_id'),
+                                )
+__characters_types_table = __db.Table('CharacterTypes',
                                 Column('character_id', Integer, ForeignKey('characters.character_id'), nullable = False),
                                 Column('type_id', Integer, ForeignKey('types.type_id'), nullable = False),
-                                PrimaryKeyConstraint('character_id', 'type_id'))
-__characters_status_table = Table('CharacterStatus',
+                                PrimaryKeyConstraint('character_id', 'type_id'),
+                            )
+__characters_status_table = __db.Table('CharacterStatus',
                                 Column('character_id', Integer, ForeignKey('characters.character_id'), nullable = False),
                                 Column('status_id', Integer, ForeignKey('status.status_id'), nullable = False),
-                                PrimaryKeyConstraint('character_id', 'status_id'))
-__characters_skills_table = Table('CharacterSkills',
+                                PrimaryKeyConstraint('character_id', 'status_id'),
+                            )
+__characters_skills_table = __db.Table('CharacterSkills',
                                 Column('character_id', Integer, ForeignKey('characters.character_id'), nullable = False),
                                 Column('skill_id', Integer, ForeignKey('skills.skill_id'), nullable = False),
-                                PrimaryKeyConstraint('character_id', 'skill_id'))
+                                PrimaryKeyConstraint('character_id', 'skill_id'),
+                            )
 
 #region Fonctions
 def get_app() -> Flask:

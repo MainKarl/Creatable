@@ -6,7 +6,8 @@ CREATE TABLE IF NOT EXISTS Users (
     username TEXT NOT NULL,
     email TEXT NOT NULL,
     password TEXT NOT NULL,
-    role INTEGER NOT NULL
+    role INTEGER NOT NULL,
+    img TEXT
 );
 
 -- Passives
@@ -523,8 +524,7 @@ VALUES
     ('Great_Bless_Luck'),
     ('Bless_Mana'),
     ('Great_Bless_Mana'),
-    ('Spirit_Boost'),
-    ('Great_Spirit_Boost')
+    ('Spirit_Limit')
 ;
 
 -- Armors
@@ -534,15 +534,15 @@ CREATE TABLE IF NOT EXISTS Armors (
     power INTEGER NOT NULL,
     img TEXT
 );
-INSERT INTO Armors (name, power)
+INSERT INTO Armors (name, power, img)
 VALUES
-    ('Clothe', 0),
-    ('Leather armor', 2),
-    ('Adventurer armor', 4),
-    ('Mage robes', 3),
-    ('Chainmail', 6),
-    ('Full plate', 8),
-    ('Royal armor', 12)
+    ('Clothe', 0, 'http:////144.217.14.182//img//notFound.jpg'),
+    ('Leather armor', 2, 'http:////144.217.14.182//img//leather_armor.jpg'),
+    ('Adventurer armor', 4, 'http:////144.217.14.182//img//adventurer_armor.jpg'),
+    ('Mage robes', 3, 'http:////144.217.14.182//img//mage_robes.jpg'),
+    ('Chainmail', 6, 'http:////144.217.14.182//img//chainmail.jpg'),
+    ('Full plate', 8, 'http:////144.217.14.182//img//full_plate.jpg'),
+    ('Royal armor', 12, 'http:////144.217.14.182//img//royal_armor.jpg')
 ;
 
 -- Weapons
@@ -558,100 +558,100 @@ CREATE TABLE IF NOT EXISTS Weapons (
     weapon_type TEXT NOT NULL,
     img TEXT
 );
-INSERT INTO Weapons (name, damage, accuracy, crit, price, rank, damage_type, weapon_type)
+INSERT INTO Weapons (name, damage, accuracy, crit, price, rank, damage_type, weapon_type, img)
 VALUES
-    ('Fist', 1, 100, 0, 0, 'E', 'Physical', 'Fist'), -- 1
-    ('Bronze gauntlet', 2, 90, 0, 6, 'E', 'Physical', 'Fist'), -- 2
-    ('Iron gauntlet', 4, 85, 0, 15, 'D', 'Physical', 'Fist'), -- 3
-    ('Steel gauntlet', 7, 85, 0, 30, 'C', 'Physical', 'Fist'), -- 4
-    ('Magisteel gauntlet', 6, 80, 0, 60, 'B', 'Physical', 'Fist'), -- 5
-    ('Silver gauntlet', 8, 90, 0, 120, 'A', 'Physical', 'Fist'), -- 6
-    ('Caestus', 3, 100, 0, 3, 'D', 'Physical', 'Fist'), -- 7
-    ('Spiked caestus', 4, 100, 0, 12, 'C', 'Physical', 'Fist'), -- 8
-    ('Katar', 6, 95, 15, 70, 'B', 'Physical', 'Fist'), -- 9
-    ('Bronze sword', 2, 100, 0, 8, 'E', 'Physical', 'Sword'), -- 10
-    ('Iron sword', 5, 100, 0, 16, 'D', 'Physical', 'Sword'), -- 11
-    ('Steel sword', 8, 95, 0, 32, 'C', 'Physical', 'Sword'), -- 12
-    ('Magisteel sword', 6, 95, 0, 64, 'B', 'Physical', 'Sword'), -- 13
-    ('Silver sword', 12, 100, 0, 128, 'A', 'Physical', 'Sword'), -- 14
-    ('Katana', 9, 95, 15, 75, 'A', 'Physical', 'Sword'), -- 15
-    ('Rapier', 10, 100, 10, 100, 'A', 'Physical', 'Sword'), -- 16
-    ('Armorslayer', 7, 90, 0, 40, 'C', 'Physical', 'Sword'), -- 17
-    ('Wrymslayer', 7, 85, 0, 50, 'C', 'Physical', 'Sword'), -- 18
-    ('Brave sword', 8, 90, 5, 150, 'A', 'Physical', 'Sword'), -- 19
-    ('Levin sword', 9, 95, 0, 200, 'A', 'Arcane', 'Sword'), -- 20
-    ('Creator sword', 10, 95, 5, 0, 'B', 'Physical', 'Sword'), -- 21
-    ('Thunderbrand', 12, 80, 5, 0, 'S', 'Physical', 'Sword'), -- 22
-    ('Blutgang', 8, 90, 5, 0, 'B', 'Physical', 'Sword'), -- 23
-    ('Sword of Seiros', 6, 95, 0, 0, 'C', 'Physical', 'Sword'), -- 24
-    ('Sword of Moralta', 6, 90, 10, 0, 'C', 'Physical', 'Sword'), -- 25
-    ('Bronze spear', 3, 90, 0, 10, 'E', 'Physical', 'Spear'), -- 26
-    ('Iron spear', 6, 85, 5, 20, 'D', 'Physical', 'Spear'), -- 27
-    ('Steel spear', 9, 80, 5, 40, 'C', 'Physical', 'Spear'), -- 28
-    ('Magisteel spear', 7, 80, 5, 80, 'B', 'Physical', 'Spear'), -- 29
-    ('Silver spear', 13, 85, 10, 160, 'A', 'Physical', 'Spear'), -- 30
-    ('Naginata', 9, 100, 5, 40, 'B', 'Physical', 'Spear'), -- 31
-    ('Javelin', 6, 80, 5, 25, 'C', 'Physical', 'Spear'), -- 32
-    ('Killer spear', 7, 80, 30, 95, 'B', 'Physical', 'Spear'), -- 33
-    ('Beastslayer', 8, 85, 5, 50, 'C', 'Physical', 'Spear'), -- 34
-    ('Brave spear', 11, 80, 15, 170, 'A', 'Physical', 'Spear'), -- 35
-    ('Blessed trident', 9, 75, 5, 100, 'B', 'Holy', 'Spear'), -- 36
-    ('Aredhbar', 12, 90, 20, 0, 'S', 'Physical', 'Spear'), -- 37
-    ('Lùin', 8, 80, 10, 0, 'B', 'Physical', 'Spear'), -- 38
-    ('Spear of Assal', 10, 90, 5, 0, 'C', 'Physical', 'Spear'), -- 39
-    ('Crescent Sariel', 14, 75, 10, 0, 'A', 'Arcane', 'Spear'), -- 40
-    ('Bronze axe', 5, 85, 0, 12, 'E', 'Physical', 'Axe'), -- 41
-    ('Iron axe', 7, 80, 0, 24, 'D', 'Physical', 'Axe'), -- 42
-    ('Steel axe', 10, 75, 0, 48, 'C', 'Physical', 'Axe'), -- 43
-    ('Magisteel axe', 9, 60, 0, 96, 'B', 'Physical', 'Axe'), -- 44
-    ('Silver axe', 15, 65, 0, 192, 'A', 'Physical', 'Axe'), -- 45
-    ('Hand axe', 6, 60, 0, 30, 'D', 'Physical', 'Axe'), -- 46
-    ('Tomahawk', 13, 50, 5, 100, 'B', 'Physical', 'Axe'), -- 47
-    ('Hammer', 9, 55, 0, 50, 'C', 'Physical', 'Axe'), -- 48
-    ('Mace', 6, 65, 5, 26, 'D', 'Physical', 'Axe'), -- 49
-    ('Killer axe', 9, 45, 20, 55, 'C', 'Physical', 'Axe'), -- 50
-    ('Brave axe', 11, 55, 5, 200, 'A', 'Physical', 'Axe'), -- 51
-    ('Aymr', 15, 65, 5, 0, 'B', 'Physical', 'Axe'), -- 52
-    ('Freikugel', 16, 70, 10, 0, 'S', 'Physical', 'Axe'), -- 53
-    ('Axe of Ukonvasara', 13, 60, 5, 0, 'A', 'Physical', 'Axe'), -- 54
-    ('Bronze dagger', 2, 100, 0, 3, 'E', 'Physical', 'Dagger'), -- 55
-    ('Iron dagger', 4, 95, 5, 6, 'D', 'Physical', 'Dagger'), -- 56
-    ('Steel dagger', 6, 90, 5, 12, 'C', 'Physical', 'Dagger'), -- 57
-    ('Magisteel dagger', 5, 80, 5, 25, 'B', 'Physical', 'Dagger'), -- 58
-    ('Silver dagger', 8, 85, 5, 48, 'A', 'Physical', 'Dagger'), -- 59
-    ('Shuriken', 3, 100, 15, 10, 'D', 'Physical', 'Dagger'), -- 60
-    ('Chakram', 5, 100, 15, 15, 'C', 'Physical', 'Dagger'), -- 61
-    ('Hunter knife', 5, 90, 10, 8, 'D', 'Physical', 'Dagger'), -- 62
-    ('Killer dagger', 6, 80, 25, 20, 'C', 'Physical', 'Dagger'), -- 63
-    ('Brave dagger', 8, 80, 10, 56, 'A', 'Physical', 'Dagger'), -- 64
-    ('Mortem', 9, 95, 15, 0, 'S', 'Physical', 'Dagger'), -- 65
-    ('Ragnell', 11, 75, 10, 0, 'A', 'Physical', 'Dagger'), -- 66
-    ('Bölverk', 15, 65, 5, 0, 'B', 'Physical', 'Dagger'), -- 67
-    ('Siegfried', 7, 85, 10, 0, 'A', 'Physical', 'Dagger'), -- 68
-    ('Wooden staff', 1, 100, 0, 1, 'E', 'Arcane', 'Staff'), -- 69
-    ('Iron staff', 3, 80, 0, 6, 'D', 'Arcane', 'Staff'), -- 70
-    ('Magisteel staff', 6, 70, 0, 24, 'B', 'Arcane', 'Staff'), -- 71
-    ('Byrnhildr', 8, 75, 15, 0, 'S', 'Arcane', 'Staff'), -- 72
-    ('Bronze bow', 3, 95, 0, 5, 'E', 'Physical', 'Bow'), -- 73
-    ('Iron bow', 5, 95, 0, 10, 'D', 'Physical', 'Bow'), -- 74
-    ('Steel bow', 8, 85, 0, 20, 'C', 'Physical', 'Bow'), -- 75
-    ('Magisteel bow', 6, 80, 0, 40, 'B', 'Physical', 'Bow'), -- 76
-    ('Silver bow', 11, 85, 0, 80, 'A', 'Physical', 'Bow'), -- 77
-    ('Greatbow', 15, 60, 0, 50, 'B', 'Physical', 'Bow'), -- 78
-    ('Shortbow', 7, 90, 0, 30, 'C', 'Physical', 'Bow'), -- 79
-    ('Longbow', 9, 80, 0, 50, 'B', 'Physical', 'Bow'), -- 80
-    ('Killer bow', 7, 75, 20, 45, 'C', 'Physical', 'Bow'), -- 81
-    ('Brave bow', 10, 80, 5, 100, 'A', 'Physical', 'Bow'), -- 82
-    ('Failnaught', 12, 90, 10, 0, 'S', 'Physical', 'Bow'), -- 83
-    ('Fujin yumi', 9, 85, 5, 0, 'A', 'Wind', 'Bow'), -- 84
-    ('Skadi', 7, 80, 10, 0, 'B', 'Physical', 'Bow'), -- 85
-    ('Beast claw', 6, 125, 10, 0, 'E', 'Physical', 'Other'), -- 86
-    ('Dragon claw', 9, 95, 5, 0, 'E', 'Physical', 'Other'), -- 87
-    ('Beast jaw', 10, 90, 10, 0, 'C', 'Physical', 'Other'), -- 88
-    ('Dragon jaw', 13, 95, 5, 0, 'C', 'Physical', 'Other'), -- 89
-    ('Whip', 3, 105, 0, 0, 'E', 'Physical', 'Other'), -- 90
-    ('Urumi', 7, 95, 5, 0, 'S', 'Physical', 'Other'), -- 91
-    ('Daybringer petal whip', 5, 105, 10, 0, 'S', 'Physical', 'Other') -- 92
+    ('Fist', 1, 100, 0, 0, 'E', 'Physical', 'Fist', 'http:////144.217.14.182//img//fist.jpg'), -- 1
+    ('Bronze gauntlet', 2, 90, 0, 6, 'E', 'Physical', 'Fist', 'http:////144.217.14.182//img//bronze_gauntlet.jpg'), -- 2
+    ('Iron gauntlet', 4, 85, 0, 15, 'D', 'Physical', 'Fist', 'http:////144.217.14.182//img//iron_gauntlet.jpg'), -- 3
+    ('Steel gauntlet', 7, 85, 0, 30, 'C', 'Physical', 'Fist', 'http:////144.217.14.182//img//steel_gauntlet.jpg'), -- 4
+    ('Magisteel gauntlet', 6, 80, 0, 60, 'B', 'Physical', 'Fist', 'http:////144.217.14.182//img//magisteel_gauntlet.jpg'), -- 5
+    ('Silver gauntlet', 8, 90, 0, 120, 'A', 'Physical', 'Fist', 'http:////144.217.14.182//img//silver_gauntlet.jpg'), -- 6
+    ('Caestus', 3, 100, 0, 3, 'D', 'Physical', 'Fist', 'http:////144.217.14.182//img//caestus.jpg'), -- 7
+    ('Spiked caestus', 4, 100, 0, 12, 'C', 'Physical', 'Fist', 'http:////144.217.14.182//img//spiked_caestus.jpg'), -- 8
+    ('Katar', 6, 95, 15, 70, 'B', 'Physical', 'Fist', 'http:////144.217.14.182//img//katar.jpg'), -- 9
+    ('Bronze sword', 2, 100, 0, 8, 'E', 'Physical', 'Sword', 'http:////144.217.14.182//img//bronze_sword.jpg'), -- 10
+    ('Iron sword', 5, 100, 0, 16, 'D', 'Physical', 'Sword', 'http:////144.217.14.182//img//iron_sword.jpg'), -- 11
+    ('Steel sword', 8, 95, 0, 32, 'C', 'Physical', 'Sword', 'http:////144.217.14.182//img//steel_sword.jpg'), -- 12
+    ('Magisteel sword', 6, 95, 0, 64, 'B', 'Physical', 'Sword', 'http:////144.217.14.182//img//magisteel_sword.jpg'), -- 13
+    ('Silver sword', 12, 100, 0, 128, 'A', 'Physical', 'Sword', 'http:////144.217.14.182//img//silver_sword.jpg'), -- 14
+    ('Katana', 9, 95, 15, 75, 'A', 'Physical', 'Sword', 'http:////144.217.14.182//img//katana.jpg'), -- 15
+    ('Rapier', 10, 100, 10, 100, 'A', 'Physical', 'Sword', 'http:////144.217.14.182//img//rapier.jpg'), -- 16
+    ('Armorslayer', 7, 90, 0, 40, 'C', 'Physical', 'Sword', 'http:////144.217.14.182//img//armorslayer.jpg'), -- 17
+    ('Wrymslayer', 7, 85, 0, 50, 'C', 'Physical', 'Sword', 'http:////144.217.14.182//img//wrymslayer.jpg'), -- 18
+    ('Brave sword', 8, 90, 5, 150, 'A', 'Physical', 'Sword', 'http:////144.217.14.182//img//brave_sword.jpg'), -- 19
+    ('Levin sword', 9, 95, 0, 200, 'A', 'Arcane', 'Sword', 'http:////144.217.14.182//img//levin_sword.jpg'), -- 20
+    ('Creator sword', 10, 95, 5, 0, 'B', 'Physical', 'Sword', 'http:////144.217.14.182//img//creator_sword.jpg'), -- 21
+    ('Thunderbrand', 12, 80, 5, 0, 'S', 'Physical', 'Sword', 'http:////144.217.14.182//img//thunderbrand.jpg'), -- 22
+    ('Blutgang', 8, 90, 5, 0, 'B', 'Physical', 'Sword', 'http:////144.217.14.182//img//blutgang.jpg'), -- 23
+    ('Sword of Seiros', 6, 95, 0, 0, 'C', 'Physical', 'Sword', 'http:////144.217.14.182//img//sword_of_seiros.jpg'), -- 24
+    ('Sword of Moralta', 6, 90, 10, 0, 'C', 'Physical', 'Sword', 'http:////144.217.14.182//img//sword_of_moralta.jpg'), -- 25
+    ('Bronze spear', 3, 90, 0, 10, 'E', 'Physical', 'Spear', 'http:////144.217.14.182//img//bronze_spear.jpg'), -- 26
+    ('Iron spear', 6, 85, 5, 20, 'D', 'Physical', 'Spear', 'http:////144.217.14.182//img//iron_spear.jpg'), -- 27
+    ('Steel spear', 9, 80, 5, 40, 'C', 'Physical', 'Spear', 'http:////144.217.14.182//img//steel_spear.jpg'), -- 28
+    ('Magisteel spear', 7, 80, 5, 80, 'B', 'Physical', 'Spear', 'http:////144.217.14.182//img//magisteel_spear.jpg'), -- 29
+    ('Silver spear', 13, 85, 10, 160, 'A', 'Physical', 'Spear', 'http:////144.217.14.182//img//silver_spear.jpg'), -- 30
+    ('Naginata', 9, 100, 5, 40, 'B', 'Physical', 'Spear', 'http:////144.217.14.182//img//naginata.jpg'), -- 31
+    ('Javelin', 6, 80, 5, 25, 'C', 'Physical', 'Spear', 'http:////144.217.14.182//img//javelin.jpg'), -- 32
+    ('Killer spear', 7, 80, 30, 95, 'B', 'Physical', 'Spear', 'http:////144.217.14.182//img//killer_spear.jpg'), -- 33
+    ('Beastslayer', 8, 85, 5, 50, 'C', 'Physical', 'Spear', 'http:////144.217.14.182//img//beastslayer.jpg'), -- 34
+    ('Brave spear', 11, 80, 15, 170, 'A', 'Physical', 'Spear', 'http:////144.217.14.182//img//brave_spear.jpg'), -- 35
+    ('Blessed trident', 9, 75, 5, 100, 'B', 'Holy', 'Spear', 'http:////144.217.14.182//img//blessed_trident.jpg'), -- 36
+    ('Aredhbar', 12, 90, 20, 0, 'S', 'Physical', 'Spear', 'http:////144.217.14.182//img//aredhbar.jpg'), -- 37
+    ('Lùin', 8, 80, 10, 0, 'B', 'Physical', 'Spear', 'http:////144.217.14.182//img//lùin.jpg'), -- 38
+    ('Spear of Assal', 10, 90, 5, 0, 'C', 'Physical', 'Spear', 'http:////144.217.14.182//img//spear_of_assal.jpg'), -- 39
+    ('Crescent Sariel', 14, 75, 10, 0, 'A', 'Arcane', 'Spear', 'http:////144.217.14.182//img//crescent_sariel.jpg'), -- 40
+    ('Bronze axe', 5, 85, 0, 12, 'E', 'Physical', 'Axe', 'http:////144.217.14.182//img//bronze_axe.jpg'), -- 41
+    ('Iron axe', 7, 80, 0, 24, 'D', 'Physical', 'Axe', 'http:////144.217.14.182//img//iron_axe.jpg'), -- 42
+    ('Steel axe', 10, 75, 0, 48, 'C', 'Physical', 'Axe', 'http:////144.217.14.182//img//steel_axe.jpg'), -- 43
+    ('Magisteel axe', 9, 60, 0, 96, 'B', 'Physical', 'Axe', 'http:////144.217.14.182//img//magisteel_axe.jpg'), -- 44
+    ('Silver axe', 15, 65, 0, 192, 'A', 'Physical', 'Axe', 'http:////144.217.14.182//img//silver_axe.jpg'), -- 45
+    ('Hand axe', 6, 60, 0, 30, 'D', 'Physical', 'Axe', 'http:////144.217.14.182//img//hand_axe.jpg'), -- 46
+    ('Tomahawk', 13, 50, 5, 100, 'B', 'Physical', 'Axe', 'http:////144.217.14.182//img//tomahawk.jpg'), -- 47
+    ('Hammer', 9, 55, 0, 50, 'C', 'Physical', 'Axe', 'http:////144.217.14.182//img//hammer.jpg'), -- 48
+    ('Mace', 6, 65, 5, 26, 'D', 'Physical', 'Axe', 'http:////144.217.14.182//img//mace.jpg'), -- 49
+    ('Killer axe', 9, 45, 20, 55, 'C', 'Physical', 'Axe', 'http:////144.217.14.182//img//killer_axe.jpg'), -- 50
+    ('Brave axe', 11, 55, 5, 200, 'A', 'Physical', 'Axe', 'http:////144.217.14.182//img//brave_axe.jpg'), -- 51
+    ('Aymr', 15, 65, 5, 0, 'B', 'Physical', 'Axe', 'http:////144.217.14.182//img//aymr.jpg'), -- 52
+    ('Freikugel', 16, 70, 10, 0, 'S', 'Physical', 'Axe', 'http:////144.217.14.182//img//freikugel.jpg'), -- 53
+    ('Axe of Ukonvasara', 13, 60, 5, 0, 'A', 'Physical', 'Axe', 'http:////144.217.14.182//img//axe_of_ukonvasara.jpg'), -- 54
+    ('Bronze dagger', 2, 100, 0, 3, 'E', 'Physical', 'Dagger', 'http:////144.217.14.182//img//bronze_dagger.jpg'), -- 55
+    ('Iron dagger', 4, 95, 5, 6, 'D', 'Physical', 'Dagger', 'http:////144.217.14.182//img//iron_dagger.jpg'), -- 56
+    ('Steel dagger', 6, 90, 5, 12, 'C', 'Physical', 'Dagger', 'http:////144.217.14.182//img//steel_dagger.jpg'), -- 57
+    ('Magisteel dagger', 5, 80, 5, 25, 'B', 'Physical', 'Dagger', 'http:////144.217.14.182//img//magisteel_dagger.jpg'), -- 58
+    ('Silver dagger', 8, 85, 5, 48, 'A', 'Physical', 'Dagger', 'http:////144.217.14.182//img//silver_dagger.jpg'), -- 59
+    ('Shuriken', 3, 100, 15, 10, 'D', 'Physical', 'Dagger', 'http:////144.217.14.182//img//shuriken.jpg'), -- 60
+    ('Chakram', 5, 100, 15, 15, 'C', 'Physical', 'Dagger', 'http:////144.217.14.182//img//chakram.jpg'), -- 61
+    ('Hunter knife', 5, 90, 10, 8, 'D', 'Physical', 'Dagger', 'http:////144.217.14.182//img//hunter_knife.jpg'), -- 62
+    ('Killer dagger', 6, 80, 25, 20, 'C', 'Physical', 'Dagger', 'http:////144.217.14.182//img//killer_dagger.jpg'), -- 63
+    ('Brave dagger', 8, 80, 10, 56, 'A', 'Physical', 'Dagger', 'http:////144.217.14.182//img//brave_dagger.jpg'), -- 64
+    ('Mortem', 9, 95, 15, 0, 'S', 'Physical', 'Dagger', 'http:////144.217.14.182//img//mortem.jpg'), -- 65
+    ('Ragnell', 11, 75, 10, 0, 'A', 'Physical', 'Dagger', 'http:////144.217.14.182//img//ragnell.jpg'), -- 66
+    ('Bölverk', 15, 65, 5, 0, 'B', 'Physical', 'Dagger', 'http:////144.217.14.182//img//bölverk.jpg'), -- 67
+    ('Siegfried', 7, 85, 10, 0, 'A', 'Physical', 'Dagger', 'http:////144.217.14.182//img//siegfried.jpg'), -- 68
+    ('Wooden staff', 1, 100, 0, 1, 'E', 'Arcane', 'Staff', 'http:////144.217.14.182//img//wooden_staff.jpg'), -- 69
+    ('Iron staff', 3, 80, 0, 6, 'D', 'Arcane', 'Staff', 'http:////144.217.14.182//img//iron_staff.jpg'), -- 70
+    ('Magisteel staff', 6, 70, 0, 24, 'B', 'Arcane', 'Staff', 'http:////144.217.14.182//img//magisteel_staff.jpg'), -- 71
+    ('Byrnhildr', 8, 75, 15, 0, 'S', 'Arcane', 'Staff', 'http:////144.217.14.182//img//byrnhildr.jpg'), -- 72
+    ('Bronze bow', 3, 95, 0, 5, 'E', 'Physical', 'Bow', 'http:////144.217.14.182//img//bronze_bow.jpg'), -- 73
+    ('Iron bow', 5, 95, 0, 10, 'D', 'Physical', 'Bow', 'http:////144.217.14.182//img//iron_bow.jpg'), -- 74
+    ('Steel bow', 8, 85, 0, 20, 'C', 'Physical', 'Bow', 'http:////144.217.14.182//img//steel_bow.jpg'), -- 75
+    ('Magisteel bow', 6, 80, 0, 40, 'B', 'Physical', 'Bow', 'http:////144.217.14.182//img//magisteel_bow.jpg'), -- 76
+    ('Silver bow', 11, 85, 0, 80, 'A', 'Physical', 'Bow', 'http:////144.217.14.182//img//silver_bow.jpg'), -- 77
+    ('Greatbow', 15, 60, 0, 50, 'B', 'Physical', 'Bow', 'http:////144.217.14.182//img//greatbow.jpg'), -- 78
+    ('Shortbow', 7, 90, 0, 30, 'C', 'Physical', 'Bow', 'http:////144.217.14.182//img//shortbow.jpg'), -- 79
+    ('Longbow', 9, 80, 0, 50, 'B', 'Physical', 'Bow', 'http:////144.217.14.182//img//longbow.jpg'), -- 80
+    ('Killer bow', 7, 75, 20, 45, 'C', 'Physical', 'Bow', 'http:////144.217.14.182//img//killer_bow.jpg'), -- 81
+    ('Brave bow', 10, 80, 5, 100, 'A', 'Physical', 'Bow', 'http:////144.217.14.182//img//brave_bow.jpg'), -- 82
+    ('Failnaught', 12, 90, 10, 0, 'S', 'Physical', 'Bow', 'http:////144.217.14.182//img//failnaught.jpg'), -- 83
+    ('Fujin yumi', 9, 85, 5, 0, 'A', 'Wind', 'Bow', 'http:////144.217.14.182//img//fujin_yumi.jpg'), -- 84
+    ('Skadi', 7, 80, 10, 0, 'B', 'Physical', 'Bow', 'http:////144.217.14.182//img//skadi.jpg'), -- 85
+    ('Beast claw', 6, 125, 10, 0, 'E', 'Physical', 'Other', 'http:////144.217.14.182//img//beast_claw.jpg'), -- 86
+    ('Dragon claw', 9, 95, 5, 0, 'E', 'Physical', 'Other', 'http:////144.217.14.182//img//dragon_claw.jpg'), -- 87
+    ('Beast jaw', 10, 90, 10, 0, 'C', 'Physical', 'Other', 'http:////144.217.14.182//img//beast_jaw.jpg'), -- 88
+    ('Dragon jaw', 13, 95, 5, 0, 'C', 'Physical', 'Other', 'http:////144.217.14.182//img//dragon_jaw.jpg'), -- 89
+    ('Whip', 3, 105, 0, 0, 'E', 'Physical', 'Other', 'http:////144.217.14.182//img//whip.jpg'), -- 90
+    ('Urumi', 7, 95, 5, 0, 'S', 'Physical', 'Other', 'http:////144.217.14.182//img//urumi.jpg'), -- 91
+    ('Daybringer petal whip', 5, 105, 10, 0, 'S', 'Physical', 'Other', 'http:////144.217.14.182//img//daybringer_petal_whip.jpg') -- 92
 ;
 
 -- Skills
@@ -866,6 +866,7 @@ CREATE TABLE IF NOT EXISTS Characters (
     class_id INTEGER NOT NULL REFERENCES Classes(class_id),
     weapon_id INTEGER NOT NULL REFERENCES Weapons(weapon_id),
     armor_id INTEGER NOT NULL REFERENCES Armors(armor_id),
+    user_id INTEGER NOT NULL REFERENCES Users(user_id),
     img TEXT NOT NULL
 );
 

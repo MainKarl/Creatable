@@ -3,7 +3,7 @@ from sqlalchemy.orm import relationship
 
 from classes.base import Base
 from constants import get_skill_passive_table, get_character_skill_table
-from fonctions import get_join_passive
+import fonctions
 
 class skills(Base):
     __tablename__ = "skills"
@@ -36,7 +36,7 @@ class skills(Base):
             'skill_type': self.skill_type,
             'skill_purpose': self.skill_purpose,
             'damage_type': self.damage_type,
-            'passives': get_join_passive(self.passives)
+            'passives': fonctions.get_join_passive(self.passives)
         }
 
     def __init__(self, name, power ,power_g, accuracy, accuracy_g, crit, crit_g, mana_usage, skill_type, skill_purpose, damage_type):

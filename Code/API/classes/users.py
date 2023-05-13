@@ -9,16 +9,24 @@ from constants import get_app
 class users(Base):
     __tablename__ = "users"
     id = Column('user_id', Integer, primary_key = True)
-    username = Column(String)
+    username = Column(String, nullable=False)
     email = Column(String, nullable=False)
     password = Column(String, nullable=False)
     role = Column(Integer, nullable=False)
+    img = Column(String, nullable=True)
 
     def __init__(self, username, email, password, role):
         self.username = username
         self.email = email
         self.password = bcrypt.hashpw(password.encode('utf8'), bcrypt.gensalt()).decode()
         self.role = role
+
+    def __init__(self, username, email, password, role, img):
+        self.username = username
+        self.email = email
+        self.password = bcrypt.hashpw(password.encode('utf8'), bcrypt.gensalt()).decode()
+        self.role = role
+        self.img = img
 
     def verify_password(self, password):
         return bcrypt.checkpw(password.encode('utf8'), self.password.encode('utf8'))

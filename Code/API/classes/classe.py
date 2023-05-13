@@ -5,7 +5,7 @@ from classes.base import Base
 from constants import get_classe_passive_table
 from fonctions import get_join_passive
 
-class classes(Base):
+class classe(Base):
     __tablename__ = "classes"
     id = Column('class_id', Integer, primary_key = True)
     name = Column(String)

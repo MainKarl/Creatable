@@ -3,7 +3,7 @@ from sqlalchemy.orm import relationship
 import random as rnd
 
 from classes.base import Base
-from classes.classes import classes
+from classes.classe import classe as Classes
 from classes.statuses import statuses
 from classes.types import types
 from classes.skills import skills
@@ -14,6 +14,7 @@ from constants import get_character_skill_table, get_character_passive_table, ge
 from fonctions import get_extension, download_image, get_join_type, get_join_status, get_join_passive, get_join_skill
 
 class characters(Base):
+    __tablename__ = "characters"
     id = Column('character_id', Integer, primary_key = True)
     name = Column(String)
     race = Column(String)
@@ -80,11 +81,103 @@ class characters(Base):
     armor_id = Column(Integer, ForeignKey('armors.armor_id'), nullable = False)
     weapon_id = Column(Integer, ForeignKey('weapons.weapon_id'), nullable = False)
     class_id = Column(Integer, ForeignKey('classes.class_id'), nullable = False)
+    user_id = Column(Integer, ForeignKey('users.user_id'), nullable = False)
     types = relationship('types', secondary = get_character_type_table(), back_populates = 'characters')
     statuses = relationship('statuses', secondary = get_character_status_table(), back_populates = 'characters')
     skills = relationship('skills', secondary = get_character_skill_table(), back_populates = 'characters')
     passives = relationship('passives', secondary = get_character_passive_table(), back_populates = 'characters')
     img = Column(String)
+
+    def __init__(self, name, race, class_id, user_id, img):
+        self.name = name
+        self.race = race
+        self.level = 1
+        self.define_default_magic()
+        self.define_default_stat(class_id)
+        self.define_default_weapon_rank()
+        self.spirit_rk = 'Basic'
+        self.armor_id = 1
+        self.weapon_id = 1
+        self.class_id = class_id
+        self.user_id = user_id
+        if (img != ''):
+            self.img = download_image(img, name, get_extension(img))
+        else:
+            self.img = "http:////144.217.14.182//img//notFound.jpg"
+    def get(self):
+        return {
+            'character_id': self.id,
+            'name': self.name,
+            'race': self.race,
+            'level': self.level,
+            'hp': self.hp,
+            'combat_hp': self.combat_hp,
+            'hp_growth': self.hp_growth,
+            'strength': self.strength,
+            'combat_strength': self.combat_strength,
+            'strength_growth': self.strength_growth,
+            'defense': self.defense,
+            'combat_defense': self.combat_defense,
+            'defense_growth': self.defense_growth,
+            'magic': self.magic,
+            'combat_magic': self.combat_magic,
+            'magic_growth': self.magic_growth,
+            'resistance': self.resistance,
+            'combat_resistance': self.combat_resistance,
+            'resistance_growth': self.resistance_growth,
+            'speed': self.speed,
+            'combat_speed': self.combat_speed,
+            'speed_growth': self.speed_growth,
+            'skill': self.skill,
+            'combat_skill': self.combat_skill,
+            'skill_growth': self.skill_growth,
+            'luck': self.luck,
+            'combat_luck': self.combat_luck,
+            'luck_growth': self.luck_growth,
+            'mana': self.mana,
+            'combat_mana': self.combat_mana,
+            'mana_growth': self.mana_growth,
+            'arcane_lvl': self.arcane_lvl,
+            'illusion_lvl': self.illusion_lvl,
+            'mind_lvl': self.mind_lvl,
+            'fire_lvl': self.fire_lvl,
+            'lava_lvl': self.lava_lvl,
+            'heat_lvl': self.heat_lvl,
+            'water_lvl': self.water_lvl,
+            'liquid_lvl': self.liquid_lvl,
+            'ice_lvl': self.ice_lvl,
+            'air_lvl': self.air_lvl,
+            'wind_lvl': self.wind_lvl,
+            'lightning_lvl': self.lightning_lvl,
+            'earth_lvl': self.earth_lvl,
+            'nature_lvl': self.nature_lvl,
+            'poison_lvl': self.poison_lvl,
+            'light_lvl': self.light_lvl,
+            'holy_lvl': self.holy_lvl,
+            'space_lvl': self.space_lvl,
+            'dark_lvl': self.dark_lvl,
+            'curse_lvl': self.curse_lvl,
+            'necromancy_lvl': self.necromancy_lvl,
+            'fist_lvl': self.fist_lvl,
+            'sword_lvl': self.sword_lvl,
+            'spear_lvl': self.spear_lvl,
+            'axe_lvl': self.axe_lvl,
+            'dagger_lvl': self.dagger_lvl,
+            'staff_lvl': self.staff_lvl,
+            'bow_lvl': self.bow_lvl,
+            'other_lvl': self.other_lvl,
+            'stat_rk': self.stat_rk,
+            'magic_rk': self.magic_rk,
+            'spirit_rk': self.spirit_rk,
+            'armor': armors.query.filter(armors.id == self.armor_id).one().get(),
+            'weapon': weapons.query.filter(weapons.id == self.weapon_id).one().get(),
+            'class': Classes.query.filter(Classes.id == self.class_id).one().get(),
+            'types': get_join_type(self.types),
+            'status': get_join_status(self.statuses),
+            'skills': get_join_skill(self.skills),
+            'passives': get_join_passive(self.passives),
+            'img': self.img,
+        }
 
     def calculate_stat_rank(self):
         total = self.hp + self.strength + self.defense + self.magic + self.resistance + self.speed + self.skill + self.luck + self.mana
@@ -110,7 +203,7 @@ class characters(Base):
         self.combat_mana = self.mana
 
     def define_default_stat(self, class_id):
-        classe = classes.query.filter(classes.id == class_id).one()
+        classe = Classes.query.filter(Classes.id == class_id).one()
         
         self.hp = rnd.randrange(10, 20)
         self.combat_hp = self.hp
@@ -209,8 +302,8 @@ class characters(Base):
         self.rest()
 
     def change_class(self, class_id):
-        oClass = classes.query.filter(classes.id == self.class_id).one()
-        nClass = classes.query.filter(classes.id == class_id).one()
+        oClass = Classes.query.filter(Classes.id == self.class_id).one()
+        nClass = Classes.query.filter(Classes.id == class_id).one()
         self.hp_growth -= oClass.hp_growth - nClass.hp_growth
         self.strength_growth -= oClass.strength_growth - nClass.strength_growth
         self.defense_growth -= oClass.defense_growth - nClass.defense_growth
@@ -252,93 +345,3 @@ class characters(Base):
         self.luck_growth += luck
         self.mana_growth += mana
         self.rest()
-
-    def get(self):
-        return {
-            'character_id': self.id,
-            'name': self.name,
-            'race': self.race,
-            'level': self.level,
-            'hp': self.hp,
-            'combat_hp': self.combat_hp,
-            'hp_growth': self.hp_growth,
-            'strength': self.strength,
-            'combat_strength': self.combat_strength,
-            'strength_growth': self.strength_growth,
-            'defense': self.defense,
-            'combat_defense': self.combat_defense,
-            'defense_growth': self.defense_growth,
-            'magic': self.magic,
-            'combat_magic': self.combat_magic,
-            'magic_growth': self.magic_growth,
-            'resistance': self.resistance,
-            'combat_resistance': self.combat_resistance,
-            'resistance_growth': self.resistance_growth,
-            'speed': self.speed,
-            'combat_speed': self.combat_speed,
-            'speed_growth': self.speed_growth,
-            'skill': self.skill,
-            'combat_skill': self.combat_skill,
-            'skill_growth': self.skill_growth,
-            'luck': self.luck,
-            'combat_luck': self.combat_luck,
-            'luck_growth': self.luck_growth,
-            'mana': self.mana,
-            'combat_mana': self.combat_mana,
-            'mana_growth': self.mana_growth,
-            'arcane_lvl': self.arcane_lvl,
-            'illusion_lvl': self.illusion_lvl,
-            'mind_lvl': self.mind_lvl,
-            'fire_lvl': self.fire_lvl,
-            'lava_lvl': self.lava_lvl,
-            'heat_lvl': self.heat_lvl,
-            'water_lvl': self.water_lvl,
-            'liquid_lvl': self.liquid_lvl,
-            'ice_lvl': self.ice_lvl,
-            'air_lvl': self.air_lvl,
-            'wind_lvl': self.wind_lvl,
-            'lightning_lvl': self.lightning_lvl,
-            'earth_lvl': self.earth_lvl,
-            'nature_lvl': self.nature_lvl,
-            'poison_lvl': self.poison_lvl,
-            'light_lvl': self.light_lvl,
-            'holy_lvl': self.holy_lvl,
-            'space_lvl': self.space_lvl,
-            'dark_lvl': self.dark_lvl,
-            'curse_lvl': self.curse_lvl,
-            'necromancy_lvl': self.necromancy_lvl,
-            'fist_lvl': self.fist_lvl,
-            'sword_lvl': self.sword_lvl,
-            'spear_lvl': self.spear_lvl,
-            'axe_lvl': self.axe_lvl,
-            'dagger_lvl': self.dagger_lvl,
-            'staff_lvl': self.staff_lvl,
-            'bow_lvl': self.bow_lvl,
-            'other_lvl': self.other_lvl,
-            'stat_rk': self.stat_rk,
-            'magic_rk': self.magic_rk,
-            'spirit_rk': self.spirit_rk,
-            'armor': armors.query.filter(armors.id == self.armor_id).one().get(),
-            'weapon': weapons.query.filter(weapons.id == self.weapon_id).one().get(),
-            'class': classes.query.filter(classes.id == self.class_id).one().get(),
-            'types': get_join_type(self.types),
-            'status': get_join_status(self.statuses),
-            'skills': get_join_skill(self.skills),
-            'passives': get_join_passive(self.passives),
-            'img': self.img,
-        }
-    def __init__(self, name, race, class_id, img):
-        self.name = name
-        self.race = race
-        self.level = 1
-        self.define_default_magic()
-        self.define_default_stat(class_id)
-        self.define_default_weapon_rank()
-        self.spirit_rk = 'Basic'
-        self.armor_id = 1
-        self.weapon_id = 1
-        self.class_id = class_id
-        if (img != ''):
-            self.img = download_image(img, name, get_extension(img))
-        else:
-            self.img = "http:////144.217.14.182//img//notFound.jpg"
