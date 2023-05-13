@@ -1,0 +1,23 @@
+{
+    "api_url": "http://144.217.14.182:6361/",
+    "colors": [
+        {
+            "basicbackgroundcolor":"#FFFFFF",
+            "darkerbackgroundcolor1":"#EEEFF1",
+            "darkerbackgroundcolor2":"#E9EAED",
+            "darkestbackgroundcolor":"#E0E1E5",
+            "textcolor":"#060607",
+            "textalternatecolor1":"#4E5058",
+            "textalternatecolor2":"#6D6F78"
+        },
+        {
+            "basicbackgroundcolor":"#313338",
+            "darkerbackgroundcolor1":"#2B2D31",
+            "darkerbackgroundcolor2":"#232428",
+            "darkestbackgroundcolor":"#1E1F22",
+            "textcolor":"#F3F4F5",
+            "textalternatecolor1":"#B8B9BF",
+            "textalternatecolor2":"#82858F"
+        }
+    ]
+}
