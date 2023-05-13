@@ -14,10 +14,13 @@ from fonctions import get_extension, download_image, get_join_type, get_join_sta
 
 class characters(get_db().Model):
     __tablename__ = "characters"
+    # General
     id = Column('character_id', Integer, primary_key = True)
     name = Column(String)
     race = Column(String)
     level = Column(Integer)
+
+    # Stats
     hp = Column(Integer)
     combat_hp = Column(Integer)
     hp_growth = Column(Integer)
@@ -45,6 +48,8 @@ class characters(get_db().Model):
     mana = Column(Integer)
     combat_mana = Column(Integer)
     mana_growth = Column(Integer)
+
+    # Magic
     arcane_lvl = Column(Integer)
     illusion_lvl = Column(Integer)
     mind_lvl = Column(Integer)
@@ -66,6 +71,8 @@ class characters(get_db().Model):
     dark_lvl = Column(Integer)
     curse_lvl = Column(Integer)
     necromancy_lvl = Column(Integer)
+
+    # Weapons
     fist_lvl = Column(String)
     sword_lvl = Column(String)
     spear_lvl = Column(String)
@@ -74,9 +81,13 @@ class characters(get_db().Model):
     staff_lvl = Column(String)
     bow_lvl = Column(String)
     other_lvl = Column(String)
+
+    # Ranks
     stat_rk = Column(String)
     magic_rk = Column(String)
     spirit_rk = Column(String)
+
+    # Others
     armor_id = Column(Integer, ForeignKey('armors.armor_id'), nullable = False)
     weapon_id = Column(Integer, ForeignKey('weapons.weapon_id'), nullable = False)
     class_id = Column(Integer, ForeignKey('classes.class_id'), nullable = False)
@@ -178,18 +189,6 @@ class characters(get_db().Model):
             'img': self.img,
         }
 
-    def calculate_stat_rank(self):
-        total = self.hp + self.strength + self.defense + self.magic + self.resistance + self.speed + self.skill + self.luck + self.mana
-        if total <= 150:
-            self.stat_rk = 'Basic'
-        elif total <= 200:
-            self.stat_rk = 'Expert'
-        elif total <= 300:
-            self.stat_rk = 'Sage'
-        elif total <= 600:
-            self.stat_rk = 'Dragon'
-        elif total > 600:
-            self.stat_rk = 'God'
     def rest(self):
         self.combat_hp = self.hp
         self.combat_strength = self.strength
@@ -207,31 +206,40 @@ class characters(get_db().Model):
         self.hp = rnd.randrange(10, 20)
         self.combat_hp = self.hp
         self.hp_growth = (rnd.randrange(1,4)*5)+classe.hp_growth
+
         self.strength = rnd.randrange(5, 12)
         self.combat_strength = self.strength
         self.strength_growth = (rnd.randrange(1,4)*5)+classe.strength_growth
+
         self.defense = rnd.randrange(5, 12)
         self.combat_defense = self.defense
         self.defense_growth = (rnd.randrange(1,4)*5)+classe.defense_growth
+
         self.magic = rnd.randrange(5, 12)
         self.combat_magic = self.magic
         self.magic_growth = (rnd.randrange(1,4)*5)+classe.magic_growth
+
         self.resistance = rnd.randrange(5, 12)
         self.combat_resistance = self.resistance
         self.resistance_growth = (rnd.randrange(1,4)*5)+classe.resistance_growth
+
         self.speed = rnd.randrange(5, 12)
         self.combat_speed = self.speed
         self.speed_growth = (rnd.randrange(1,4)*5)+classe.speed_growth
+
         self.skill = rnd.randrange(5, 12)
         self.combat_skill = self.skill
         self.skill_growth = (rnd.randrange(1,4)*5)+classe.skill_growth
+
         self.luck = rnd.randrange(5, 12)
         self.combat_luck = self.luck
         self.luck_growth = (rnd.randrange(1,4)*5)+classe.luck_growth
+
         self.mana = rnd.randrange(10, 20)
         self.combat_mana = self.mana
         self.mana_growth = (rnd.randrange(1,4)*5)+classe.mana_growth
-        self.calculate_stat_rank()
+
+        self.define_stat_rank()
     def define_default_magic(self):
         self.arcane_lvl = 0
         self.mind_lvl = 0
@@ -270,15 +278,19 @@ class characters(get_db().Model):
     def define_spirit_rank(self, spirit_rank):
         self.spirit_rk = spirit_rank
         self.rest()
-    def define_weapon_rank(self, sword_rank, spear_rank, axe_rank, dagger_rank, staff_rank, bow_rank, other_rank):
-        self.sword_lvl = sword_rank
-        self.spear_lvl = spear_rank
-        self.axe_lvl = axe_rank
-        self.dagger_lvl = dagger_rank
-        self.staff_lvl = staff_rank
-        self.bow_lvl = bow_rank
-        self.other_lvl = other_rank
-        self.rest()
+    def define_stat_rank(self):
+        total = self.hp + self.strength + self.defense + self.magic + self.resistance + self.speed + self.skill + self.luck + self.mana
+        if total <= 150:
+            self.stat_rk = 'Basic'
+        elif total <= 200:
+            self.stat_rk = 'Expert'
+        elif total <= 300:
+            self.stat_rk = 'Sage'
+        elif total <= 600:
+            self.stat_rk = 'Dragon'
+        elif total > 600:
+            self.stat_rk = 'God'    
+    
     def define_type(self, ctypes):
         self.types.clear()
         for type in str(ctypes).split(';'):
@@ -315,14 +327,36 @@ class characters(get_db().Model):
         self.class_id = nClass.id
         self.rest()
     def change_weapon(self, weapon_id):
-        weapon = weapons.query.filter(weapons.id == weapon_id).one()
-        self.weapon_id = weapon.id
+        oa = weapons.query.filter(weapons.id == self.weapon_id).one()
+        na = weapons.query.filter(weapons.id == weapon_id).one()
+        self.strength += na.get_strength() - oa.get_strength()
+        self.defense += na.get_defense() - oa.get_defense()
+        self.magic += na.get_magic() - oa.get_magic()
+        self.resistance += na.get_resistance() - oa.get_resistance()
+        self.speed += na.get_speed() - oa.get_speed()
+        self.skill += na.get_skill() - oa.get_skill()
+        self.luck += na.get_luck() - oa.get_luck()
+        self.weapon_id = na.id
         self.rest()  
     def change_armor(self, armor_id):
-        armor = armors.query.filter(armors.id == armor_id).one()
-        self.armor_id = armor.id
+        oa = armors.query.filter(armors.id == self.armor_id).one()
+        na = armors.query.filter(armors.id == armor_id).one()
+        self.defense += na.get_defense() - oa.get_defense()
+        self.resistance += na.get_resistance() - oa.get_resistance()
+        self.speed += na.get_speed() - oa.get_speed()
+        self.armor_id = na.id
         self.rest()
-    def change_magic(self, hp, strength, defense, magic, resistance, speed, skill, luck, mana):
+    def change_weapon_rank(self, sword_rank, spear_rank, axe_rank, dagger_rank, staff_rank, bow_rank, other_rank):
+        self.sword_lvl = sword_rank
+        self.spear_lvl = spear_rank
+        self.axe_lvl = axe_rank
+        self.dagger_lvl = dagger_rank
+        self.staff_lvl = staff_rank
+        self.bow_lvl = bow_rank
+        self.other_lvl = other_rank
+        self.rest()
+    
+    def add_stat(self, hp, strength, defense, magic, resistance, speed, skill, luck, mana):
         self.hp += hp
         self.strength += strength
         self.defense += defense
@@ -333,7 +367,7 @@ class characters(get_db().Model):
         self.luck += luck
         self.mana += mana
         self.rest()
-    def change_magic_growth(self, hp, strength, defense, magic, resistance, speed, skill, luck, mana):
+    def add_stat_growth(self, hp, strength, defense, magic, resistance, speed, skill, luck, mana):
         self.hp_growth += hp
         self.strength_growth += strength
         self.defense_growth += defense
@@ -343,4 +377,27 @@ class characters(get_db().Model):
         self.skill_growth += skill
         self.luck_growth += luck
         self.mana_growth += mana
+        self.rest()
+    def add_magic(self, arcane, illusion, mind, fire, heat, lava, water, liquid, ice, air, wind, lightning, earth, poison, nature, light, space, holy, dark, necromancy, curse):
+        self.arcane_lvl = arcane
+        self.illusion_lvl = illusion
+        self.mind_lvl = mind
+        self.fire_lvl = fire
+        self.heat_lvl = heat
+        self.lava_lvl = lava
+        self.water_lvl = water
+        self.liquid_lvl = liquid
+        self.ice_lvl = ice
+        self.air_lvl = air
+        self.wind_lvl = wind
+        self.lightning_lvl = lightning
+        self.earth_lvl = earth
+        self.poison_lvl = poison
+        self.nature_lvl = nature
+        self.light_lvl = light
+        self.space_lvl = space
+        self.holy_lvl = holy
+        self.dark_lvl = dark
+        self.necromancy_lvl = necromancy
+        self.curse_lvl = curse
         self.rest()
