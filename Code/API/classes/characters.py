@@ -2,7 +2,6 @@ from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 import random as rnd
 
-from classes.base import Base
 from classes.classe import classe as Classes
 from classes.statuses import statuses
 from classes.types import types
@@ -10,10 +9,10 @@ from classes.skills import skills
 from classes.weapons import weapons
 from classes.armors import armors
 from classes.passives import passives
-from constants import get_character_skill_table, get_character_passive_table, get_character_status_table, get_character_type_table
+from constants import get_character_skill_table, get_character_passive_table, get_character_status_table, get_character_type_table, get_db
 from fonctions import get_extension, download_image, get_join_type, get_join_status, get_join_passive, get_join_skill
 
-class characters(Base):
+class characters(get_db().Model):
     __tablename__ = "characters"
     id = Column('character_id', Integer, primary_key = True)
     name = Column(String)

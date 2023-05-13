@@ -1,10 +1,9 @@
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
 
-from classes.base import Base
-from constants import get_character_status_table
+from constants import get_character_status_table, get_db
 
-class statuses(Base):
+class statuses(get_db().Model):
     __tablename__ = "status"
     id = Column('status_id', Integer, primary_key = True)
     name = Column(String)

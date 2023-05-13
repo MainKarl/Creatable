@@ -1,11 +1,10 @@
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
 
-from classes.base import Base
-from constants import get_classe_passive_table
+from constants import get_classe_passive_table, get_db
 from fonctions import get_join_passive
 
-class classe(Base):
+class classe(get_db().Model):
     __tablename__ = "classes"
     id = Column('class_id', Integer, primary_key = True)
     name = Column(String)

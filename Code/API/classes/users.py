@@ -3,10 +3,9 @@ import datetime
 import bcrypt
 import jwt
 
-from classes.base import Base
-from constants import get_app
+from constants import get_app, get_db
 
-class users(Base):
+class users(get_db().Model):
     __tablename__ = "users"
     id = Column('user_id', Integer, primary_key = True)
     username = Column(String, nullable=False)
@@ -36,7 +35,8 @@ class users(Base):
             payload = {
                 'exp': datetime.datetime.utcnow() + datetime.timedelta(days=5),
                 'iat': datetime.datetime.utcnow(),
-                'sub': user_id
+                'sub': user_id,
+                'rle': role
             }
             return jwt.encode(
                 payload,
@@ -50,6 +50,15 @@ class users(Base):
         try:
             payload = jwt.decode(auth_token, get_app().secret_key, algorithms='HS256')
             return payload['sub']
+        except jwt.ExpiredSignatureError:
+            return 'Signature expired. Please log in again.'
+        except jwt.InvalidTokenError:
+            return 'Invalid token. Please log in again.'
+        
+    def decode_role_auth_token(auth_token):
+        try:
+            payload = jwt.decode(auth_token, get_app().secret_key, algorithms='HS256')
+            return payload['rle']
         except jwt.ExpiredSignatureError:
             return 'Signature expired. Please log in again.'
         except jwt.InvalidTokenError:

@@ -1,11 +1,10 @@
 from sqlalchemy import Column, Integer, String, Float
 from sqlalchemy.orm import relationship
 
-from classes.base import Base
-from constants import get_weapon_passive_table
+from constants import get_weapon_passive_table, get_db
 from fonctions import get_join_passive, download_image, get_extension
 
-class weapons(Base):
+class weapons(get_db().Model):
     __tablename__ = "weapons"
     id = Column("weapon_id", Integer, primary_key = True)
     name = Column(String)

@@ -1,10 +1,9 @@
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
 
-from classes.base import Base
-from constants import get_character_type_table
+from constants import get_character_type_table, get_db
 
-class types(Base):
+class types(get_db().Model):
     __tablename__ = 'types'
     id = Column('type_id', Integer, primary_key = True)
     name = Column(String)

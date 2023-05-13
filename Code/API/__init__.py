@@ -12,7 +12,7 @@ from classes.types import types
 from classes.users import users
 from classes.weapons import weapons
 from constants import get_app, get_db
-from fonctions import get_join_passive, verify_token
+from fonctions import get_join_passive, get_role_id, verify_token
 
 #region Constants
 app = get_app()
@@ -31,167 +31,94 @@ def before_request():
 
 @app.route("/type/get", methods=['GET'])
 def get_route():
-    id = request.args.get('type_id', None, type=int)
-
-    list_types = types.query.all()
-    list = []
-    type: types
-    for type in list_types:
-        list.append({
-            'type_id': type.id,
-            'name': type.name
-        })
-    
-    response = jsonify(list)
-    response.headers.add('Access-Control-Allow-Origin', '*')
-    return response
+    if verify_token(request.headers.get('Authorization')):
+        list_types = types.query.all()
+        list = []
+        type: types
+        for type in list_types:
+            list.append(type.get())
+        return jsonify(list)
+    else: 
+        return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })
 
 @app.route("/status/get", methods=['GET'])
 def get_status():
-    id = request.args.get('status_id', None, type=int)
-
-    list_status = statuses.query.all()
-    list = []
-    status: statuses
-    for status in list_status:
-        list.append({
-            'status_id': status.id,
-            'name': status.name
-        })
-    
-    response = jsonify(list)
-    response.headers.add('Access-Control-Allow-Origin', '*')
-    return response
+    if verify_token(request.headers.get('Authorization')):
+        list_status = statuses.query.all()
+        list = []
+        status: statuses
+        for status in list_status:
+            list.append(status.get())
+        return jsonify(list)
+    else: 
+        return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })
 
 @app.route("/passive/get", methods=['GET'])
 def get_passive():
-    list_passives = passives.query.all()
-    list = []
-    passive: passives
-    for passive in list_passives:
-        list.append({
-            'passive_id': passive.id,
-            'name': passive.name,
-            'description': passive.description,
-            'passive_type': passive.passive_type
-        })
-    
-    response = jsonify(list)
-    return response
+    if verify_token(request.headers.get('Authorization')):
+        list_passives = passives.query.all()
+        list = []
+        passive: passives
+        for passive in list_passives:
+            list.append(passive.get())
+        return jsonify(list)
+    else: 
+        return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })
 
 @app.route("/armor/get", methods=['GET'])
 def get_armor():
-    list_armors = armors.query.join(passives, armors.passives, isouter=True).all()
-    list = []
-    armor: armors
-    for armor in list_armors:        
-        list.append({
-            'armor_id': armor.id,
-            'name': armor.name,
-            'power': armor.power,
-            'passives': get_join_passive(armor.passives)
-        })
-    
-    response = jsonify(list)
-    return response
+    if verify_token(request.headers.get('Authorization')):
+        list = []
+        armor: armors
+        for armor in armors.query.join(passives, armors.passives, isouter=True).all():        
+            list.append(armor.get())
+        return jsonify(list)
+    else: 
+        return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })
 
 @app.route("/weapon/get", methods=['GET'])
 def get_weapon():
-    list_weapons = weapons.query.join(passives, weapons.passives, isouter=True).all()
-    list = []
-    weapon: weapons
-    for weapon in list_weapons:
-        list.append({
-            'weapon_id': weapon.id,
-            'name': weapon.name,
-            'damage': weapon.damage,
-            'accuracy': weapon.accuracy,
-            'crit': weapon.crit,
-            'price': weapon.price,
-            'rank': weapon.rank,
-            'damage_type': weapon.damage_type,
-            'weapon_type': weapon.weapon_type,
-            'passives': get_join_passive(weapon.passives)
-        })
-    
-    response = jsonify(list)
-    return response
+    if verify_token(request.headers.get('Authorization')):
+        list = []
+        weapon: weapons
+        for weapon in weapons.query.join(passives, weapons.passives, isouter=True).all():
+            list.append(weapon.get())
+        return jsonify(list)
+    else: 
+        return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })
 
 @app.route("/class/get", methods=['GET'])
 def get_class():
-    list_classes = Classes.query.join(passives, Classes.passives, isouter=True).all()
-    list = []
-    classe: Classes
-    for classe in list_classes:
-        list.append({
-            'class_id': classe.id,
-            'name': classe.name,
-            'hp_growth': classe.hp_growth,
-            'strength_growth': classe.strength_growth,
-            'defense_growth': classe.defense_growth,
-            'magic_growth': classe.magic_growth,
-            'resistance_growth': classe.resistance_growth,
-            'speed_growth': classe.speed_growth,
-            'skill_growth': classe.skill_growth,
-            'luck_growth': classe.luck_growth,
-            'mana_growth': classe.mana_growth,
-            'class_serie': classe.class_serie,
-            'predecessor': classe.predecessor,
-            'passives': get_join_passive(classe.passives)
-        })
+    if verify_token(request.headers.get('Authorization')):
+        list = []
+        classe: Classes
+        for classe in Classes.query.join(passives, Classes.passives, isouter=True).all():
+            list.append(classe.get())
+        return jsonify(list)
+    else: 
+        return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })
 
-    response = jsonify(list)
-    return response
 @app.route("/class/get_basic", methods=['GET'])
 def get_classic_class():
-    list_classes = Classes.query.filter(Classes.predecessor == 'None').join(passives, Classes.passives, isouter=True).all()
-    list = []
-    classe: Classes
-    for classe in list_classes:
-        list.append({
-            'class_id': classe.id,
-            'name': classe.name,
-            'hp_growth': classe.hp_growth,
-            'strength_growth': classe.strength_growth,
-            'defense_growth': classe.defense_growth,
-            'magic_growth': classe.magic_growth,
-            'resistance_growth': classe.resistance_growth,
-            'speed_growth': classe.speed_growth,
-            'skill_growth': classe.skill_growth,
-            'luck_growth': classe.luck_growth,
-            'mana_growth': classe.mana_growth,
-            'class_serie': classe.class_serie,
-            'predecessor': classe.predecessor,
-            'passives': get_join_passive(classe.passives)
-        })
-
-    response = jsonify(list)
-    return response
+    if verify_token(request.headers.get('Authorization')):
+        list = []
+        classe: Classes
+        for classe in Classes.query.filter(Classes.predecessor == 'None').join(passives, Classes.passives, isouter=True).all():
+            list.append(classe.get())
+        return jsonify(list)
+    else: 
+        return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })
 
 @app.route("/skill/get", methods=['GET'])
 def get_skill():
-    list_skills = skills.query.join(passives, skills.passives, isouter=True).all()
-    list = []
-    skill: skills
-    for skill in list_skills:
-        list.append({
-            'skill_id': skill.id,
-            'name': skill.name,
-            'power': skill.power,
-            'power_gain': skill.power_gain,
-            'accuracy': skill.accuracy,
-            'accuracy_gain': skill.accuracy_gain,
-            'crit': skill.crit,
-            'crit_gain': skill.crit_gain,
-            'mana_usage': skill.mana_usage,
-            'skill_type': skill.skill_type,
-            'skill_purpose': skill.skill_type,
-            'damage_type': skill.damage_type,
-            'passives': get_join_passive(skill.passives)
-        })
-    
-    response = jsonify(list)
-    return response
+    if verify_token(request.headers.get('Authorization')):
+        list = []
+        skill: skills
+        for skill in skills.query.join(passives, skills.passives, isouter=True).all():
+            list.append(skill.get())
+        return jsonify(list)
+    else: 
+        return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })
 
 @app.route("/character/get", methods=['GET'])
 def get_characters():
@@ -203,7 +130,6 @@ def get_characters():
         character: characters
         for character in list_characters:
             list.append(character.get())
-    
         response = jsonify(list)
         return response
     else: 

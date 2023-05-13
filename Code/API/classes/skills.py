@@ -1,11 +1,10 @@
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
 
-from classes.base import Base
-from constants import get_skill_passive_table, get_character_skill_table
+from constants import get_skill_passive_table, get_character_skill_table, get_db
 import fonctions
 
-class skills(Base):
+class skills(get_db().Model):
     __tablename__ = "skills"
     id = Column('skill_id', Integer, primary_key=True)
     name = Column(String)

@@ -78,3 +78,13 @@ def get_user_id(token):
             return 0
     else:
         return 0
+    
+def get_role_id(token):
+    if token:
+        resp = us.decode_role_auth_token(token)
+        if not isinstance(resp, str):
+            return resp
+        else:
+            return 0
+    else:
+        return 0
