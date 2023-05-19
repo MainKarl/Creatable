@@ -15,9 +15,11 @@ import {
     NumberInputField,
     NumberInputStepper,
     NumberIncrementStepper,
-    NumberDecrementStepper
+    NumberDecrementStepper,
+    useDisclosure
 } from '@chakra-ui/react'
 import { AddIcon } from '@chakra-ui/icons'
+import CustomDrawer from '../../Components/CustomDrawer'
 let data = require('../../data.json')
 
 const CharacterList = () => {
@@ -26,6 +28,9 @@ const CharacterList = () => {
 
     const [minLevel, setMinLevel] = useState(0)
     const [maxLevel, setMaxLevel] = useState(0)
+
+    const { isOpen: cDrawerIsOpen, onOpen: cDrawerOnOpen, onClose: cDrawerOnClose } = useDisclosure()
+    const [cDrawerData, setCDrawerData] = useState([])
 
     let url = require('../../data.json')
 
@@ -38,6 +43,11 @@ const CharacterList = () => {
 
     const filterCharacters = () => {
 
+    }
+
+    const createCharacter = async (data) => {
+
+        cDrawerOnClose()
     }
 
     const getCharacters = async () => {       
@@ -62,6 +72,104 @@ const CharacterList = () => {
                     })
                 })
                 setCharactersJson(list)
+            })
+        })
+    }
+
+    const getClass = async () => {
+        fetch(url.api_url + 'class/get_basic', {
+            method: 'GET',
+            mode: 'cors',
+            cache: 'default',
+            redirect: 'manual',
+            headers: {
+                'Authorization': localStorage.getItem('token_auth')
+            }
+        }).then((response) => {
+            response.json.then((item) => {
+                setCDrawerData([
+                    {
+                        name: 'img',
+                        type: 'img',
+                        value: '',
+                        errors: [
+                            {
+                                name: 'NULL',
+                                message: 'The image cannot be null.'
+                            }
+                        ]
+                    },
+                    {
+                        name: 'name',
+                        type: 'text',
+                        value: '',
+                        errors: [
+                            {
+                                name: 'NULL',
+                                message: 'The name cannot be null.'
+                            }
+                        ]
+                    },
+                    {
+                        name: 'race',
+                        type: 'select',
+                        actual: '-- Select a race --',
+                        value: 0,
+                        data: [
+                            {
+                               id: 1,
+                               value: 'Human'
+                            },
+                            {
+                                id: 2,
+                                value: 'Elf'
+                            },
+                            {
+                                id: 3,
+                                value: 'Demon'
+                            },
+                            {
+                                id: 4,
+                                value: 'Kitsune'
+                            },
+                            {
+                                id: 5,
+                                value: 'Wolfskin'
+                            },
+                            {
+                                id: 6,
+                                value: 'Voidoid'
+                            },
+                            {
+                                id: 7,
+                                value: 'Undead'
+                            },
+                            {
+                                id: 8,
+                                value: 'Monster'
+                            }
+                        ],
+                        errors: [
+                            {
+                                name: 'SELECT_NULL',
+                                message: 'The race cannot be null.'
+                            }
+                        ]
+                    },
+                    {
+                        name: 'class',
+                        type: 'select',
+                        actual: '-- Select a class --',
+                        value: 0,
+                        data: item,
+                        errors: [
+                            {
+                                name: 'SELECT_NULL',
+                                message: 'The class cannot be null.'
+                            }
+                        ]
+                    }
+                ])
             })
         })
     }
@@ -92,6 +200,7 @@ const CharacterList = () => {
     }, [charactersJson])
 
     useEffect(() => {
+        getClass()
         getCharacters()
     }, [])
 
@@ -198,7 +307,7 @@ const CharacterList = () => {
                           fontSize={ '24px' }
                           fontWeight={ 'bold' }>
                             Character
-                            <IconButton colorScheme={ 'whatsapp' } ml={ '1%' } icon={ <AddIcon /> } />
+                            <IconButton colorScheme={ 'whatsapp' } ml={ '1%' } icon={ <AddIcon /> } onClick={ () => cDrawerOnOpen() } />
                         </Text>
                     </HStack>
                     <HStack w={ '100%' }>
@@ -218,6 +327,13 @@ const CharacterList = () => {
                 </VStack>
                 <HStack w={ '10%' } />
             </Flex>
+            <CustomDrawer
+              data={ cDrawerData } 
+              item={ 'character' }
+              type={ 'create' }
+              isOpen={ cDrawerIsOpen }
+              onClose={ cDrawerOnClose } 
+              onSubmit={ createCharacter }/>
         </Box>
     )
 }

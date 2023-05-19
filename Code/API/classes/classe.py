@@ -39,6 +39,12 @@ class classe(get_db().Model):
             'predecessor': self.predecessor,
             'passives': get_join_passive(self.passives)
         }
+    
+    def get_simplified(self):
+        return {
+            'id': self.id,
+            'value': self.name
+        }
 
     def __init__(self, name, hp_g, strength_g, defense_g, magic_g, resistance_g, speed_g, skill_g, luck_g, mana_g, class_serie, predecessor):
         self.name = name

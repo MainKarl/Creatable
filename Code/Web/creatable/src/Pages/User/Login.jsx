@@ -126,7 +126,7 @@ const Login = () => {
                     </HStack>
                     <HStack
                       width={'100%'}>
-                        <FormControl isInvalid={emailError}>
+                        <FormControl isInvalid={emailError} onKeyUp={ (value) => { if (value.code === 'Enter') { handleLogin() } } }>
                             <FormLabel color={textColor}>Email</FormLabel>
                             <InputGroup>
                                 <Input 
@@ -140,7 +140,7 @@ const Login = () => {
                     </HStack>
                     <HStack
                       width={'100%'}>
-                        <FormControl isInvalid={passwordError}>
+                        <FormControl isInvalid={passwordError} onKeyUp={ (value) => { if (value.code === 'Enter') { handleLogin() } } }>
                             <FormLabel color={textColor}>Password</FormLabel>
                             <InputGroup>
                                 <Input 
@@ -158,7 +158,7 @@ const Login = () => {
                         </FormControl>
                     </HStack>
                     <HStack width={'100%'}>
-                        <Button 
+                        <Button
                           size={'md'} 
                           colorScheme={'orange'} 
                           marginLeft={'auto'} 

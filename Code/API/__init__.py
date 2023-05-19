@@ -104,7 +104,7 @@ def get_classic_class():
         list = []
         classe: Classes
         for classe in Classes.query.filter(Classes.predecessor == 'None').join(passives, Classes.passives, isouter=True).all():
-            list.append(classe.get())
+            list.append(classe.get_simplified())
         return jsonify(list)
     else: 
         return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })
