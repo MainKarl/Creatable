@@ -14,12 +14,6 @@ class users(get_db().Model):
     role = Column(Integer, nullable=False)
     img = Column(String, nullable=True)
 
-    def __init__(self, username, email, password, role):
-        self.username = username
-        self.email = email
-        self.password = bcrypt.hashpw(password.encode('utf8'), bcrypt.gensalt()).decode()
-        self.role = role
-
     def __init__(self, username, email, password, role, img):
         self.username = username
         self.email = email

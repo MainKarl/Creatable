@@ -184,7 +184,7 @@ def delete_character():
 def register():
     try:
         data = request.get_json(force=True)
-        user = users(data["username"], data["email"], data["password"], 1, data["profilePicture"])
+        user = users(data["username"], data["email"], data["password"], 2, data["profilePicture"])
         db.session.add(user)
         db.session.commit()
         obj = {
