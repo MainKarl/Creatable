@@ -98,7 +98,7 @@ class characters(get_db().Model):
     passives = relationship('passives', secondary = get_character_passive_table(), back_populates = 'characters')
     img = Column(String)
 
-    def __init__(self, name, race, class_id, user_id, img):
+    def __init__(self, name: str, race: str, class_id: int, user_id: int, img: str):
         self.name = name
         self.race = race
         self.level = 1

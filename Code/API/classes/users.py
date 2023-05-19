@@ -30,7 +30,7 @@ class users(get_db().Model):
     def verify_password(self, password):
         return bcrypt.checkpw(password.encode('utf8'), self.password.encode('utf8'))
 
-    def encode_auth_token(self, user_id, role):
+    def encode_auth_token(self, user_id, role) -> bytes:
         try:
             payload = {
                 'exp': datetime.datetime.utcnow() + datetime.timedelta(days=5),
@@ -44,7 +44,8 @@ class users(get_db().Model):
                 algorithm='HS256'
             )
         except Exception as e:
-            return e
+            print(e)
+            return 0
     
     def decode_auth_token(auth_token):
         try:

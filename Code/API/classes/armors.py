@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
 
-from classes.passives import passives
+from classes.passives import passives as pas
 
 from constants import get_db
 from constants import get_armor_passive_table
@@ -33,34 +33,35 @@ class armors(get_db().Model):
         }
 
     def add_defense(self):
-        passive: passives
-        for passive in self.passives:
-            match passive.name:
-                case 'Defense+I':
-                    return 1
-                case 'Defense+II':
-                    return 2
-                case 'Defense+III':
-                    return 3
-                case 'Defense+IV':
-                    return 4
-                case 'Defense+V':
-                    return 5
-                case 'Defense+VI':
-                    return 6
-                case 'Defense+VII':
-                    return 7
-                case 'Defense+VIII':
-                    return 8
-                case 'Defense+IX':
-                    return 9
-                case 'Defense+X':
-                    return 10
+        if self.passives:
+            item: pas
+            for item in self.passives:
+                match str(item.name):
+                    case 'Defense+I':
+                        return 1
+                    case 'Defense+II':
+                        return 2
+                    case 'Defense+III':
+                        return 3
+                    case 'Defense+IV':
+                        return 4
+                    case 'Defense+V':
+                        return 5
+                    case 'Defense+VI':
+                        return 6
+                    case 'Defense+VII':
+                        return 7
+                    case 'Defense+VIII':
+                        return 8
+                    case 'Defense+IX':
+                        return 9
+                    case 'Defense+X':
+                        return 10
         return 0                 
     def add_resistance(self):
-        passive: passives
-        for passive in self.passives:
-            match passive.name:
+        item: pas
+        for item in self.passives:
+            match item.name:
                 case 'Resistance+I':
                     return 1
                 case 'Resistance+II':
@@ -83,9 +84,9 @@ class armors(get_db().Model):
                     return 10
         return 0
     def add_speed(self):
-        passive: passives
-        for passive in self.passives:
-            match passive.name:
+        item: pas
+        for item in self.passives:
+            match item.name:
                 case 'Speed-I':
                     return -1
                 case 'Speed-II':

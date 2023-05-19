@@ -1,8 +1,8 @@
 {
-  "main": "public/electron.js",
-  "homepage": "./",
   "name": "creatable",
   "version": "0.1.0",
+  "main": "public/electron.js",
+  "homepage": "./",
   "private": true,
   "dependencies": {
     "@chakra-ui/icon": "^3.0.16",

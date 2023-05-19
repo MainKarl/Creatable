@@ -101,19 +101,27 @@ const Register = () => {
             setUsernameError(true);
             error = true;
         }
+
+        if (profilePicture === null || profilePicture === '') {
+            setProfilePictureErrorMessage('ERROR: Profile picture cannot be empty!');
+            setProfilePictureError(true);
+            error = true;
+        }
         
         if (!error) {
             let opt = {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username: username, email: email, password: password })
+                body: JSON.stringify({ username: username, email: email, password: password, profilePicture: profilePicture })
             }
             fetch('http://144.217.14.182:6361/register', opt).then((response) => {
                 response.json().then((item) => {
                     console.log(item)
                     if (item.status == 'success')
                         setRedirect(true)
-                    else {}
+                    else {
+                        
+                    }
                 })
             });
         }
@@ -246,15 +254,17 @@ const Register = () => {
                           onClick={ handleRegister }>
                             Register
                         </Button>
-                        <Button
+                        <Link
+                          draggable={ false }
+                          to={'/'}
                           size={'md'}
+                          pl={'5%'}
+                          pr={'5%'}
                           width={'25%'}>
-                            <Link
-                              draggable={ false }
-                              to={'/'}>
+                            <Button>
                                 Cancel
-                            </Link>
-                        </Button>
+                            </Button>
+                        </Link>
                     </HStack>
                 </VStack>
                 <HStack width={'30%'} />

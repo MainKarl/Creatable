@@ -27,16 +27,12 @@ const Navbar = () => {
               alignItems={ 'center' }
               justifyContent={ 'space-between' }>
                 <HStack w={ '20%' }>
-                    <Link 
-                      draggable={ false }
-                      to={ "/home" }>
-                        <Image
-                          alt={ 'Creatable-Icon' } 
-                          src={ `Creatable_large.png` }
-                          w={ '10vh' }
-                          h={ '10vh' }
-                          ml={ '6vh' }/>
-                    </Link>
+                    <Image
+                      alt={ 'Creatable-Icon' } 
+                      src={ `Creatable_large.png` }
+                      w={ '10vh' }
+                      h={ '10vh' }
+                      ml={ '6vh' }/>
                 </HStack>
                 <HStack 
                   w={ '65%' }

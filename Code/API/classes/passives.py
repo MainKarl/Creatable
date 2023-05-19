@@ -22,8 +22,9 @@ class passives(get_db().Model):
             'description': self.description,
             'passive_type': self.passive_type
         }
-
     def __init__(self, name, description, passive_type):
         self.name = name
         self.description = description
         self.passive_type = passive_type
+
+

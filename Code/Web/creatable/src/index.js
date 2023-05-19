@@ -17,7 +17,9 @@ import themes from './theme'
 import AccountLayout from './Components/AccountLayout'
 import Login from './Pages/User/Login'
 import Register from './Pages/User/Register'
+
 import Layout from './Components/Layout'
+import CharacterList from './Pages/Characters/CharacterList'
 
 const Index = () => {
   return (
@@ -27,9 +29,9 @@ const Index = () => {
         <Route index={ true } element={ <Login /> } />
         <Route path={ "register" } element={ <Register /> } />
       </Route>
-      { /* <Route path={ "/" } element={ <Layout /> }>
-
-      </Route> */ }
+      <Route path={ "/" } element={ <Layout /> }>
+        <Route path="characters" element={ <CharacterList /> } />
+      </Route>
     </Routes>
   </HashRouter>
   )

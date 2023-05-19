@@ -12,7 +12,7 @@ from classes.types import types
 from classes.users import users
 from classes.weapons import weapons
 from constants import get_app, get_db
-from fonctions import get_join_passive, get_role_id, verify_token
+from fonctions import get_user_id, get_role_id, verify_token
 
 #region Constants
 app = get_app()
@@ -125,46 +125,41 @@ def get_characters():
     token = request.headers.get('Authorization')
     if verify_token(token):
         list_characters = characters.query.join(types, characters.types, isouter=True).join(statuses, characters.statuses, isouter=True).join(skills, characters.skills, isouter=True).join(passives, characters.passives, isouter=True).all()
-        print(list_characters)
         list = []
         character: characters
         for character in list_characters:
             list.append(character.get())
         response = jsonify(list)
         return response
-    else: 
+    else:
         return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })
 @app.route("/character/get_single/<int:id>", methods=['GET'])
 def get_character(id: int):
     token = request.headers.get('Authorization')
     if verify_token(token):
-        print(id)
-        return jsonify(characters.query.filter(characters.id == id).join(types, characters.types, isouter=True).join(statuses, characters.statuses, isouter=True).join(skills, characters.skills, isouter=True).join(passives, characters.passives, isouter=True).one().get())
+        if get_role_id(token) == 1:    
+            return jsonify(characters.query.filter(characters.id == id).join(types, characters.types, isouter=True).join(statuses, characters.statuses, isouter=True).join(skills, characters.skills, isouter=True).join(passives, characters.passives, isouter=True).one().get())
+        else:
+            return jsonify(characters.query.filter(characters.id == id and characters.id == get_user_id(token)).join(types, characters.types, isouter=True).join(statuses, characters.statuses, isouter=True).join(skills, characters.skills, isouter=True).join(passives, characters.passives, isouter=True).one().get())
     else:
         return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })
 @app.route("/character/create", methods=['POST'])
 def create_character():
     token = request.headers.get('Authorization')
-    print(token)
     if verify_token(token):
         data = request.get_json(force=True)
-
-        character = characters(data['name'], data['race'], data['class_id'], data['img'])
+        character = characters(data['name'], data['race'], data['class_id'], int(get_user_id(token)), data['img'])
         type: int
         for type in str(data['types']).split(';'):
             character.types.append(types.query.filter(types.id == type).first())
-        db.session.add(character)
-        db.session.commit()
-
+        get_db().session.add(character)
+        get_db().session.commit()
         name = data['name']
-
         obj = {
             'status': 'success',
             'message': f'{name} successfully created'
         }
-        response = jsonify(obj)
-        response.headers.add('Access-Control-Allow-Origin', '*')
-        return response
+        return jsonify(obj)
     else:
         return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })
 @app.route("/character/delete", methods=['POST'])
@@ -175,16 +170,12 @@ def delete_character():
         character = characters.query.filter(characters.id == data['character_id']).one()
         db.session.delete(character)
         db.session.commit()
-
         name = data['character_id']
-
         obj = {
             'status': 'success',
             'message': f'{name} successfully deleted'
         }
-        response = jsonify(obj)
-        response.headers.add('Access-Control-Allow-Origin', '*')
-        return response
+        return jsonify(obj)
     else:
         print('Permission denied...')
         return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })
@@ -193,7 +184,7 @@ def delete_character():
 def register():
     try:
         data = request.get_json(force=True)
-        user = users(data["username"], data["email"], data["password"], 1)
+        user = users(data["username"], data["email"], data["password"], 1, data["profilePicture"])
         db.session.add(user)
         db.session.commit()
         obj = {
@@ -207,24 +198,23 @@ def register():
             'status': 'failure',
             'message': str(e)
         }
-        response = jsonify(obj)
-        response.headers.add('Access-Control-Allow-Origin', '*')
-        return response
+        return jsonify(obj)
 @app.route("/login", methods=['POST'])
 def login():
     data = request.get_json(force=True)
+    user: users
     user = users.query.filter(users.email == data['email']).one()
     if user.verify_password(data['password']):
+        auth_token: bytes
         auth_token = user.encode_auth_token(user.id, user.role)
         if auth_token:
             obj = {
                 'status': 'success',
                 'message': 'Successfully logged in...',
-                'auth_token': auth_token.decode('utf8'),
+                'auth_token': auth_token,
                 'role': user.role
             }
-            response = jsonify(obj)
-            return response
+            return jsonify(obj)
     return jsonify({
         'status': 'failure',
         'message': 'Some error occured. Please try again.'

@@ -78,10 +78,10 @@ const Login = () => {
             }
             fetch('http://144.217.14.182:6361/login', obj).then((response) => {
                 response.json().then((item) => {
-                    console.log(item);
+                    console.log(item)
                     if (item.status == 'success') {
-                        localStorage.setItem("token_auth", item.auth_token);
-                        setRedirect(true);
+                        localStorage.setItem("token_auth", item.auth_token)
+                        setRedirect(true)
                     }
                     else {
                         errorList.push('CONNEXION ERROR: Your email or password is not accurate')
@@ -96,7 +96,7 @@ const Login = () => {
         <Box 
           minHeight={'100vh'}
           backgroundColor={backgroundColor}>
-            { redirect ? (<Navigate push to="/home"/>) : null }
+            { redirect ? (<Navigate push to="/characters"/>) : null }
             <Flex
               alignItems={'center'} 
               justifyContent={'space-between'} 
