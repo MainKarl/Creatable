@@ -25,12 +25,12 @@ const Index = () => {
   return (
   <HashRouter>
     <Routes>
-      <Route path={ "/" } element={ <AccountLayout /> }>
-        <Route index={ true } element={ <Login /> } />
-        <Route path={ "register" } element={ <Register /> } />
+      <Route key={ 'accountLayout' } path={ "/" } element={ <AccountLayout /> }>
+        <Route key={ 'login' } index={ true } element={ <Login /> } />
+        <Route key={ 'register' } path={ "register" } element={ <Register /> } />
       </Route>
-      <Route path={ "/" } element={ <Layout /> }>
-        <Route path="characters" element={ <CharacterList /> } />
+      <Route key={ 'normalLayout'} path={ "/" } element={ <Layout /> }>
+        <Route key={ 'characters' } path="characters" element={ <CharacterList /> } />
       </Route>
     </Routes>
   </HashRouter>

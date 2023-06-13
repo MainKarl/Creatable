@@ -11,8 +11,9 @@ class types(get_db().Model):
 
     def get(self):
         return {
-            'type_id': self.id,
-            'name': self.name
+            'id': self.id,
+            'value': self.name,
+            'selected': False
         }
 
     def __init__(self, name):

@@ -164,7 +164,7 @@ const Register = () => {
                             <FormLabel color={ textColor }>Profile Picture</FormLabel>
                             <Image
                               fit={ 'contain' }
-                              backgroundColor={ tbackgroundColor }
+                              backgroundColor={ inputBackgroundColor }
                               borderColor={ inputBorderColor }
                               boxSize={ 'sm' } 
                               ml={ 'auto' } 

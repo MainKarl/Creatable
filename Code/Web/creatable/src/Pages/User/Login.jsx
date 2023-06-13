@@ -76,19 +76,16 @@ const Login = () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email: email, password: password })
             }
-            fetch('http://144.217.14.182:6361/login', obj).then((response) => {
+            fetch(data.api_url+'login', obj).then((response) => {
                 response.json().then((item) => {
-                    console.log(item)
                     if (item.status == 'success') {
                         localStorage.setItem("token_auth", item.auth_token)
                         setRedirect(true)
                     }
-                    else {
+                    else
                         errorList.push('CONNEXION ERROR: Your email or password is not accurate')
-                        //alert.show(errorList)
-                    }
-                });
-            });
+                })
+            })
         }
     }
 
