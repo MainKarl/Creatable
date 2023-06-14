@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
 import {
     Box,
     Flex,
@@ -8,19 +7,20 @@ import {
     useColorModeValue,
     Text,
     Divider,
-    Grid,
-    GridItem,
+    SimpleGrid,
     IconButton,
     NumberInput,
     NumberInputField,
     NumberInputStepper,
     NumberIncrementStepper,
     NumberDecrementStepper,
-    useDisclosure
+    useDisclosure,
+    filter
 } from '@chakra-ui/react'
 import { AddIcon } from '@chakra-ui/icons'
 import CustomDrawer from '../../Components/CustomDrawer'
-
+import CharacterDetail from './CharacterDetail'
+import { PageChanger } from '../../Components/PageChanger'
 
 const CharacterList = () => {
     let data = require('../../data.json')
@@ -30,6 +30,50 @@ const CharacterList = () => {
 
     const [minLevel, setMinLevel] = useState(0)
     const [maxLevel, setMaxLevel] = useState(0)
+
+    const [races] = useState([
+        {
+            id: 1,
+            value: 'None'
+        },
+        {
+           id: 2,
+           value: 'Human'
+        },
+        {
+            id: 3,
+            value: 'Elf'
+        },
+        {
+            id: 4,
+            value: 'Demon'
+        },
+        {
+            id: 5,
+            value: 'Kitsune'
+        },
+        {
+            id: 6,
+            value: 'Wolfskin'
+        },
+        {
+            id: 7,
+            value: 'Voidoid'
+        },
+        {
+            id: 8,
+            value: 'Undead'
+        },
+        {
+            id: 9,
+            value: 'Monster'
+        }
+    ])
+    const [filterRace, setFilterRace] = useState('None')
+    const [pageFilter, setPageFilter] = useState(1)
+    
+    let itemCounter = 0
+    const resetItemCounter = () => { itemCounter = 0 }
 
     const { isOpen: cDrawerIsOpen, onOpen: cDrawerOnOpen, onClose: cDrawerOnClose } = useDisclosure()
     const [seeDrawer, setSeeDrawer] = useState(false)
@@ -117,8 +161,30 @@ const CharacterList = () => {
     let textColor = useColorModeValue(data.colors[0].textcolor, data.colors[1].textcolor)
     let alternateTextColor = useColorModeValue(data.colors[0].textalternatecolor1, data.colors[1].textalternatecolor1)
 
-    const filterCharacters = () => {
-
+    const verifyCharacter = (item) => {
+        itemCounter++
+        return (verifyFilter(item) && verifyPage())
+    }
+    const verifyFilter = (item) => {
+        if (minLevel > 0 && item.level < minLevel)
+            return false
+        if (maxLevel > 0 && item.level > maxLevel)
+            return false
+        if (filterRace !== 'None' && item.race !== filterRace)
+            return false
+            
+        return true
+    }
+    const verifyPage = () => {
+        if (itemCounter > (pageFilter - 1) * 4 && itemCounter <= pageFilter * 4)
+            return true
+        return false
+    }
+    const changePage = (pageNumber, lists) => {
+        if (pageNumber > 0 && lists.length > ((pageNumber - 1) * 4)) {
+            window.scrollTo(0, 0)
+            setPageFilter(pageNumber)
+        }
     }
     const getRace = (id) => {
         switch (id) {
@@ -141,7 +207,7 @@ const CharacterList = () => {
         }
     }
 
-    const createCharacter = (list) => {
+    const createCharacter = async (list) => {
         const obj = {
             method: 'POST',
             headers: {
@@ -152,6 +218,7 @@ const CharacterList = () => {
         fetch(data.api_url + 'character/create', obj).then(response => {
             response.json().then(item => {
                 console.log(item)
+                getCharacters()
             })
         })
         cDrawerOnClose()
@@ -178,8 +245,8 @@ const CharacterList = () => {
         event.preventDefault()
     }
 
-    const getCharacters = async () => {       
-        fetch(data.api_url + 'character/get', {
+    const getCharacters = async () => {     
+        const obj = {
             method: 'GET',
             mode: 'cors',
             cache: 'default',
@@ -187,22 +254,8 @@ const CharacterList = () => {
             headers: {
                 'Authorization': localStorage.getItem('token_auth')
             }
-        }).then((response) => {
-            response.json().then((items) => {
-                console.log(items)
-                let list = []
-                items.map((item) => {
-                    list.push({
-                        id: item.character_id,
-                        name: item.name,
-                        race: item.race,
-                        level: item.level,
-                        img: item.img
-                    })
-                })
-                setCharactersJson(list)
-            })
-        })
+        }
+        fetch(data.api_url + 'character/get', obj).then(response => response.json().then(items => setCharactersJson(items)))
     }
 
     const getClass = () => {
@@ -278,7 +331,13 @@ const CharacterList = () => {
     }
 
     useEffect(() => {
-        filterCharacters()
+        setCharacters(charactersJson.filter(verifyCharacter))
+    }, [pageFilter])
+
+    useEffect(() => {
+        setPageFilter(1)
+        resetItemCounter()
+        setCharacters(charactersJson.filter(verifyCharacter))
     }, [charactersJson])
 
     useEffect(() => {
@@ -289,16 +348,15 @@ const CharacterList = () => {
 
     return (
         <Box
-          minH={ '88vh' }
-          backgroundColor={ backgroundColor }>
+          w={ '100%' }
+          h={ '100%' }
+          minH={ '87vh' }
+          bgColor={ backgroundColor }>
             <Flex
-              alignItems={ 'center' } 
-              justifyContent={ 'space-between' } 
-              padding={ '0' }
-              minHeight={ '88vh' }>
-                <VStack 
+              padding={ '0' }>
+                <VStack
                   w={' 15%' }
-                  minH={ '88vh' }
+                  minH={ '87vh' }
                   bgColor={ sbackgroundColor }>
                     <Text 
                       w={ '80%' } 
@@ -379,7 +437,7 @@ const CharacterList = () => {
                     </HStack>
                 </VStack>
                 <VStack 
-                  w={ '75%' }
+                  w={ '80%' }
                   color={ textColor }
                   padding={ '2%' }>
                     <HStack 
@@ -397,18 +455,22 @@ const CharacterList = () => {
                         <Divider color={ alternateTextColor } />
                     </HStack>
                     <VStack w={ '100%' }>
-                        <Grid>
-                            { characters.map((character) => (
-                                    <Link to={ 'characterdetail/'} state={{ character_id: character.id }}>
-                                        <GridItem>
-                                        </GridItem>
-                                    </Link>
+                        <SimpleGrid 
+                          w={ '100%' }
+                          h={ '100%' }
+                          columns={ 2 } 
+                          spacing={ 5 }>
+                            { characters.map(character => (
+                                    <CharacterDetail
+                                      key={ character.id }
+                                      data={ character }/>
                                 )) 
-                            }                       
-                        </Grid>
+                            }     
+                        </SimpleGrid>
+                        <PageChanger changePage={ changePage } filteredItems={ charactersJson } pageFilter={ pageFilter } itemsPerPage={ 4 } />       
                     </VStack>
                 </VStack>
-                <HStack w={ '10%' } />
+                <HStack w={ '5%' } />
             </Flex>
             { seeDrawer && 
                 <CustomDrawer

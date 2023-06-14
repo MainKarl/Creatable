@@ -22,7 +22,8 @@ import {
     ViewIcon,
     ViewOffIcon
 } from '@chakra-ui/icons'
-let data = require('../../data.json');
+
+let data = require('../../data.json')
 
 const Register = () => {
     const [redirect, setRedirect] = useState(false);
@@ -126,33 +127,46 @@ const Register = () => {
             });
         }
     }
-
+    
     return (
         <Box
-          minH={'100vh'}
-          backgroundColor={backgroundColor}>
+        minH={'100vh'}
+        backgroundColor={backgroundColor}>
             { redirect ? (<Navigate push to="/"/>) : null }
             <Flex
-              alignItems={'center'}
-              justifyContent={'space-between'}
-              padding={'0 5%'}
-              minH={'88vh'}>
+                padding={'0 5%'}>
                 <HStack width={'30%'} />
                 <VStack
-                  width={'40%'}
-                  backgroundColor={sbackgroundColor}
-                  color={textColor}
-                  top={'50%'}
-                  position={'relative'}
-                  spacing={'20px'}
-                  padding={'2%'}>
+                    w={'40%'}
+                    h={'100vh'}
+                    backgroundColor={sbackgroundColor}
+                    color={textColor}
+                    top={'50%'}
+                    position={'relative'}
+                    spacing={'20px'}
+                    padding={'2%'}
+                    overflow={ 'scroll' }
+                    css={{
+                        '&::-webkit-scrollbar': {
+                            width: '15px',
+                            height: '100%'
+                        },
+                        '&::-webkit-scrollbar-track': {
+                            background: sbackgroundColor,
+                        },
+                        '&::-webkit-scrollbar-thumb': {
+                            backgroundColor: tbackgroundColor,
+                            borderRadius: '20px',
+                            border: `3px solid ${sbackgroundColor}`
+                        },
+                    }}>
                     <HStack width={'100%'}>
                         <Text
-                          color={textColor} 
-                          textAlign={'center'} 
-                          width={'100%'}
-                          fontSize={'24px'}
-                          fontWeight={'bold'}>
+                            color={textColor} 
+                            textAlign={'center'} 
+                            width={'100%'}
+                            fontSize={'24px'}
+                            fontWeight={'bold'}>
                             Register
                         </Text>
                     </HStack>
@@ -163,22 +177,22 @@ const Register = () => {
                         <FormControl isInvalid={ profilePictureError }>
                             <FormLabel color={ textColor }>Profile Picture</FormLabel>
                             <Image
-                              fit={ 'contain' }
-                              backgroundColor={ inputBackgroundColor }
-                              borderColor={ inputBorderColor }
-                              boxSize={ 'sm' } 
-                              ml={ 'auto' } 
-                              mr={ 'auto' } 
-                              mb={ '1%' } 
-                              borderRadius={ 'full' } 
-                              src={ profilePicture } 
-                              fallbackSrc={ 'http://144.217.14.182/img/notFound.jpg' } />
+                                fit={ 'contain' }
+                                backgroundColor={ inputBackgroundColor }
+                                borderColor={ inputBorderColor }
+                                boxSize={ 'sm' } 
+                                ml={ 'auto' } 
+                                mr={ 'auto' } 
+                                mb={ '1%' } 
+                                borderRadius={ 'full' } 
+                                src={ profilePicture } 
+                                fallbackSrc={ 'http://144.217.14.182/img/notFound.jpg' } />
                             <InputGroup>
                                 <Input
-                                  type={ 'text' }
-                                  backgroundColor={ inputBackgroundColor }
-                                  borderColor={ inputBorderColor }
-                                  onChange={ (value) => changeProfilePicture(value.target.value) }/>
+                                    type={ 'text' }
+                                    backgroundColor={ inputBackgroundColor }
+                                    borderColor={ inputBorderColor }
+                                    onChange={ (value) => changeProfilePicture(value.target.value) }/>
                             </InputGroup>
                             <FormErrorMessage>{ profilePictureErrorMessage }</FormErrorMessage>
                         </FormControl>
@@ -188,10 +202,10 @@ const Register = () => {
                             <FormLabel color={ textColor }>Email</FormLabel>
                             <InputGroup>
                                 <Input 
-                                  type={ 'text' }
-                                  backgroundColor={ inputBackgroundColor }
-                                  borderColor={ inputBorderColor }
-                                  onChange={ (nEmail) => changeEmail(nEmail.target.value) }/>
+                                    type={ 'text' }
+                                    backgroundColor={ inputBackgroundColor }
+                                    borderColor={ inputBorderColor }
+                                    onChange={ (nEmail) => changeEmail(nEmail.target.value) }/>
                             </InputGroup>
                             <FormErrorMessage>{ emailErrorMessage }</FormErrorMessage>
                         </FormControl>
@@ -201,10 +215,10 @@ const Register = () => {
                             <FormLabel color={ textColor }>Username</FormLabel>
                             <InputGroup>
                                 <Input 
-                                  type={ 'text' }
-                                  backgroundColor={ inputBackgroundColor }
-                                  borderColor={ inputBorderColor }
-                                  onChange={ (nUsername) => changeUsername(nUsername.target.value) }/>
+                                    type={ 'text' }
+                                    backgroundColor={ inputBackgroundColor }
+                                    borderColor={ inputBorderColor }
+                                    onChange={ (nUsername) => changeUsername(nUsername.target.value) }/>
                             </InputGroup>
                             <FormErrorMessage>{ usernameErrorMessage }</FormErrorMessage>
                         </FormControl>
@@ -214,10 +228,10 @@ const Register = () => {
                             <FormLabel color={ textColor }>Password</FormLabel>
                             <InputGroup>
                                 <Input
-                                  type={ passwordVisibility ? 'text' : 'password' }
-                                  backgroundColor={ inputBackgroundColor }
-                                  borderColor={ inputBorderColor }
-                                  onChange={ (nPassword) => changePassword(nPassword.target.value) } />
+                                    type={ passwordVisibility ? 'text' : 'password' }
+                                    backgroundColor={ inputBackgroundColor }
+                                    borderColor={ inputBorderColor }
+                                    onChange={ (nPassword) => changePassword(nPassword.target.value) } />
                                 <InputRightElement>
                                     <IconButton h='1.75rem' size='sm' onClick={ togglePasswordVisibility }>
                                         {passwordVisibility ?  <ViewOffIcon /> : <ViewIcon /> }
@@ -232,10 +246,10 @@ const Register = () => {
                             <FormLabel color={ textColor }>Password Confirmation</FormLabel>
                             <InputGroup>
                                 <Input
-                                  type={ passwordConfirmationVisibility ? 'text' : 'password' }
-                                  backgroundColor={ inputBackgroundColor }
-                                  borderColor={ inputBorderColor }
-                                  onChange={ (nPasswordConfirmation) => changePasswordConfirmation(nPasswordConfirmation.target.value) }/>
+                                    type={ passwordConfirmationVisibility ? 'text' : 'password' }
+                                    backgroundColor={ inputBackgroundColor }
+                                    borderColor={ inputBorderColor }
+                                    onChange={ (nPasswordConfirmation) => changePasswordConfirmation(nPasswordConfirmation.target.value) }/>
                                 <InputRightElement>
                                     <IconButton h={ '1.75rem' } size={ 'sm' } onClick={ togglePasswordConfirmationVisibility }>
                                         { passwordConfirmationVisibility ? <ViewOffIcon /> : <ViewIcon /> }
@@ -247,20 +261,20 @@ const Register = () => {
                     </HStack>
                     <HStack width={'100%'}>
                         <Button
-                          size={'md'}
-                          colorScheme={'orange'}
-                          marginLeft={'25%'}
-                          width={'25%'}
-                          onClick={ handleRegister }>
+                            size={'md'}
+                            colorScheme={'orange'}
+                            marginLeft={'25%'}
+                            width={'25%'}
+                            onClick={ handleRegister }>
                             Register
                         </Button>
                         <Link
-                          draggable={ false }
-                          to={'/'}
-                          size={'md'}
-                          pl={'5%'}
-                          pr={'5%'}
-                          width={'25%'}>
+                            draggable={ false }
+                            to={'/'}
+                            size={'md'}
+                            pl={'5%'}
+                            pr={'5%'}
+                            width={'25%'}>
                             <Button>
                                 Cancel
                             </Button>
