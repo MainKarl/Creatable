@@ -124,7 +124,12 @@ def get_skill():
 def get_characters():
     token = request.headers.get('Authorization')
     if verify_token(token):
-        list_characters = characters.query.join(types, characters.types, isouter=True).join(statuses, characters.statuses, isouter=True).join(skills, characters.skills, isouter=True).join(passives, characters.passives, isouter=True).all()
+        tuser_id = get_user_id(token)
+        trole_id = get_role_id(token)
+        if trole_id != 1:
+            list_characters = characters.query.filter(characters.user_id == tuser_id).join(types, characters.types, isouter=True).join(statuses, characters.statuses, isouter=True).join(skills, characters.skills, isouter=True).join(passives, characters.passives, isouter=True).all()
+        else:
+            list_characters = characters.query.join(types, characters.types, isouter=True).join(statuses, characters.statuses, isouter=True).join(skills, characters.skills, isouter=True).join(passives, characters.passives, isouter=True).all()
         list = []
         character: characters
         for character in list_characters:

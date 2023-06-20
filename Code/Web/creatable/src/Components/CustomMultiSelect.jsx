@@ -56,7 +56,7 @@ const CustomMultiSelect = ({ message, list, selectedList, onAdd, onRemove }) => 
                   borderBottomRadius={ '5px' }
                   position={ 'absolute' }>
                     { props.map(item => {
-                        if (String(selectedList.value).split(';').find(element => String(element).match(String(item.id))) !== undefined) {
+                        if (String(selectedList.value).split(';').find(element => String(element).includes(String(item.id))) !== undefined) {
                             return <HStack 
                               key={ item.id }
                               w={ '100%' }

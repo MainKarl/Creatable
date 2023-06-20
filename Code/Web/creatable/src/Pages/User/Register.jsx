@@ -115,7 +115,7 @@ const Register = () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username: username, email: email, password: password, profilePicture: profilePicture })
             }
-            fetch('http://144.217.14.182:6361/register', opt).then((response) => {
+            fetch('http://144.217.14.182:6362/register', opt).then((response) => {
                 response.json().then((item) => {
                     console.log(item)
                     if (item.status == 'success')
