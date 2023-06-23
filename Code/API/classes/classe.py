@@ -43,7 +43,8 @@ class classe(get_db().Model):
     def get_simplified(self):
         return {
             'id': self.id,
-            'value': self.name
+            'value': self.name,
+            'selected': False
         }
 
     def __init__(self, name, hp_g, strength_g, defense_g, magic_g, resistance_g, speed_g, skill_g, luck_g, mana_g, class_serie, predecessor):

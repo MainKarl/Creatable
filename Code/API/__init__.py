@@ -97,9 +97,18 @@ def get_class():
         return jsonify(list)
     else: 
         return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })
-
+@app.route("/class/get_list", methods=['GET'])
+def get_list_class():
+    if verify_token(request.headers.get('Authorization')):
+        list = []
+        classe: Classes
+        for classe in Classes.query.join(passives, Classes.passives, isouter=True).all():
+            list.append(classe.get_simplified())
+        return jsonify(list)
+    else: 
+        return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })
 @app.route("/class/get_basic", methods=['GET'])
-def get_classic_class():
+def get_basic_class():
     if verify_token(request.headers.get('Authorization')):
         list = []
         classe: Classes
@@ -148,6 +157,21 @@ def get_character(id: int):
             return jsonify(characters.query.filter(characters.id == id and characters.id == get_user_id(token)).join(types, characters.types, isouter=True).join(statuses, characters.statuses, isouter=True).join(skills, characters.skills, isouter=True).join(passives, characters.passives, isouter=True).one().get())
     else:
         return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })
+@app.route("/character/get_passive/<int:id>", methods=['GET'])
+def get_passive_character(id: int):
+    token = request.headers.get('Authorization')
+    if verify_token(token):
+        list_passives = passives.query.filter(passives.passive_type == 'Other').all()
+        character: characters
+        character = characters.query.filter(characters.id == id).one()
+        list = []
+        passive: passives
+        for passive in list_passives:
+            if character.has_passive(passive) == False:
+                list.append(passive.get_passive())
+        return jsonify(list)
+    else:
+        return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })        
 @app.route("/character/create", methods=['POST'])
 def create_character():
     token = request.headers.get('Authorization')
@@ -184,6 +208,165 @@ def delete_character():
     else:
         print('Permission denied...')
         return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })
+
+@app.route("/character/rest", methods=['POST'])
+def rest_character():
+    token = request.headers.get('Authorization')
+    if verify_token(token):
+        data = request.get_json(force=True)
+        character: characters
+        character = characters.query.filter(characters.id == data['id']).one()
+        character.rest()
+        get_db().session.commit()
+        return jsonify({
+            'status': 'success',
+            'message': 'Rest successful'
+        })
+    else: 
+        return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })
+@app.route("/character/levelup/<int:id>", methods=['POST'])
+def levelup_character(id: int):
+    token = request.headers.get('Authorization')
+    if verify_token(token):
+        character: characters
+        character = characters.query.filter(characters.id == id).one()
+        character.level_up()
+        get_db().session.commit()
+        return jsonify({
+            'status': 'success',
+            'message': 'Level up successful'
+        })
+    else: 
+        return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })
+
+@app.route("/character/change_type", methods=['POST'])
+def change_type_character():
+    token = request.headers.get('Authorization')
+    if verify_token(token):
+        data = request.get_json(force=True)
+
+        character: characters
+        character = characters.query.filter(characters.id == data['id']).one()
+        character.types.clear()
+
+        type: int
+        for type in str(data['types']).split(';'):
+            character.types.append(types.query.filter(types.id == type).first())
+        get_db().session.commit()
+        return jsonify({
+            'status': 'success',
+            'message': 'Types successfully changed'
+        })
+    else: 
+        return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })
+@app.route("/character/change_status", methods=['POST'])
+def change_status_character():
+    token = request.headers.get('Authorization')
+    if verify_token(token):
+        data = request.get_json(force=True)
+        character: characters
+        character = characters.query.filter(characters.id == data['id']).one()
+        character.rest()
+        if data['status'] != '':
+            character.define_status(data['status'])
+        get_db().session.commit()
+        return jsonify({
+            'status': 'success',
+            'message': 'Status successfully changed'
+        })
+    else: 
+        return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })
+@app.route("/character/change_stat", methods=['POST'])
+def change_stat_character():
+    token = request.headers.get('Authorization')
+    if verify_token(token):
+        data = request.get_json(force=True)
+        character: characters
+        character = characters.query.filter(characters.id == data['id']).one()
+        character.change_stat(data['hp'], data['hp_growth'], data['strength'], data['strength_growth'], data['defense'], data['defense_growth'], data['magic'], data['magic_growth'], data['resistance'], data['resistance_growth'], data['speed'], data['speed_growth'], data['skill'], data['skill_growth'], data['luck'], data['luck_growth'], data['mana'], data['mana_growth'])
+        get_db().session.commit()
+        return jsonify({
+            'status': 'success',
+            'message': 'Stats successfully changed'
+        })
+    else: 
+        return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })
+@app.route("/character/change_magic", methods=['POST'])
+def change_magic_character():
+    token = request.headers.get('Authorization')
+    if verify_token(token):
+        data = request.get_json(force=True)
+        character: characters
+        character = characters.query.filter(characters.id == data['id']).one()
+        character.add_magic(data['arcane'], data['illusion'], data['mind'], data['fire'], data['heat'], data['lava'], data['water'], data['liquid'], data['ice'], data['air'], data['wind'], data['lightning'], data['earth'], data['poison'], data['nature'], data['light'], data['space'], data['holy'], data['dark'], data['necromancy'], data['curse'])
+        get_db().session.commit()
+        return jsonify({
+            'status': 'success',
+            'message': 'Magic successfully changed'
+        })
+    else: 
+        return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })
+@app.route("/character/change_weapon_rank", methods=['POST'])
+def change_weapon_rank_character():
+    token = request.headers.get('Authorization')
+    if verify_token(token):
+        data = request.get_json(force=True)
+        character: characters
+        character = characters.query.filter(characters.id == data['id']).one()
+        character.change_weapon_rank(data['sword'], data['spear'], data['axe'], data['dagger'], data['staff'], data['bow'], data['fist'], data['other'])
+        get_db().session.commit()
+        return jsonify({
+            'status': 'success',
+            'message': 'Weapon Rank successfully changed'
+        })
+    else: 
+        return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })
+@app.route("/character/change_rank", methods=['POST'])
+def change_rank_character():
+    token = request.headers.get('Authorization')
+    if verify_token(token):
+        data = request.get_json(force=True)
+        character: characters
+        character = characters.query.filter(characters.id == data['id']).one()
+        character.define_magic_rank(data['magic'])
+        character.define_spirit_rank(data['spirit'])
+        get_db().session.commit()
+        return jsonify({
+            'status': 'success',
+            'message': 'Weapon Rank successfully changed'
+        })
+    else: 
+        return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })
+@app.route("/character/change_class", methods=['POST'])
+def change_class():
+    token = request.headers.get('Authorization')
+    if verify_token(token):
+        data = request.get_json(force=True)
+        character: characters
+        character = characters.query.filter(characters.id == data['id']).one()
+        character.change_class(data['class'])
+        get_db().session.commit()
+        return jsonify({
+            'status': 'success',
+            'message': 'Weapon Rank successfully changed'
+        })
+    else: 
+        return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })        
+@app.route("/character/add_passive", methods=['POST'])
+def add_passive():
+    token = request.headers.get('Authorization')
+    if verify_token(token):
+        data = request.get_json(force=True)
+        character: characters
+        character = characters.query.filter(characters.id == data['id']).one()
+        character.add_passives(data['passive'])
+        get_db().session.commit()
+        return jsonify({
+            'status': 'success',
+            'message': 'Passives successfully changed'
+        })
+    else:
+        return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })        
 
 @app.route("/register", methods=['POST'])
 def register():

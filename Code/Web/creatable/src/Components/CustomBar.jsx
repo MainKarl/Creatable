@@ -22,7 +22,7 @@ const CustomBar = ({ value, max }) => {
     return (
         <HStack w={ '100%' } m={ '5%' } bgColor={ barColor } borderRadius={ '10px' }>
             <Center w={ '100%' } h={ '100%' }>
-                <Text>{ value } / { max }</Text>
+                <Text>{ Number(value).toFixed() } / { Number(max).toFixed() }</Text>
             </Center>
         </HStack>
     )

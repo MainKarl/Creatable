@@ -21,6 +21,7 @@ import { AddIcon } from '@chakra-ui/icons'
 import CustomDrawer from '../../Components/CustomDrawer'
 import CharacterDetail from './CharacterDetail'
 import { PageChanger } from '../../Components/PageChanger'
+import { GiConsoleController } from 'react-icons/gi'
 
 const CharacterList = () => {
     let data = require('../../data.json')
@@ -141,6 +142,10 @@ const CharacterList = () => {
                 {
                     id: 8,
                     value: 'Monster'
+                },
+                {
+                    id: 9,
+                    value: 'Dragonoid'
                 }
             ],
             hasError: false,
@@ -153,6 +158,11 @@ const CharacterList = () => {
             ]
         }
     ])
+
+    const { isOpen: mDrawerIsOpen, onOpen: mDrawerOnOpen, onClose: mDrawerOnClose } = useDisclosure()
+    const [seeMDrawer, setSeeMDrawer] = useState(false)
+    const [mDrawerData, setMDrawerData] = useState([])
+    const [mId, setMId] = useState(0)
 
     let backgroundColor = useColorModeValue(data.colors[0].basicbackgroundcolor, data.colors[1].basicbackgroundcolor)
     let sbackgroundColor = useColorModeValue(data.colors[0].darkerbackgroundcolor1, data.colors[1].darkerbackgroundcolor1)
@@ -204,6 +214,38 @@ const CharacterList = () => {
                 return 'Undead'
             case 8:
                 return 'Monster'
+            case 9:
+                return 'Dragonoid'
+        }
+    }
+    const getWeaponRank = (id) => {
+        switch (id) {
+            case 1:
+                return 'E'
+            case 2:
+                return 'D'
+            case 3:
+                return 'C'
+            case 4:
+                return 'B'
+            case 5:
+                return 'A'
+            case 6:
+                return 'S'
+        }
+    }
+    const getRank = (id) => {
+        switch (id) {
+            case 1:
+                return 'Basic'
+            case 2:
+                return 'Expert'
+            case 3:
+                return 'Sage'
+            case 4:
+                return 'Dragon'
+            case 5:
+                return 'God'
         }
     }
 
@@ -245,6 +287,249 @@ const CharacterList = () => {
         event.preventDefault()
     }
 
+    const changeToCharacter = async (id, value) => {
+        setMId(id)
+        setMDrawerData(value)
+        setSeeMDrawer(true)
+        mDrawerOnOpen()
+    }
+
+    const submitModify = async (list) => {
+        if (list[0].name === 'types') {
+            fetch(data.api_url + 'character/change_type', {
+                method: 'POST',
+                mode: 'cors',
+                cache: 'default',
+                redirect: 'manual',
+                headers: {
+                    'Authorization': localStorage.getItem('token_auth'),
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ id: mId, types: list[0].value })
+            }).then((response) => {
+                response.json().then((item) => {
+                    setSeeMDrawer(false)
+                    getCharacters()
+                })
+            })
+        } else if (list[0].name === 'status') {
+            fetch(data.api_url + 'character/change_status', {
+                method: 'POST',
+                mode: 'cors',
+                cache: 'default',
+                redirect: 'manual',
+                headers: {
+                    'Authorization': localStorage.getItem('token_auth'),
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ id: mId, status: list[0].value })
+            }).then((response) => {
+                response.json().then((item) => {
+                    setSeeMDrawer(false)
+                    getCharacters()
+                })
+            })
+        } else if (list[0].name === 'HP') {
+            fetch(data.api_url+'character/change_stat', {
+                method: 'POST',
+                mode: 'cors',
+                cache: 'default',
+                redirect: 'manual',
+                headers: {
+                    'Authorization': localStorage.getItem('token_auth'),
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ 
+                    id: mId, 
+                    hp: list[0].value, 
+                    hp_growth: list[1].value,
+                    strength: list[2].value,
+                    strength_growth: list[3].value,
+                    defense: list[4].value,
+                    defense_growth: list[5].value,
+                    magic: list[6].value,
+                    magic_growth: list[7].value,
+                    resistance: list[8].value,
+                    resistance_growth: list[9].value,
+                    speed: list[10].value,
+                    speed_growth: list[11].value,
+                    skill: list[12].value,
+                    skill_growth: list[13].value,
+                    luck: list[14].value,
+                    luck_growth: list[15].value,
+                    mana: list[16].value,
+                    mana_growth: list[17].value
+                })
+            }).then(response => {
+                response.json().then(item => {
+                    setSeeMDrawer(false)
+                    getCharacters()
+                })
+            })
+        } else if (list[0].name === 'Arcane') {
+            fetch(data.api_url+'/character/change_magic', {
+                method: 'POST',
+                mode: 'cors',
+                cache: 'default',
+                redirect: 'manual',
+                headers: {
+                    'Authorization': localStorage.getItem('token_auth'),
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id: mId,
+                    arcane: list[0].value,
+                    illusion: list[1].value,
+                    mind: list[2].value,
+                    fire: list[3].value,
+                    heat: list[4].value,
+                    lava: list[5].value,
+                    water: list[6].value,
+                    liquid: list[7].value,
+                    ice: list[8].value,
+                    air: list[9].value,
+                    wind: list[10].value,
+                    lightning: list[11].value,
+                    earth: list[12].value,
+                    nature: list[13].value,
+                    poison: list[14].value,
+                    light: list[15].value,
+                    holy: list[16].value,
+                    space: list[17].value,
+                    dark: list[18].value,
+                    curse: list[19].value,
+                    necromancy: list[20].value
+                })
+            }).then(response => {
+                response.json().then(item => {
+                    setSeeMDrawer(false)
+                    getCharacters()
+                })
+            })
+        } else if (list[0].name === 'Sword') {
+            fetch(data.api_url+'/character/change_weapon_rank', {
+                method: 'POST',
+                mode: 'cors',
+                cache: 'default',
+                redirect: 'manual',
+                headers: {
+                    'Authorization': localStorage.getItem('token_auth'),
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id: mId,
+                    sword: getWeaponRank(list[0].value),
+                    spear: getWeaponRank(list[1].value),
+                    axe: getWeaponRank(list[2].value),
+                    dagger: getWeaponRank(list[3].value),
+                    staff: getWeaponRank(list[4].value),
+                    bow: getWeaponRank(list[5].value),
+                    fist: getWeaponRank(list[6].value),
+                    other: getWeaponRank(list[7].value)
+                })
+            }).then(response => {
+                response.json().then(item => {
+                    setSeeMDrawer(false)
+                    getCharacters()
+                })
+            })
+        } else if (list[0].name === 'Magic Rank') {
+            fetch(data.api_url+'/character/change_rank', {
+                method: 'POST',
+                mode: 'cors',
+                cache: 'default',
+                redirect: 'manual',
+                headers: {
+                    'Authorization': localStorage.getItem('token_auth'),
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ id: mId, magic: getRank(list[0].value), spirit: getRank(list[1].value) })
+            }).then(response => {
+                response.json().then(item => {
+                    setSeeMDrawer(false)
+                    getCharacters()
+                })
+            })
+        } else if (list[0].name === 'passive') {
+            fetch(data.api_url+'character/add_passive', {
+                method: 'POST',
+                mode: 'cors',
+                cache: 'default',
+                redirect: 'manual',
+                headers: {
+                    'Authorization': localStorage.getItem('token_auth'),
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ id: mId, passive: list[0].value })
+            }).then(response => {
+                response.json().then(item => {
+                    setSeeMDrawer(false)
+                    getCharacters()
+                })
+            })
+        } else if (list[0].name === 'class') {
+            fetch(data.api_url+'character/change_class', {
+                method: 'POST',
+                mode: 'cors',
+                cache: 'default',
+                redirect: 'manual',
+                headers: {
+                    'Authorization': localStorage.getItem('token_auth'),
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ id: mId, class: list[0].value })
+            }).then(response => {
+                response.json().then(item => {
+                    setSeeMDrawer(false)
+                    getCharacters()
+                })
+            })
+        }
+    }
+
+    const callRest = (nId) => {
+        fetch(data.api_url + 'character/rest', {
+            method: 'POST',
+            mode: 'cors',
+            cache: 'default',
+            redirect: 'manual',
+            headers: {
+                'Authorization': localStorage.getItem('token_auth'),
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id: nId })
+        }).then(response => {
+            response.json().then(item => {
+                getCharacters()
+            })
+        })
+    }
+    const callLevelUp = (nId) => {
+        fetch(data.api_url+'character/levelup/'+nId, {
+            method: 'POST',
+            mode: 'cors',
+            cache: 'default',
+            redirect: 'manual',
+            headers: {
+                'Authorization': localStorage.getItem('token_auth'),
+                'Content-Type': 'application/json'
+            }
+        }).then(response => {
+            response.json().then(item => {
+                getCharacters()
+            })
+        })
+    }
+
+    const orderBy = (a, b) => {
+        if (a.name < b.name){
+            return -1
+        }
+        if (a.name > b.name){
+            return 1
+        }
+        return 0
+    }
     const getCharacters = async () => {     
         const obj = {
             method: 'GET',
@@ -255,9 +540,11 @@ const CharacterList = () => {
                 'Authorization': localStorage.getItem('token_auth')
             }
         }
-        fetch(data.api_url + 'character/get', obj).then(response => response.json().then(items => setCharactersJson(items)))
+        fetch(data.api_url + 'character/get', obj).then(response => response.json().then(items => {
+            console.log(typeof(items))
+            setCharactersJson(items.sort(orderBy))
+        }))
     }
-
     const getClass = () => {
         fetch(data.api_url + 'class/get_basic', {
             method: 'GET',
@@ -293,7 +580,6 @@ const CharacterList = () => {
             })
         })
     }
-
     const getTypes = () => {
         fetch(data.api_url + 'type/get', {
             method: 'GET',
@@ -333,15 +619,13 @@ const CharacterList = () => {
     useEffect(() => {
         setCharacters(charactersJson.filter(verifyCharacter))
     }, [pageFilter])
-
     useEffect(() => {
-        setPageFilter(1)
-        resetItemCounter()
         setCharacters(charactersJson.filter(verifyCharacter))
     }, [charactersJson])
-
     useEffect(() => {
         setSeeDrawer(false)
+        setPageFilter(1)
+        resetItemCounter()
         getClass()
         getCharacters()
     }, [])
@@ -460,12 +744,15 @@ const CharacterList = () => {
                           h={ '100%' }
                           columns={ 2 } 
                           spacing={ 5 }>
-                            { characters.map(character => (
+                            { characters.map((character) => (
                                     <CharacterDetail
                                       key={ character.id }
-                                      data={ character }/>
-                                )) 
-                            }     
+                                      data={ character }
+                                      onChangeCharacter={ changeToCharacter }
+                                      callRest={ callRest }
+                                      callLevelUp={ callLevelUp } />
+                                ))
+                            }
                         </SimpleGrid>
                         <PageChanger changePage={ changePage } filteredItems={ charactersJson } pageFilter={ pageFilter } itemsPerPage={ 4 } />       
                     </VStack>
@@ -480,6 +767,15 @@ const CharacterList = () => {
                   isOpen={ cDrawerIsOpen }
                   onClose={ cDrawerOnClose } 
                   onSubmit={ createCharacter }/>
+            }
+            { seeMDrawer &&
+                <CustomDrawer 
+                  nData={ mDrawerData }
+                  item={ 'character' }
+                  type={ 'modify' }
+                  isOpen={ mDrawerIsOpen }
+                  onClose={ mDrawerOnClose }
+                  onSubmit={ submitModify }/>
             }
         </Box>
     )

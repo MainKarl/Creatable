@@ -94,6 +94,11 @@ const CustomDrawer = ({ nData, item, type, isOpen, onClose, onSubmit }) => {
                     verification = true
                     return { ...error, status: true }
                 }
+                else if (error.name === 'NUMBER_NULL' && (sitem.value === null || sitem.value === undefined)) {
+                    hasError = true
+                    verification = true
+                    return { ...error, status: true }
+                }
                 else
                     return { ...error }
             })
@@ -156,7 +161,7 @@ const CustomDrawer = ({ nData, item, type, isOpen, onClose, onSubmit }) => {
                                       max={ item.max }
                                       color={ alternateTextColor }
                                       borderColor={ alternateTextColor }
-                                      onChange={ event => onChangeProps(event.target.value, item.name) }>
+                                      onChange={ event => onChangeProps(Number(event), item.name) }>
                                         <NumberInputField />
                                         <NumberInputStepper borderColor={ alternateTextColor }>
                                             <NumberIncrementStepper borderColor={ alternateTextColor } />

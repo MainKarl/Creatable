@@ -426,7 +426,7 @@ VALUES
     ('Skilled Artist', 'The character skills damage are 1.5 time higher', 'Other'), -- 405
     ('Lord of Despair Abaddon', 'The character have access to infinite magicules', 'Other'), -- 406
     ('God of Justice Elrath', 'The character have divine might when fighting to what the character consider right', 'Other'), -- 407
-    ('God of Nature Sylvanna', 'The character cab create and use the nature as he please', 'Other'), -- 408
+    ('God of Nature Sylvanna', 'The character can create and use the nature as he please', 'Other'), -- 408
     ('Ascended God of Humanity Arkath', 'The character stat growth rate are increased by 100', 'Other'), -- 409
     ('Forgotten God Ylath', 'The character gain access to forbidden magic', 'Other'), -- 410
     ('Goddess of Success Elira', 'The character have divine luck', 'Other'), -- 411
@@ -446,10 +446,10 @@ VALUES
     ('True Dragon of Power Byleth', 'The character attack ignore defense and resistance', 'Other'), -- 425
     ('True Dragon of Existance Corrin', 'The character gain access to existance manipulation', 'Other'), -- 426
     ('True Dragon of Fate Nantharu', 'The character gain access to law manipulation', 'Other'), -- 427
-    ('True Dragon of Faith Rhea', 'The character stats are double is someone believe in him', 'Other'), -- 428
+    ('True Dragon of Faith Rhea', 'The character stats are double if someone believe in him', 'Other'), -- 428
     ('Creator of Skills Tirmis', 'The character is immune to active', 'Other'), -- 429
     ('Great Corruption Ythil', 'The character is immune to passive', 'Other'), -- 430
-    ('Master of Though Adelia', 'The character have control over the world of your though and can send people in it', 'Other'), -- 431
+    ('Master of Though Adelia', 'The character have control over the world of his though and can send people in it', 'Other'), -- 431
     ('Corrupted Hero of Dusk Ardyn', 'The character gain access to corrupted holy magic', 'Other') -- 432
 ;
 

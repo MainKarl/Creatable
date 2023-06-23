@@ -18,10 +18,17 @@ class passives(get_db().Model):
     def get(self):
         return {
             'passive_id': self.id,
-            'name': self.description,
+            'name': self.name,
             'description': self.description,
             'passive_type': self.passive_type
         }
+    def get_passive(self):
+        return {
+            'id': self.id,
+            'value': self.name,
+            'selected': False
+        }
+    
     def __init__(self, name, description, passive_type):
         self.name = name
         self.description = description

@@ -102,14 +102,42 @@ class characters(get_db().Model):
         self.name = name
         self.race = race
         self.level = 1
-        self.define_default_magic()
-        self.define_default_stat(class_id)
-        self.define_default_weapon_rank()
+        self.arcane_lvl = 0
+        self.mind_lvl = 0
+        self.illusion_lvl = 0
+        self.fire_lvl = 0
+        self.lava_lvl = 0
+        self.heat_lvl = 0
+        self.water_lvl = 0
+        self.liquid_lvl = 0
+        self.ice_lvl = 0
+        self.air_lvl = 0
+        self.wind_lvl = 0
+        self.lightning_lvl = 0
+        self.earth_lvl = 0
+        self.nature_lvl = 0
+        self.poison_lvl = 0
+        self.light_lvl = 0
+        self.holy_lvl = 0
+        self.space_lvl = 0
+        self.dark_lvl = 0
+        self.curse_lvl = 0
+        self.necromancy_lvl = 0
+        self.magic_rk = 'Basic'
+        self.fist_lvl = 'E'
+        self.sword_lvl = 'E'
+        self.spear_lvl = 'E'
+        self.axe_lvl = 'E'
+        self.dagger_lvl = 'E'
+        self.staff_lvl = 'E'
+        self.bow_lvl = 'E'
+        self.other_lvl = 'E'
         self.spirit_rk = 'Basic'
         self.armor_id = 1
         self.weapon_id = 1
         self.class_id = class_id
         self.user_id = user_id
+        self.define_default_stat(class_id)
         if (img != ''):
             self.img = download_image(img, name, get_extension(img))
         else:
@@ -189,16 +217,11 @@ class characters(get_db().Model):
             'img': self.img,
         }
 
-    def rest(self):
-        self.combat_hp = self.hp
-        self.combat_strength = self.strength
-        self.combat_defense = self.defense
-        self.combat_magic = self.magic
-        self.combat_resistance = self.resistance
-        self.combat_speed = self.speed
-        self.combat_skill = self.skill
-        self.combat_luck = self.luck
-        self.combat_mana = self.mana
+    def has_passive(self, vpassive):
+        for passive in self.passives:
+            if passive == vpassive:
+                return True
+        return False
 
     def define_default_stat(self, class_id):
         classe = Classes.query.filter(Classes.id == class_id).one()
@@ -240,44 +263,6 @@ class characters(get_db().Model):
         self.mana_growth = (rnd.randrange(1,4)*5)+classe.mana_growth
 
         self.define_stat_rank()
-    def define_default_magic(self):
-        self.arcane_lvl = 0
-        self.mind_lvl = 0
-        self.illusion_lvl = 0
-        self.fire_lvl = 0
-        self.lava_lvl = 0
-        self.heat_lvl = 0
-        self.water_lvl = 0
-        self.liquid_lvl = 0
-        self.ice_lvl = 0
-        self.air_lvl = 0
-        self.wind_lvl = 0
-        self.lightning_lvl = 0
-        self.earth_lvl = 0
-        self.nature_lvl = 0
-        self.poison_lvl = 0
-        self.light_lvl = 0
-        self.holy_lvl = 0
-        self.space_lvl = 0
-        self.dark_lvl = 0
-        self.curse_lvl = 0
-        self.necromancy_lvl = 0
-        self.magic_rk = 'Basic'
-    def define_default_weapon_rank(self):
-        self.fist_lvl = 'E'
-        self.sword_lvl = 'E'
-        self.spear_lvl = 'E'
-        self.axe_lvl = 'E'
-        self.dagger_lvl = 'E'
-        self.staff_lvl = 'E'
-        self.bow_lvl = 'E'
-        self.other_lvl = 'E'
-    def define_magic_rank(self, magic_rank):
-        self.magic_rk = magic_rank
-        self.rest()
-    def define_spirit_rank(self, spirit_rank):
-        self.spirit_rk = spirit_rank
-        self.rest()
     def define_stat_rank(self):
         total = self.hp + self.strength + self.defense + self.magic + self.resistance + self.speed + self.skill + self.luck + self.mana
         if total <= 150:
@@ -290,95 +275,411 @@ class characters(get_db().Model):
             self.stat_rk = 'Dragon'
         elif total > 600:
             self.stat_rk = 'God'    
-    
-    def define_type(self, ctypes):
-        self.types.clear()
-        for type in str(ctypes).split(';'):
-            self.types.append(types.query.filter(types.id == type).first())
+        self.rest()
+    def define_magic_rank(self, magic_rank):
+        self.magic_rk = magic_rank
+        self.rest()
+    def define_spirit_rank(self, spirit_rank):
+        self.spirit_rk = spirit_rank
         self.rest()
     def define_status(self, cstatus):
-        self.statuses.clear()
+        status: int
         for status in str(cstatus).split(';'):
-            self.statuses.append(statuses.query.filter(statuses.id == status).first())
-        self.rest()
-    def define_skill(self, cskills):
-        self.skills.clear()
-        for skill in str(cskills).split(';'):
-            self.skills.append(skills.query.filter(skills.id == skill).first())
-        self.rest()
-    def define_passive(self, cpassives):
-        self.passives.clear()
-        for passive in str(cpassives).split(';'):
-            self.passives.append(passives.query.filter(passives.id == passive).first())
-        self.rest()
-
-    def change_class(self, class_id):
-        oClass = Classes.query.filter(Classes.id == self.class_id).one()
-        nClass = Classes.query.filter(Classes.id == class_id).one()
-        self.hp_growth -= oClass.hp_growth - nClass.hp_growth
-        self.strength_growth -= oClass.strength_growth - nClass.strength_growth
-        self.defense_growth -= oClass.defense_growth - nClass.defense_growth
-        self.magic_growth -= oClass.magic_growth - nClass.magic_growth
-        self.resistance_growth -= oClass.resistance_growth - nClass.resistance_growth
-        self.speed_growth -= oClass.speed_growth - nClass.speed_growth
-        self.skill_growth -= oClass.skill_growth - nClass.skill_growth
-        self.luck_growth -= oClass.luck_growth - nClass.luck_growth
-        self.mana_growth -= oClass.mana_growth - nClass.mana_growth
-        self.class_id = nClass.id
-        self.rest()
-    def change_weapon(self, weapon_id):
-        oa = weapons.query.filter(weapons.id == self.weapon_id).one()
-        na = weapons.query.filter(weapons.id == weapon_id).one()
-        self.strength += na.get_strength() - oa.get_strength()
-        self.defense += na.get_defense() - oa.get_defense()
-        self.magic += na.get_magic() - oa.get_magic()
-        self.resistance += na.get_resistance() - oa.get_resistance()
-        self.speed += na.get_speed() - oa.get_speed()
-        self.skill += na.get_skill() - oa.get_skill()
-        self.luck += na.get_luck() - oa.get_luck()
-        self.weapon_id = na.id
-        self.rest()  
-    def change_armor(self, armor_id):
-        oa = armors.query.filter(armors.id == self.armor_id).one()
-        na = armors.query.filter(armors.id == armor_id).one()
-        self.defense += na.get_defense() - oa.get_defense()
-        self.resistance += na.get_resistance() - oa.get_resistance()
-        self.speed += na.get_speed() - oa.get_speed()
-        self.armor_id = na.id
-        self.rest()
-    def change_weapon_rank(self, sword_rank, spear_rank, axe_rank, dagger_rank, staff_rank, bow_rank, other_rank):
-        self.sword_lvl = sword_rank
-        self.spear_lvl = spear_rank
-        self.axe_lvl = axe_rank
-        self.dagger_lvl = dagger_rank
-        self.staff_lvl = staff_rank
-        self.bow_lvl = bow_rank
-        self.other_lvl = other_rank
-        self.rest()
+            self.add_status_effect(status)
     
-    def add_stat(self, hp, strength, defense, magic, resistance, speed, skill, luck, mana):
-        self.hp += hp
-        self.strength += strength
-        self.defense += defense
-        self.magic += magic
-        self.resistance += resistance
-        self.speed += speed
-        self.skill += skill
-        self.luck += luck
-        self.mana += mana
+    def add_status_effect(self, status_id: int):
+        new_status = statuses.query.filter(statuses.id == status_id).first()
+        self.statuses.append(new_status)
+        if new_status.name == 'Curse_HP':
+            self.combat_hp = self.combat_hp/1.5
+        elif new_status.name == 'Great_Curse_HP':
+            self.combat_hp = self.combat_hp/2
+        elif new_status.name == 'Curse_Strength':
+            self.combat_strength = self.combat_strength/1.5
+        elif new_status.name == 'Great_Curse_Strength':
+            self.combat_strength = self.combat_strength/2
+        elif new_status.name == 'Curse_Defense':
+            self.combat_defense = self.combat_defense/1.5
+        elif new_status.name == 'Great_Curse_Defense':
+            self.combat_defense = self.combat_defense/2
+        elif new_status.name == 'Curse_Magic':
+            self.combat_magic = self.combat_magic/1.5
+        elif new_status.name == 'Great_Curse_Magic':
+            self.combat_magic = self.combat_magic/2
+        elif new_status.name == 'Curse_Resistance':
+            self.combat_resistance = self.combat_resistance/1.5
+        elif new_status.name == 'Great_Curse_Resistance':
+            self.combat_resistance = self.combat_resistance/2
+        elif new_status.name == 'Curse_Speed':
+            self.combat_speed = self.combat_speed/1.5
+        elif new_status.name == 'Great_Curse_Speed':
+            self.combat_speed = self.combat_speed/2
+        elif new_status.name == 'Curse_Skill':
+            self.combat_skill = self.combat_skill/1.5
+        elif new_status.name == 'Great_Curse_Skill':
+            self.combat_skill = self.combat_skill/2
+        elif new_status.name == 'Curse_Luck':
+            self.combat_luck = self.combat_luck/1.5
+        elif new_status.name == 'Great_Curse_Luck':
+            self.combat_luck = self.combat_luck/2
+        elif new_status.name == 'Curse_Mana':
+            self.combat_mana = self.combat_mana/1.5
+        elif new_status.name == 'Great_Curse_Mana':
+            self.combat_mana = self.combat_mana/2
+        elif new_status.name == 'Bless_HP':
+            self.combat_hp = self.combat_hp*1.5
+        elif new_status.name == 'Great_Bless_HP':
+            self.combat_hp = self.combat_hp*2
+        elif new_status.name == 'Bless_Strength':
+            self.combat_strength = self.combat_strength*1.5
+        elif new_status.name == 'Great_Bless_Strength':
+            self.combat_strength = self.combat_strength*2
+        elif new_status.name == 'Bless_Defense':
+            self.combat_defense = self.combat_defense*1.5
+        elif new_status.name == 'Great_Bless__Defense':
+            self.combat_defense = self.combat_defense*2
+        elif new_status.name == 'Bless_Magic':
+            self.combat_magic = self.combat_magic*1.5
+        elif new_status.name == 'Great_Bless_Magic':
+            self.combat_magic = self.combat_magic*2
+        elif new_status.name == 'Bless_Resistance':
+            self.combat_resistance = self.combat_resistance*1.5
+        elif new_status.name == 'Great_Bless_Resistance':
+            self.combat_resistance = self.combat_resistance*2
+        elif new_status.name == 'Bless_Speed':
+            self.combat_speed = self.combat_speed*1.5
+        elif new_status.name == 'Great_Bless_Speed':
+            self.combat_speed = self.combat_speed*2
+        elif new_status.name == 'Bless_Skill':
+            self.combat_skill = self.combat_skill*1.5
+        elif new_status.name == 'Great_Bless_Skill':
+            self.combat_skill = self.combat_skill*2
+        elif new_status.name == 'Bless_Luck':
+            self.combat_luck = self.combat_luck*1.5
+        elif new_status.name == 'Great_Bless_Luck':
+            self.combat_luck = self.combat_luck*2
+        elif new_status.name == 'Bless_Mana':
+            self.combat_mana = self.combat_mana*1.5
+        elif new_status.name == 'Great_Bless_Mana':
+            self.combat_mana = self.combat_mana*2
+        elif new_status.name == 'Spirit_Limit':
+            multiplier = 0
+            if self.spirit_rk == 'Basic':
+                multiplier = 1.5
+            elif self.spirit_rk == 'Expert':
+                multiplier = 2
+            elif self.spirit_rk == 'Sage':
+                multiplier = 5
+            elif self.spirit_rk == 'Dragon':
+                multiplier = 10
+            elif self.spirit_rk == 'God':
+                multiplier = 50
+
+            self.combat_hp = self.combat_hp*multiplier
+            self.combat_strength = self.combat_strength*multiplier
+            self.combat_defense = self.combat_defense*multiplier
+            self.combat_magic = self.combat_magic*multiplier
+            self.combat_resistance = self.combat_resistance*multiplier
+            self.combat_speed = self.combat_speed*multiplier
+            self.combat_skill = self.combat_skill*multiplier
+            self.combat_luck = self.combat_luck*multiplier
+            self.combat_mana = self.combat_mana*multiplier
+    def add_passives(self, passives: str):
+        passive: int
+        for passive in str(passives).split(';'):
+            self.add_passive(passive)
         self.rest()
-    def add_stat_growth(self, hp, strength, defense, magic, resistance, speed, skill, luck, mana):
-        self.hp_growth += hp
-        self.strength_growth += strength
-        self.defense_growth += defense
-        self.magic_growth += magic
-        self.resistance_growth += resistance
-        self.speed_growth += speed
-        self.skill_growth += skill
-        self.luck_growth += luck
-        self.mana_growth += mana
-        self.rest()
-    def add_magic(self, arcane, illusion, mind, fire, heat, lava, water, liquid, ice, air, wind, lightning, earth, poison, nature, light, space, holy, dark, necromancy, curse):
+    def add_passive(self, passive: int):
+        new_passive = passives.query.filter(passives.id == passive).first()
+        self.passives.append(new_passive)
+        if new_passive.name == 'Heroic Desire':
+            self.hp_growth += 5
+            self.strength_growth += 5
+            self.defense_growth += 5
+            self.magic_growth += 5
+            self.resistance_growth += 5
+            self.speed_growth += 5
+            self.skill_growth += 5
+            self.luck_growth += 5
+            self.mana_growth += 5
+        elif new_passive.name == 'Mage Prodigy':
+            self.magic_growth += 15
+            self.mana_growth += 15
+        elif new_passive.name == 'Perseverant':
+            self.hp_growth += 10
+        elif new_passive.name == 'Strong':
+            self.strength_growth += 10
+        elif new_passive.name == 'Intelligent':
+            self.magic_growth += 10
+        elif new_passive.name == 'Tanky':
+            self.defense_growth += 10
+        elif new_passive.name == 'Resilient':
+            self.resistance_growth += 10
+        elif new_passive.name == 'Skilled':
+            self.skill_growth += 10
+        elif new_passive.name == 'Fast':
+            self.speed_growth += 10
+        elif new_passive.name == 'Lucky':
+            self.luck_growth += 10
+        elif new_passive.name == 'Adept':
+            self.mana_growth += 10
+        elif new_passive.name == 'Unkillable':
+            self.hp_growth += 100
+            self.hp *= 2
+        elif new_passive.name == 'Powerful':
+            self.strength_growth += 100
+            self.strength *= 2
+        elif new_passive.name == 'Mastermind':
+            self.magic_growth += 100
+            self.magic *= 2
+        elif new_passive.name == 'Defender':
+            self.defense_growth += 100
+            self.defense *= 2
+        elif new_passive.name == 'Robust':
+            self.resistance_growth += 100
+            self.resistance *= 2
+        elif new_passive.name == 'Swift':
+            self.speed_growth += 100
+            self.speed *= 2
+        elif new_passive.name == 'Talented':
+            self.skill_growth += 100
+            self.skill *= 2
+        elif new_passive.name == 'Fortunate':
+            self.luck_growth += 100
+            self.luck *= 2
+        elif new_passive.name == 'Gifted':
+            self.mana_growth += 100
+            self.mana *= 2
+        elif new_passive.name == 'Trash':
+            self.hp_growth -= 5
+            self.strength_growth -= 5
+            self.defense_growth -= 5
+            self.magic_growth -= 5
+            self.resistance_growth -= 5
+            self.speed_growth -= 5
+            self.skill_growth -= 5
+            self.luck_growth -= 5
+            self.mana_growth -= 5
+        elif new_passive.name == 'Ascended God of Humanity Arkath':
+            self.hp_growth += 100
+            self.strength_growth += 100
+            self.defense_growth += 100
+            self.magic_growth += 100
+            self.resistance_growth += 100
+            self.speed_growth += 100
+            self.skill_growth += 100
+            self.luck_growth += 100
+            self.mana_growth += 100
+        elif new_passive.name == 'Magicless Asta':
+            self.strength_growth += 200
+            self.mana = 0
+            self.mana_growth = 0
+        elif new_passive.name == 'Defense+':
+            self.defense += 2
+        elif new_passive.name == 'Heavy Blade':
+            self.strength += 3
+            self.speed -= 1
+        elif new_passive.name == 'Strength+':
+            self.strength += 2
+        elif new_passive.name == 'Skill+':
+            self.skill += 2
+        elif new_passive.name == 'Dancing Blade':
+            self.speed += 3
+            self.defense -= 1
+        elif new_passive.name == 'Resistance+':
+            self.resistance += 2
+        elif new_passive.name == 'Holy Proficiency':
+            self.holy_lvl += 10
+        elif new_passive.name == 'Holy Mage':
+            self.holy_lvl += 25
+        elif new_passive.name == 'Creature of Light':
+            self.light_lvl += 25
+        elif new_passive.name == 'Sorcery':
+            self.dark_lvl += 50
+            self.curse_lvl += 50
+        elif new_passive.name == 'Darkness':
+            self.dark_lvl += 50
+        elif new_passive.name == 'Magic Proficiency':
+            self.arcane_lvl += 5
+            self.illusion_lvl += 5
+            self.mind_lvl += 5
+            self.fire_lvl += 5
+            self.heat_lvl += 5
+            self.lava_lvl += 5
+            self.water_lvl += 5
+            self.liquid_lvl += 5
+            self.ice_lvl += 5
+            self.air_lvl += 5
+            self.wind_lvl += 5
+            self.lightning_lvl += 5
+            self.earth_lvl += 5
+            self.nature_lvl += 5
+            self.poison_lvl += 5
+            self.light_lvl += 5
+            self.holy_lvl += 5
+            self.space_lvl += 5
+            self.dark_lvl += 5
+            self.curse_lvl += 5
+            self.necromancy_lvl += 5
+        elif new_passive.name == 'Magic+':
+            self.magic += 2
+        elif new_passive.name == 'Arcane Mastery':
+            self.arcane_lvl += 25
+        elif new_passive.name == 'Illusion Master':
+            self.illusion_lvl += 100
+        elif new_passive.name == 'Aeromancy':
+            self.air_lvl += 60
+        elif new_passive.name == 'Hydromancy':
+            self.water_lvl += 60
+        elif new_passive.name == 'Elemental Mage':
+            self.fire_lvl += 25
+            self.water_lvl += 25
+            self.air_lvl += 25
+            self.earth_lvl += 25
+        elif new_passive.name == 'Pyromancy':
+            self.fire_lvl += 60
+        elif new_passive.name == 'Geomancy':
+            self.earth_lvl += 60
+        elif new_passive.name == 'Aptitude':
+            self.hp_growth += 10
+            self.strength_growth += 10
+            self.defense_growth += 10
+            self.magic_growth += 10
+            self.resistance_growth += 10
+            self.speed_growth += 10
+            self.skill_growth += 10
+            self.luck_growth += 10
+            self.mana_growth += 10
+        elif new_passive.name == 'Mind Master':
+            self.mind_lvl += 50
+        elif new_passive.name == 'King of Blood Giovanni':
+            self.curse_lvl += 100
+            self.mind_lvl += 100
+        elif new_passive.name == 'Magic User':
+            self.arcane_lvl += 30
+            self.dark_lvl += 30
+        elif new_passive.name == 'Dark Artist':
+            self.dark_lvl += 80
+        elif new_passive.name == 'Necromancy':
+            self.dark_lvl += 50
+            self.necromancy_lvl += 100
+        elif new_passive.name == 'Creature of Magic':
+            self.mana *= 2
+            self.mana_growth += 100
+        elif new_passive.name == 'All rounder mage':
+            self.arcane_lvl += 25
+            self.illusion_lvl += 25
+            self.mind_lvl += 25
+            self.fire_lvl += 25
+            self.heat_lvl += 25
+            self.lava_lvl += 25
+            self.water_lvl += 25
+            self.liquid_lvl += 25
+            self.ice_lvl += 25
+            self.air_lvl += 25
+            self.wind_lvl += 25
+            self.lightning_lvl += 25
+            self.earth_lvl += 25
+            self.nature_lvl += 25
+            self.poison_lvl += 25
+            self.light_lvl += 25
+            self.holy_lvl += 25
+            self.space_lvl += 25
+            self.dark_lvl += 25
+            self.curse_lvl += 25
+            self.necromancy_lvl += 25
+        elif new_passive.name == 'God of Chaos Urgash':
+            self.strength *= 2
+            self.strength_growth += 100
+            self.magic *= 2
+            self.magic_growth += 100
+        elif new_passive.name == 'Primordial Chaos':
+            self.dark_lvl += 150
+        elif new_passive.name == 'Strength++':
+            self.strength += 5
+        elif new_passive.name == 'Fire Mastery':
+            self.fire_lvl += 50
+        elif new_passive.name == 'Destroyer of World':
+            self.strength += 15
+        elif new_passive.name == 'Magic Affinity':
+            self.arcane_lvl += 25
+            self.illusion_lvl += 25
+            self.mind_lvl += 25
+            self.fire_lvl += 25
+            self.heat_lvl += 25
+            self.lava_lvl += 25
+            self.water_lvl += 25
+            self.liquid_lvl += 25
+            self.ice_lvl += 25
+            self.air_lvl += 25
+            self.wind_lvl += 25
+            self.lightning_lvl += 25
+            self.earth_lvl += 25
+            self.nature_lvl += 25
+            self.poison_lvl += 25
+            self.light_lvl += 25
+            self.holy_lvl += 25
+            self.space_lvl += 25
+            self.dark_lvl += 25
+            self.curse_lvl += 25
+            self.necromancy_lvl += 25
+        elif new_passive.name == 'Draconic Gift':
+            self.hp += 5
+            self.strength += 5
+            self.defense += 5
+            self.magic += 5
+            self.resistance += 5
+            self.speed += 5
+            self.skill += 5
+            self.luck += 5
+            self.mana += 5
+        elif new_passive.name == 'Magic Mastery':
+            self.arcane_lvl += 100
+            self.illusion_lvl += 100
+            self.mind_lvl += 100
+            self.fire_lvl += 100
+            self.heat_lvl += 100
+            self.lava_lvl += 100
+            self.water_lvl += 100
+            self.liquid_lvl += 100
+            self.ice_lvl += 100
+            self.air_lvl += 100
+            self.wind_lvl += 100
+            self.lightning_lvl += 100
+            self.earth_lvl += 100
+            self.nature_lvl += 100
+            self.poison_lvl += 100
+            self.light_lvl += 100
+            self.holy_lvl += 100
+            self.space_lvl += 100
+            self.dark_lvl += 100
+            self.curse_lvl += 100
+            self.necromancy_lvl += 100
+        elif new_passive.name == 'Draconic Ancestry':
+            self.mana_growth += 400
+            self.mana *= 4
+    def add_magic(self, \
+                  arcane, \
+                  illusion,\
+                  mind, \
+                  fire, \
+                  heat, \
+                  lava, \
+                  water, \
+                  liquid, \
+                  ice, \
+                  air, \
+                  wind, \
+                  lightning, \
+                  earth, \
+                  poison, \
+                  nature, \
+                  light, \
+                  space, \
+                  holy, \
+                  dark, \
+                  necromancy, \
+                  curse):
         self.arcane_lvl = arcane
         self.illusion_lvl = illusion
         self.mind_lvl = mind
@@ -401,3 +702,176 @@ class characters(get_db().Model):
         self.necromancy_lvl = necromancy
         self.curse_lvl = curse
         self.rest()
+
+    def change_stat(self, \
+                    hp: int, \
+                    hp_growth: int, \
+                    strength: int, \
+                    strength_growth: int, \
+                    defense: int, \
+                    defense_growth: int, \
+                    magic: int, \
+                    magic_growth: int, \
+                    resistance: int, \
+                    resistance_growth: int, \
+                    speed: int, speed_growth: int, \
+                    skill: int, \
+                    skill_growth: int, \
+                    luck: int, \
+                    luck_growth: int, \
+                    mana: int, \
+                    mana_growth: int):
+        self.hp = hp
+        self.hp_growth = hp_growth
+        self.strength = strength
+        self.strength_growth = strength_growth
+        self.defense = defense
+        self.defense_growth = defense_growth
+        self.magic = magic
+        self.magic_growth = magic_growth
+        self.resistance = resistance
+        self.resistance_growth = resistance_growth
+        self.speed = speed
+        self.speed_growth = speed_growth
+        self.skill = skill
+        self.skill_growth = skill_growth
+        self.luck = luck
+        self.luck_growth = luck_growth
+        self.mana = mana
+        self.mana_growth = mana_growth
+        self.rest()
+        self.define_stat_rank()
+    def change_class(self, class_id):
+        oClass = Classes.query.filter(Classes.id == self.class_id).one()
+        nClass = Classes.query.filter(Classes.id == class_id).one()
+        self.hp_growth -= oClass.hp_growth - nClass.hp_growth
+        self.strength_growth -= oClass.strength_growth - nClass.strength_growth
+        self.defense_growth -= oClass.defense_growth - nClass.defense_growth
+        self.magic_growth -= oClass.magic_growth - nClass.magic_growth
+        self.resistance_growth -= oClass.resistance_growth - nClass.resistance_growth
+        self.speed_growth -= oClass.speed_growth - nClass.speed_growth
+        self.skill_growth -= oClass.skill_growth - nClass.skill_growth
+        self.luck_growth -= oClass.luck_growth - nClass.luck_growth
+        if self.has_passive(passives.query.filter(passives.name == 'Magicless Asta').one()):
+            self.mana_growth = 0
+        else:
+            self.mana_growth -= oClass.mana_growth - nClass.mana_growth
+        self.class_id = nClass.id
+        self.level = 1
+        self.rest()
+    def change_weapon(self, weapon_id):
+        oa = weapons.query.filter(weapons.id == self.weapon_id).one()
+        na = weapons.query.filter(weapons.id == weapon_id).one()
+        self.strength += na.get_strength() - oa.get_strength()
+        self.defense += na.get_defense() - oa.get_defense()
+        self.magic += na.get_magic() - oa.get_magic()
+        self.resistance += na.get_resistance() - oa.get_resistance()
+        self.speed += na.get_speed() - oa.get_speed()
+        self.skill += na.get_skill() - oa.get_skill()
+        self.luck += na.get_luck() - oa.get_luck()
+        self.weapon_id = na.id
+        self.rest()  
+    def change_armor(self, armor_id):
+        oa = armors.query.filter(armors.id == self.armor_id).one()
+        na = armors.query.filter(armors.id == armor_id).one()
+        self.defense += na.get_defense() - oa.get_defense()
+        self.resistance += na.get_resistance() - oa.get_resistance()
+        self.speed += na.get_speed() - oa.get_speed()
+        self.armor_id = na.id
+        self.rest()
+    def change_weapon_rank(self, sword_rank, spear_rank, axe_rank, dagger_rank, staff_rank, bow_rank, fist_rank, other_rank):
+        self.sword_lvl = sword_rank
+        self.spear_lvl = spear_rank
+        self.axe_lvl = axe_rank
+        self.dagger_lvl = dagger_rank
+        self.staff_lvl = staff_rank
+        self.bow_lvl = bow_rank
+        self.fist_lvl = fist_rank
+        self.other_lvl = other_rank
+        self.rest()
+    
+    def rest(self):
+        self.statuses.clear()
+        self.combat_hp = self.hp
+        self.combat_strength = self.strength
+        self.combat_defense = self.defense
+        self.combat_magic = self.magic
+        self.combat_resistance = self.resistance
+        self.combat_speed = self.speed
+        self.combat_skill = self.skill
+        self.combat_luck = self.luck
+        self.combat_mana = self.mana
+    def level_up(self):
+        self.level += 1
+        if self.level == 10:
+            classe: Classes
+            classe = Classes.query.filter(Classes.id == self.class_id).one()
+            self.add_passive(classe.passives[0].id)
+        elif self.level == 20:
+            classe: Classes
+            classe = Classes.query.filter(Classes.id == self.class_id).one()
+            self.add_passive(classe.passives[1].id)
+        hp_up = 0
+        real_hp_growth = self.hp_growth%100
+        if self.hp_growth >= 100:
+            hp_up = (self.hp_growth-(self.hp_growth%100))/100
+        strength_up = 0
+        real_strength_growth = self.strength_growth%100
+        if self.strength_growth >= 100:
+            strength_up = (self.strength_growth-(self.strength_growth%100))/100
+        defense_up = 0
+        real_defense_growth = self.defense_growth%100
+        if self.defense_growth >= 100:
+            defense_up = (self.defense_growth-(self.defense_growth%100))/100
+        magic_up = 0
+        real_magic_growth = self.magic_growth%100
+        if self.magic_growth >= 100:
+            magic_up = (self.magic_growth-(self.magic_growth%100))/100
+        resistance_up = 0
+        real_resistance_growth = self.resistance_growth%100
+        if self.resistance_growth >= 100:
+            resistance_up = (self.resistance_growth-(self.resistance_growth%100))/100        
+        speed_up = 0
+        real_speed_growth = self.speed_growth%100
+        if self.speed_growth >= 100:
+            speed_up = (self.speed_growth-(self.speed_growth%100))/100   
+        skill_up = 0
+        real_skill_growth = self.skill_growth%100
+        if self.skill_growth >= 100:
+            skill_up = (self.skill_growth-(self.skill_growth%100))/100   
+        luck_up = 0
+        real_luck_growth = self.luck_growth%100
+        if self.luck_growth >= 100:
+            luck_up = (self.luck_growth-(self.luck_growth%100))/100   
+        mana_up = 0
+        real_mana_growth = self.mana_growth%100
+        if self.mana_growth >= 100:
+            mana_up = (self.mana_growth-(self.mana_growth%100))/100
+        if rnd.randrange(0, 101) <= real_hp_growth:
+            hp_up += 1
+        if rnd.randrange(0, 101) <= real_strength_growth:
+            strength_up += 1
+        if rnd.randrange(0, 101) <= real_defense_growth:
+            defense_up += 1
+        if rnd.randrange(0, 101) <= real_magic_growth:
+            magic_up += 1
+        if rnd.randrange(0, 101) <= real_resistance_growth:
+            resistance_up += 1
+        if rnd.randrange(0, 101) <= real_speed_growth:
+            speed_up += 1
+        if rnd.randrange(0, 101) <= real_skill_growth:
+            skill_up += 1
+        if rnd.randrange(0, 101) <= real_luck_growth:
+            luck_up += 1
+        if rnd.randrange(0, 101) <= real_mana_growth:
+            mana_up += 1   
+        self.hp += hp_up
+        self.strength += strength_up
+        self.defense += defense_up
+        self.magic += magic_up
+        self.resistance += resistance_up
+        self.speed += speed_up
+        self.skill += skill_up
+        self.luck += luck_up
+        self.mana += mana_up
+        self.define_stat_rank()

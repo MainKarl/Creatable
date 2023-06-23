@@ -11,8 +11,9 @@ class statuses(get_db().Model):
 
     def get(self):
         return {
-            'status_id': self.id,
-            'name': self.name
+            'id': self.id,
+            'value': self.name,
+            'selected': False
         }
 
     def __init__(self, name):
