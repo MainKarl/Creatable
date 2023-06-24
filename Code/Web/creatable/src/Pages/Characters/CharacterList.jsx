@@ -15,13 +15,15 @@ import {
     NumberIncrementStepper,
     NumberDecrementStepper,
     useDisclosure,
-    filter
+    filter,
+    Button
 } from '@chakra-ui/react'
 import { AddIcon } from '@chakra-ui/icons'
 import CustomDrawer from '../../Components/CustomDrawer'
 import CharacterDetail from './CharacterDetail'
 import { PageChanger } from '../../Components/PageChanger'
 import { GiConsoleController } from 'react-icons/gi'
+import CustomFilterSelect from '../../Components/CustomFilterSelect'
 
 const CharacterList = () => {
     let data = require('../../data.json')
@@ -34,43 +36,47 @@ const CharacterList = () => {
 
     const [races] = useState([
         {
-            id: 1,
+            id: 0,
             value: 'None'
         },
         {
-           id: 2,
+           id: 1,
            value: 'Human'
         },
         {
-            id: 3,
+            id: 2,
             value: 'Elf'
         },
         {
-            id: 4,
+            id: 3,
             value: 'Demon'
         },
         {
-            id: 5,
+            id: 4,
             value: 'Kitsune'
         },
         {
-            id: 6,
+            id: 5,
             value: 'Wolfskin'
         },
         {
-            id: 7,
+            id: 6,
             value: 'Voidoid'
         },
         {
-            id: 8,
+            id: 7,
             value: 'Undead'
         },
         {
-            id: 9,
+            id: 8,
             value: 'Monster'
+        },
+        {
+            id: 9,
+            value: 'Dragonoid'
         }
     ])
-    const [filterRace, setFilterRace] = useState('None')
+    const [filterRace, setFilterRace] = useState(0)
     const [pageFilter, setPageFilter] = useState(1)
     
     let itemCounter = 0
@@ -171,18 +177,26 @@ const CharacterList = () => {
     let textColor = useColorModeValue(data.colors[0].textcolor, data.colors[1].textcolor)
     let alternateTextColor = useColorModeValue(data.colors[0].textalternatecolor1, data.colors[1].textalternatecolor1)
 
-    const verifyCharacter = (item) => {
-        itemCounter++
-        return (verifyFilter(item) && verifyPage())
-    }
+    const verifyCharacter = (item) => { return verifyFilter(item) && verifyPage() }
     const verifyFilter = (item) => {
         if (minLevel > 0 && item.level < minLevel)
             return false
         if (maxLevel > 0 && item.level > maxLevel)
             return false
-        if (filterRace !== 'None' && item.race !== filterRace)
+        if (getRace(filterRace) !== 'None' && item.race !== getRace(filterRace))
             return false
-            
+        
+        itemCounter++
+        return true
+    }
+    const verifyFilterForPageChanger = (item) => {
+        if (minLevel > 0 && item.level < minLevel)
+            return false
+        if (maxLevel > 0 && item.level > maxLevel)
+            return false
+        if (getRace(filterRace) !== 'None' && item.race !== getRace(filterRace))
+            return false
+        
         return true
     }
     const verifyPage = () => {
@@ -216,6 +230,8 @@ const CharacterList = () => {
                 return 'Monster'
             case 9:
                 return 'Dragonoid'
+            default:
+                return 'None'
         }
     }
     const getWeaponRank = (id) => {
@@ -247,6 +263,12 @@ const CharacterList = () => {
             case 5:
                 return 'God'
         }
+    }
+
+    const filterCharacter = () => {        
+        setPageFilter(1)
+        resetItemCounter()
+        setCharacters(charactersJson.filter(verifyCharacter))
     }
 
     const createCharacter = async (list) => {
@@ -617,6 +639,7 @@ const CharacterList = () => {
     }
 
     useEffect(() => {
+        console.log(pageFilter)
         setCharacters(charactersJson.filter(verifyCharacter))
     }, [pageFilter])
     useEffect(() => {
@@ -706,7 +729,10 @@ const CharacterList = () => {
                         </Text>
                     </HStack>
                     <HStack w={ '90%' } ml={ 'auto' } mr={ 'auto' } pb={ '5%' }>
-                        
+                        <CustomFilterSelect
+                          value={ getRace(filterRace) }
+                          list={ races }
+                          onClick={ event => setFilterRace(event) } />
                     </HStack>
                     <HStack
                       w={ '90%' }
@@ -717,7 +743,15 @@ const CharacterList = () => {
                         </Text>
                     </HStack>
                     <HStack w={ '90%' } ml={ 'auto' } mr={ 'auto' } pb={ '5%' }>
-                        
+                        {/* <CustomMultiSelect 
+                          message={ '-- Select a Type --' }
+                          list={  }
+                          selectedList={ }
+                          onAdd={ }
+                          onRemove={ } /> */}
+                    </HStack>
+                    <HStack w={ '90%' } ml={ 'auto' } mr={ 'auto' } pb={ '5%' }>
+                        <Button w={ '100%' } colorScheme={ 'orange' } onClick={ filterCharacter }>Filter</Button>
                     </HStack>
                 </VStack>
                 <VStack 
@@ -754,7 +788,7 @@ const CharacterList = () => {
                                 ))
                             }
                         </SimpleGrid>
-                        <PageChanger changePage={ changePage } filteredItems={ charactersJson } pageFilter={ pageFilter } itemsPerPage={ 4 } />       
+                        <PageChanger changePage={ changePage } filteredItems={ charactersJson.filter(verifyFilterForPageChanger) } pageFilter={ pageFilter } itemsPerPage={ 4 } />       
                     </VStack>
                 </VStack>
                 <HStack w={ '5%' } />
