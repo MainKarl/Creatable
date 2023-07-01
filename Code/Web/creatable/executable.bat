@@ -1,0 +1,1 @@
+wscript ".\invisible.vbs" ".\startup.bat"
