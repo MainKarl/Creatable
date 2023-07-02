@@ -6,6 +6,8 @@ A electron application that manage roleplaying characters and other aspect of th
 
 ## Installation
 
+First hand, you need [nodejs](https://nodejs.org/en) to run the application.
+
 To install the application go into the folder Code/Web/creatable and run the install.bat file. Alternatively, these commands must be executed:
 
 ```shell

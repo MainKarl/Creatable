@@ -15,15 +15,14 @@ import {
     NumberIncrementStepper,
     NumberDecrementStepper,
     useDisclosure,
-    filter,
     Button
 } from '@chakra-ui/react'
 import { AddIcon } from '@chakra-ui/icons'
 import CustomDrawer from '../../Components/CustomDrawer'
 import CharacterDetail from './CharacterDetail'
 import { PageChanger } from '../../Components/PageChanger'
-import { GiConsoleController } from 'react-icons/gi'
 import CustomFilterSelect from '../../Components/CustomFilterSelect'
+import CustomAlertDialog from '../../Components/CustomAlertDialog'
 
 const CharacterList = () => {
     let data = require('../../data.json')
@@ -169,6 +168,12 @@ const CharacterList = () => {
     const [seeMDrawer, setSeeMDrawer] = useState(false)
     const [mDrawerData, setMDrawerData] = useState([])
     const [mId, setMId] = useState(0)
+    
+    const { isOpen: deleteIsOpen, onOpen: deleteOnOpen, onClose: deleteOnClose } = useDisclosure()
+    const deleteRef = React.useRef()
+    const [dId, setDId] = useState(0)
+    const [alertMessage, setAlertMessage] = useState('')
+    const [alertTitle, setAlertTitle] = useState('')
 
     let backgroundColor = useColorModeValue(data.colors[0].basicbackgroundcolor, data.colors[1].basicbackgroundcolor)
     let sbackgroundColor = useColorModeValue(data.colors[0].darkerbackgroundcolor1, data.colors[1].darkerbackgroundcolor1)
@@ -288,7 +293,14 @@ const CharacterList = () => {
         cDrawerOnClose()
     }
 
-    const deleteCharacters = async (event, c_id) => {
+    const clickDeleteCharacters = (id, name) => {
+        setDId(id)
+        setAlertTitle("Delete Character")
+        setAlertMessage(`Delete the character ${name} ?`)
+        deleteOnOpen()
+    }
+    const deleteCharacters = async (c_id) => {
+        deleteOnClose()
         fetch(data.api_url + 'character/delete', {
             method: 'POST',
             mode: 'cors',
@@ -304,9 +316,6 @@ const CharacterList = () => {
                 getCharacters()
             })
         })
-
-        event.stopPropagation()
-        event.preventDefault()
     }
 
     const changeToCharacter = async (id, value) => {
@@ -784,7 +793,8 @@ const CharacterList = () => {
                                       data={ character }
                                       onChangeCharacter={ changeToCharacter }
                                       callRest={ callRest }
-                                      callLevelUp={ callLevelUp } />
+                                      callLevelUp={ callLevelUp }
+                                      deleteCharacter={ clickDeleteCharacters } />
                                 ))
                             }
                         </SimpleGrid>
@@ -800,7 +810,7 @@ const CharacterList = () => {
                   type={ 'create' }
                   isOpen={ cDrawerIsOpen }
                   onClose={ cDrawerOnClose } 
-                  onSubmit={ createCharacter }/>
+                  onSubmit={ createCharacter } />
             }
             { seeMDrawer &&
                 <CustomDrawer 
@@ -809,8 +819,15 @@ const CharacterList = () => {
                   type={ 'modify' }
                   isOpen={ mDrawerIsOpen }
                   onClose={ mDrawerOnClose }
-                  onSubmit={ submitModify }/>
+                  onSubmit={ submitModify } />
             }
+            <CustomAlertDialog 
+              isOpen={ deleteIsOpen }
+              message={ alertMessage }
+              title={ alertTitle }
+              ref={ deleteRef }
+              onCancel={ deleteOnClose }
+              onSubmit={ () => deleteCharacters(dId) } />
         </Box>
     )
 }

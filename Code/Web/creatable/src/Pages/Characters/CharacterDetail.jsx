@@ -31,7 +31,7 @@ import {
     GiCampfire
 } from 'react-icons/gi'
 
-const CharacterDetail = ({ data, onChangeCharacter, callRest, callLevelUp }) => {
+const CharacterDetail = ({ data, onChangeCharacter, callRest, callLevelUp, deleteCharacter }) => {
     let gdata = require('../../data.json')
     let backgroundColor = useColorModeValue(gdata.colors[0].basicbackgroundcolor, gdata.colors[1].basicbackgroundcolor)
     let sbackgroundColor = useColorModeValue(gdata.colors[0].darkerbackgroundcolor1, gdata.colors[1].darkerbackgroundcolor1)
@@ -1439,7 +1439,8 @@ const CharacterDetail = ({ data, onChangeCharacter, callRest, callLevelUp }) => 
                               colorScheme={ 'red' } 
                               size={ 'xs' }
                               borderRadius={ 'full' }
-                              icon={ <SmallCloseIcon /> } />
+                              icon={ <SmallCloseIcon /> }
+                              onClick={ _ => deleteCharacter(id, name) } />
                         </HStack>
                     </HStack>
                     <HStack w={ '100%' }>
