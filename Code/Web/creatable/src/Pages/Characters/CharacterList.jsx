@@ -515,6 +515,23 @@ const CharacterList = () => {
                     getCharacters()
                 })
             })
+        } else if (list[0].name === 'weapon') {
+            fetch(data.api_url+'character/change_item', {
+                method: 'POST',
+                mode: 'cors',
+                cache: 'default',
+                redirect: 'manual',
+                headers: {
+                    'Authorization': localStorage.getItem('token_auth'),
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ id: mId, weapon: list[0].value, armor: list[1].value })
+            }).then(response => {
+                response.json().then(item => {
+                    setSeeMDrawer(false)
+                    getCharacters()
+                })
+            })
         }
     }
 

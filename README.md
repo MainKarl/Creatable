@@ -25,7 +25,6 @@ npm run start
 
 ## ToDo
 
-* manage characters [delete, change weapon, change armor]
 * manage users
 * manage weapons
 * manage armors

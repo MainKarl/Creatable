@@ -1184,7 +1184,63 @@ const CharacterDetail = ({ data, onChangeCharacter, callRest, callLevelUp, delet
         onChangeCharacter(id, return_value)
     }
     const clickItem = () => {
-
+        fetch(gdata.api_url+'armor/get_list', {
+            method: 'GET',
+            mode: 'cors',
+            cache: 'default',
+            redirect: 'manual',
+            headers: {
+                'Authorization': localStorage.getItem('token_auth')
+            }
+        }).then(armor_response => {
+            armor_response.json().then(armors => {
+                fetch(gdata.api_url+'weapon/get_list', {
+                    method: 'GET',
+                    mode: 'cors',
+                    cache: 'default',
+                    redirect: 'manual',
+                    headers: {
+                        'Authorization': localStorage.getItem('token_auth')
+                    }
+                }).then(weapon_response => {
+                    weapon_response.json().then(weapons => {
+                        const return_value = [
+                            {
+                                name: 'weapon',
+                                type: 'select',
+                                actual: '-- Select a Weapon --',
+                                value: weapon.weapon_id,
+                                data: weapons,
+                                hasError: false,
+                                errors: [
+                                    {
+                                        name: 'SELECT_NULL',
+                                        message: 'The Weapon cannot be null.',
+                                        status: false
+                                    }
+                                ]
+                            },
+                            {
+                                name: 'armor',
+                                type: 'select',
+                                actual: '-- Select a Armor --',
+                                value: armor.armor_id,
+                                data: armors,
+                                hasError: false,
+                                errors: [
+                                    {
+                                        name: 'SELECT_NULL',
+                                        message: 'The Armor cannot be null.',
+                                        status: false
+                                    }
+                                ]
+                            }
+                        ]
+                        onChangeCharacter(id, return_value)
+                    })
+                })
+            })
+        })
     }
     const clickPassive = () => {
         fetch(gdata.api_url+'/character/get_passive/'+id, {
@@ -1255,6 +1311,7 @@ const CharacterDetail = ({ data, onChangeCharacter, callRest, callLevelUp, delet
     }
 
     useEffect(() => {
+        console.log(data)
         setId(data.character_id)
         setName(data.name)
         setLevel(data.level)
@@ -2366,8 +2423,86 @@ const CharacterDetail = ({ data, onChangeCharacter, callRest, callLevelUp, delet
                                 </HStack>
                             </VStack>
                         }
-                        { state === 5
-                            
+                        { state === 5 &&
+                            <VStack w={ '100%' } mt={ '5%' }>
+                                <HStack w={ '100%' }>
+                                    <VStack 
+                                      w={ '40%' } 
+                                      ml={ '5%' }
+                                      mr={ '5%' } 
+                                      minH={ '250px' } 
+                                      borderColor={ inputBorderColor } 
+                                      borderWidth={ 0.5 } 
+                                      p={ 2 }
+                                      borderRadius={ '20%' }
+                                      bgColor={ inputBorderColor }>
+                                        <HStack w={ '100%' }>
+                                            <Text
+                                            w={ '100%' } 
+                                            fontSize={ 18 } 
+                                            textAlign={ 'center' } 
+                                            color={ alternateTextColor }>
+                                                { weapon.name }
+                                            </Text>
+                                        </HStack>
+                                        <HStack w={ '100%' }>
+                                            <Divider w={ '85%' } mt={ '2%' } color={ alternateTextColor } mr={ 'auto' } ml={ 'auto' } />
+                                        </HStack>
+                                        <HStack w={ '100%' }>
+                                            <Text textTransform={ 'uppercase' } fontSize={ 17 } color={ alternateTextColor }>
+                                                dmg: { weapon.damage }
+                                            </Text>
+                                            <CustomIcon type={ weapon.damage_type } isize={ 20 } />
+                                        </HStack>
+                                        <HStack w={ '100%' }>
+                                            <Text textTransform={ 'uppercase' } fontSize={ 17 } color={ alternateTextColor }>
+                                                acc: { weapon.accuracy }
+                                            </Text>
+                                        </HStack>
+                                        <HStack w={ '100%' }>
+                                            <Text textTransform={ 'uppercase' } fontSize={ 17 } color={ alternateTextColor }>
+                                                crit: { weapon.crit }
+                                            </Text>
+                                        </HStack>
+                                        <HStack w={ '100%' }>
+                                            <Text textTransform={ 'uppercase' } fontSize={ 17 } color={ alternateTextColor }>
+                                                rank: { weapon.rank }
+                                            </Text>
+                                        </HStack>
+                                    </VStack>
+                                    <VStack 
+                                      w={ '40%' } 
+                                      ml={ '5%' } 
+                                      mr={ '5%' } 
+                                      minH={ '250px' } 
+                                      borderColor={ inputBorderColor } 
+                                      borderWidth={ 0.5 } 
+                                      p={ 2 } 
+                                      borderRadius={ '20%' }
+                                      bgColor={ inputBorderColor }>
+                                        <HStack w={ '100%' }>
+                                            <Text
+                                            w={ '100%' } 
+                                            fontSize={ 17 } 
+                                            textAlign={ 'center' } 
+                                            color={ alternateTextColor }>
+                                                { armor.name }
+                                            </Text>
+                                        </HStack>
+                                        <HStack w={ '100%' }>
+                                            <Divider w={ '85%' } mt={ '2%' } color={ textColor } mr={ 'auto' } ml={ 'auto' } />
+                                        </HStack>
+                                        <HStack w={ '100%' }>
+                                            <Text textTransform={ 'uppercase' } fontSize={ 17 } color={ alternateTextColor }>
+                                                power: { armor.power }
+                                            </Text>
+                                        </HStack>
+                                    </VStack>
+                                </HStack>
+                                <HStack w={ '100%' }>
+                                    <IconButton ml={ 'auto' } mr={ 0 } size={ 'sm' } colorScheme={ 'orange' } icon={ <SettingsIcon /> } onClick={ clickItem } />
+                                </HStack>
+                            </VStack>
                         }
                         { state === 6 &&
                             <VStack

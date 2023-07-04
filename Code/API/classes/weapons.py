@@ -20,6 +20,19 @@ class weapons(get_db().Model):
     characters = relationship('characters', backref='weapons', lazy=True)
     passives = relationship('passives', secondary = get_weapon_passive_table(), back_populates = 'weapons')
 
+    def __init__(self, name, damage, accuracy, crit, price, rank, damage_type, weapon_type, img):
+        self.name = name
+        self.damage = damage
+        self.accuracy = accuracy
+        self.crit = crit
+        self.price = price
+        self.rank = rank
+        self.damage_type = damage_type
+        self.weapon_type = weapon_type
+        if (img != ''):
+            self.img = download_image(img, name, get_extension(img))
+        else:
+            self.img = "http:////144.217.14.182//img//notFound.jpg"
     def get(self):
         return {
             'weapon_id': self.id,
@@ -34,19 +47,12 @@ class weapons(get_db().Model):
             'img': self.img,
             'passives': get_join_passive(self.passives)
         }
-    def __init__(self, name, damage, accuracy, crit, price, rank, damage_type, weapon_type, img):
-        self.name = name
-        self.damage = damage
-        self.accuracy = accuracy
-        self.crit = crit
-        self.price = price
-        self.rank = rank
-        self.damage_type = damage_type
-        self.weapon_type = weapon_type
-        if (img != ''):
-            self.img = download_image(img, name, get_extension(img))
-        else:
-            self.img = "http:////144.217.14.182//img//notFound.jpg"
+    def get_simplified(self):
+        return {
+            'id': self.id,
+            'value': self.name,
+            'selected': False
+        }
 
     def add_strength(self):
         passive: passives

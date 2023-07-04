@@ -75,6 +75,16 @@ def get_armor():
         return jsonify(list)
     else: 
         return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })
+@app.route("/armor/get_list", methods=['GET'])
+def get_list_armor():
+    if verify_token(request.headers.get('Authorization')):
+        list = []
+        armor: armors
+        for armor in armors.query.all():
+            list.append(armor.get_simplified())
+        return jsonify(list)
+    else: 
+        return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })
 
 @app.route("/weapon/get", methods=['GET'])
 def get_weapon():
@@ -86,6 +96,16 @@ def get_weapon():
         return jsonify(list)
     else: 
         return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })
+@app.route("/weapon/get_list", methods=['GET'])
+def get_list_weapon():
+    if verify_token(request.headers.get('Authorization')):
+        list = []
+        weapon: weapons
+        for weapon in weapons.query.all():
+            list.append(weapon.get_simplified())
+        return jsonify(list)
+    else: 
+        return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })    
 
 @app.route("/class/get", methods=['GET'])
 def get_class():
@@ -352,6 +372,22 @@ def change_class():
         })
     else: 
         return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })        
+@app.route("/character/change_item", methods=['POST'])
+def change_item():
+    token = request.headers.get('Authorization')
+    if verify_token(token):
+        data = request.get_json(force=True)
+        character: characters
+        character = characters.query.filter(characters.id == data['id']).one()
+        character.change_weapon(data['weapon'])
+        character.change_armor(data['armor'])
+        get_db().session.commit()
+        return jsonify({
+            'status': 'success',
+            'message': 'Item successfully changed'
+        })
+    else: 
+        return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })   
 @app.route("/character/add_passive", methods=['POST'])
 def add_passive():
     token = request.headers.get('Authorization')

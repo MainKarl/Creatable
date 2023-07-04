@@ -31,6 +31,12 @@ class armors(get_db().Model):
             'img': self.img,
             'passives': get_join_passive(self.passives)
         }
+    def get_simplified(self):
+        return {
+            'id': self.id,
+            'value': self.name,
+            'selected': False
+        }
 
     def add_defense(self):
         if self.passives:

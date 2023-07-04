@@ -762,21 +762,21 @@ class characters(get_db().Model):
     def change_weapon(self, weapon_id):
         oa = weapons.query.filter(weapons.id == self.weapon_id).one()
         na = weapons.query.filter(weapons.id == weapon_id).one()
-        self.strength += na.get_strength() - oa.get_strength()
-        self.defense += na.get_defense() - oa.get_defense()
-        self.magic += na.get_magic() - oa.get_magic()
-        self.resistance += na.get_resistance() - oa.get_resistance()
-        self.speed += na.get_speed() - oa.get_speed()
-        self.skill += na.get_skill() - oa.get_skill()
-        self.luck += na.get_luck() - oa.get_luck()
+        self.strength += na.add_strength() - oa.add_strength()
+        self.defense += na.add_defense() - oa.add_defense()
+        self.magic += na.add_magic() - oa.add_magic()
+        self.resistance += na.add_resistance() - oa.add_resistance()
+        self.speed += na.add_speed() - oa.add_speed()
+        self.skill += na.add_skill() - oa.add_skill()
+        self.luck += na.add_luck() - oa.add_luck()
         self.weapon_id = na.id
-        self.rest()  
+        self.rest()
     def change_armor(self, armor_id):
         oa = armors.query.filter(armors.id == self.armor_id).one()
         na = armors.query.filter(armors.id == armor_id).one()
-        self.defense += na.get_defense() - oa.get_defense()
-        self.resistance += na.get_resistance() - oa.get_resistance()
-        self.speed += na.get_speed() - oa.get_speed()
+        self.defense += na.add_defense() - oa.add_defense()
+        self.resistance += na.add_resistance() - oa.add_resistance()
+        self.speed += na.add_speed() - oa.add_speed()
         self.armor_id = na.id
         self.rest()
     def change_weapon_rank(self, sword_rank, spear_rank, axe_rank, dagger_rank, staff_rank, bow_rank, fist_rank, other_rank):
