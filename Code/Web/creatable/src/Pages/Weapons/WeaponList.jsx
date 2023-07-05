@@ -21,10 +21,157 @@ const WeaponList = () => {
     const [weaponsJson, setWeaponsJson] = useState([])
     const [weapons, setWeapons] = useState([])
     const [passives, setPassives] = useState([])
+    const [weaponType] = useState([
+        {
+            id: 1,
+            value: 'Sword'
+        },
+        {
+            id: 2,
+            value: 'Spear'
+        },
+        {
+            id: 3,
+            value: 'Axe'
+        },
+        {
+            id: 4,
+            value: 'Dagger'
+        },
+        {
+            id: 5,
+            value: 'Staff'
+        },
+        {
+            id: 6,
+            value: 'Bow'
+        },
+        {
+            id: 7,
+            value: 'Fist'
+        },
+        {
+            id: 8,
+            value: 'Other'
+        }
+    ])
+    const [damageType] = useState([
+        {
+            id: 1,
+            value: 'Physical'
+        },
+        {
+            id: 2,
+            value: 'Arcane'
+        },
+        {
+            id: 3,
+            value: 'Heat'
+        },
+        {
+            id: 4,
+            value: 'Lava'
+        },
+        {
+            id: 5,
+            value: 'Liquid'
+        },
+        {
+            id: 6,
+            value: 'Ice'
+        },
+        {
+            id: 7,
+            value: 'Wind'
+        },
+        {
+            id: 8,
+            value: 'Lightning'
+        },
+        {
+            id: 9,
+            value: 'Nature'
+        },
+        {
+            id: 10,
+            value: 'Poison'
+        },
+        {
+            id: 11,
+            value: 'Holy'
+        },
+        {
+            id: 12,
+            value: 'Space'
+        },
+        {
+            id: 13,
+            value: 'Curse'
+        },
+        {
+            id: 14,
+            value: 'Necromancy'
+        },
+        {
+            id: 15,
+            value: 'Corrupted Holy'
+        },
+        {
+            id: 16,
+            value: 'Chaos'
+        },
+        {
+            id: 17,
+            value: 'Void'
+        }
+    ])
+    const [weaponRank] = useState([
+        {
+            id: 1,
+            value: 'E'
+        },
+        {
+            id: 2,
+            value: 'D'
+        },
+        {
+            id: 3,
+            value: 'C'
+        },
+        {
+            id: 4,
+            value: 'B'
+        },
+        {
+            id: 5,
+            value: 'A'
+        },
+        {
+            id: 6,
+            value: 'S'
+        }
+    ])
 
     const [pageFilter, setPageFilter] = useState(1)
     let itemCounter = 0
     const resetItemCounter = () => { itemCounter = 0 }
+    const changePage = (pageNumber, lists) => {
+        if (pageNumber > 0 && lists.length > ((pageNumber - 1) * 4)) {
+            window.scrollTo(0, 0)
+            setPageFilter(pageNumber)
+        }
+    }
+
+    const [searchString, setSearchString] = useState('')
+    const [minDamage, setMinDamage] = useState(0)
+    const [maxDamage, setMaxDamage] = useState(0)
+    const [minAccuracy, setMinAccuracy] = useState(0)
+    const [maxAccuracy, setMaxAccuracy] = useState(0)
+    const [minCrit, setMinCrit] = useState(0)
+    const [maxCrit, setMaxCrit] = useState(0)
+    const [filterWeaponType, setFilterWeaponType] = useState(0)
+    const [filterWeaponRank, setFilterWeaponRank] = useState(0)
+    const [filterDamageType, setFilterDamageType] = useState(0)
 
     const { isOpen: createIsOpen, onOpen: createOnOpen, onClose: createOnClose } = useDisclosure()
     const [seeCreate, setSeeCreate] = useState(false)
@@ -57,6 +204,8 @@ const WeaponList = () => {
                 return 'A'
             case 6:
                 return 'S'
+            default:
+                return 'None'
         }
     }
     const getRankId = (value) => {
@@ -73,9 +222,10 @@ const WeaponList = () => {
                 return 5
             case 'S':
                 return 6
+            default:
+                return 0              
         }
     }
-
     const getDamageTypeValue = (id) => {
         switch (id) {
             case 1:
@@ -112,6 +262,8 @@ const WeaponList = () => {
                 return 'Chaos'
             case 17:
                 return 'Void'
+            default:
+                return 'None'
         }
     }
     const getDamageTypeId = (value) => {
@@ -150,9 +302,10 @@ const WeaponList = () => {
                 return 16
             case 'Void':
                 return 17
+            default:
+                return 0
         }
     }
-
     const getWeaponTypeValue = (id) => {
         switch (id) {
             case 1:
@@ -171,6 +324,8 @@ const WeaponList = () => {
                 return 'Fist'
             case 8:
                 return 'Other'
+            default:
+                return 'None'
         }
     }
     const getWeaponTypeId = (value) => {
@@ -191,9 +346,69 @@ const WeaponList = () => {
                 return 7
             case 'Other':
                 return 8
+            default:
+                return 0
         }
     }
 
+    const verifyWeapon = (item) => { return verifyFilter(item) && verifyPage() }
+    const verifyFilter = (item) => {
+        if (searchString !== '' && !String(item.name).includes(searchString))
+            return false
+        if (getWeaponTypeValue(filterWeaponType) !== 'None' && item.weapon_type !== getWeaponTypeValue(filterWeaponType))
+            return false
+        if (getRankValue(filterWeaponRank) !== 'None' && item.rank !== getRankValue(filterWeaponRank))
+            return false
+        if (getDamageTypeValue(filterDamageType) !== 'None' && item.damage_type !== getDamageTypeValue(filterDamageType))
+            return false
+        if (minDamage > 0 && item.damage < minDamage)
+            return false
+        if (maxDamage > 0 && item.damage > maxDamage)
+            return false
+        if (minAccuracy > 0 && item.accuracy < minAccuracy)
+            return false
+        if (maxAccuracy > 0 && item.accuracy > maxAccuracy)
+            return false
+        if (minCrit > 0 && item.crit < minCrit)
+            return false
+        if (maxCrit > 0 && item.crit > maxCrit)
+            return false
+        itemCounter++
+        return true
+    }
+    const verifyFilterPC = (item) => {
+        if (searchString !== '' && !String(item.name).includes(searchString))
+            return false
+        if (getWeaponTypeValue(filterWeaponType) !== 'None' && item.weapon_type !== getWeaponTypeValue(filterWeaponType))
+            return false
+        if (getRankValue(filterWeaponRank) !== 'None' && item.rank !== getRankValue(filterWeaponRank))
+            return false
+        if (getDamageTypeValue(filterDamageType) !== 'None' && item.damage_type !== getDamageTypeValue(filterDamageType))
+            return false
+        if (minDamage > 0 && item.damage < minDamage)
+            return false
+        if (maxDamage > 0 && item.damage > maxDamage)
+            return false
+        if (minAccuracy > 0 && item.accuracy < minAccuracy)
+            return false
+        if (maxAccuracy > 0 && item.accuracy > maxAccuracy)
+            return false
+        if (minCrit > 0 && item.crit < minCrit)
+            return false
+        if (maxCrit > 0 && item.crit > maxCrit)
+            return false
+        return true
+    }
+    const verifyPage = () => {
+        if (itemCounter > (pageFilter - 1) * 4 && itemCounter <= pageFilter * 4)
+            return true
+        return false
+    }
+    const filterWeapon = () => {
+        setPageFilter(1)
+        resetItemCounter()
+        setWeapons(weaponsJson.filter(verifyWeapon))
+    }
 
     const clickCreate = () => {
         setCreateData([
@@ -264,32 +479,7 @@ const WeaponList = () => {
                 type: 'select',
                 actual: '-- Select a rank --',
                 value: 0,
-                data: [
-                    {
-                        id: 1,
-                        value: 'E'
-                    },
-                    {
-                        id: 2,
-                        value: 'D'
-                    },
-                    {
-                        id: 3,
-                        value: 'C'
-                    },
-                    {
-                        id: 4,
-                        value: 'B'
-                    },
-                    {
-                        id: 5,
-                        value: 'A'
-                    },
-                    {
-                        id: 6,
-                        value: 'S'
-                    }
-                ],
+                data: weaponRank,
                 hasError: false,
                 errors: [
                     {
@@ -303,76 +493,7 @@ const WeaponList = () => {
                 name: 'damage type',
                 type: 'select',
                 value: 0,
-                data: [
-                    {
-                        id: 1,
-                        value: 'Physical'
-                    },
-                    {
-                        id: 2,
-                        value: 'Arcane'
-                    },
-                    {
-                        id: 3,
-                        value: 'Heat'
-                    },
-                    {
-                        id: 4,
-                        value: 'Lava'
-                    },
-                    {
-                        id: 5,
-                        value: 'Liquid'
-                    },
-                    {
-                        id: 6,
-                        value: 'Ice'
-                    },
-                    {
-                        id: 7,
-                        value: 'Wind'
-                    },
-                    {
-                        id: 8,
-                        value: 'Lightning'
-                    },
-                    {
-                        id: 9,
-                        value: 'Nature'
-                    },
-                    {
-                        id: 10,
-                        value: 'Poison'
-                    },
-                    {
-                        id: 11,
-                        value: 'Holy'
-                    },
-                    {
-                        id: 12,
-                        value: 'Space'
-                    },
-                    {
-                        id: 13,
-                        value: 'Curse'
-                    },
-                    {
-                        id: 14,
-                        value: 'Necromancy'
-                    },
-                    {
-                        id: 15,
-                        value: 'Corrupted Holy'
-                    },
-                    {
-                        id: 16,
-                        value: 'Chaos'
-                    },
-                    {
-                        id: 17,
-                        value: 'Void'
-                    }
-                ],
+                data: damageType,
                 hasError: false,
                 errors: [
                     {
@@ -386,40 +507,7 @@ const WeaponList = () => {
                 name: 'weapon type',
                 type: 'select',
                 value: 0,
-                data: [
-                    {
-                        id: 1,
-                        value: 'Sword'
-                    },
-                    {
-                        id: 2,
-                        value: 'Spear'
-                    },
-                    {
-                        id: 3,
-                        value: 'Axe'
-                    },
-                    {
-                        id: 4,
-                        value: 'Dagger'
-                    },
-                    {
-                        id: 5,
-                        value: 'Staff'
-                    },
-                    {
-                        id: 6,
-                        value: 'Bow'
-                    },
-                    {
-                        id: 7,
-                        value: 'Fist'
-                    },
-                    {
-                        id: 8,
-                        value: 'Other'
-                    }
-                ],
+                data: weaponType,
                 hasError: false,
                 errors: [
                     {
@@ -522,32 +610,7 @@ const WeaponList = () => {
                 type: 'select',
                 actual: '-- Select a rank --',
                 value: getRankId(rank),
-                data: [
-                    {
-                        id: 1,
-                        value: 'E'
-                    },
-                    {
-                        id: 2,
-                        value: 'D'
-                    },
-                    {
-                        id: 3,
-                        value: 'C'
-                    },
-                    {
-                        id: 4,
-                        value: 'B'
-                    },
-                    {
-                        id: 5,
-                        value: 'A'
-                    },
-                    {
-                        id: 6,
-                        value: 'S'
-                    }
-                ],
+                data: weaponRank,
                 hasError: false,
                 errors: [
                     {
@@ -561,76 +624,7 @@ const WeaponList = () => {
                 name: 'damage type',
                 type: 'select',
                 value: getDamageTypeId(damage_type),
-                data: [
-                    {
-                        id: 1,
-                        value: 'Physical'
-                    },
-                    {
-                        id: 2,
-                        value: 'Arcane'
-                    },
-                    {
-                        id: 3,
-                        value: 'Heat'
-                    },
-                    {
-                        id: 4,
-                        value: 'Lava'
-                    },
-                    {
-                        id: 5,
-                        value: 'Liquid'
-                    },
-                    {
-                        id: 6,
-                        value: 'Ice'
-                    },
-                    {
-                        id: 7,
-                        value: 'Wind'
-                    },
-                    {
-                        id: 8,
-                        value: 'Lightning'
-                    },
-                    {
-                        id: 9,
-                        value: 'Nature'
-                    },
-                    {
-                        id: 10,
-                        value: 'Poison'
-                    },
-                    {
-                        id: 11,
-                        value: 'Holy'
-                    },
-                    {
-                        id: 12,
-                        value: 'Space'
-                    },
-                    {
-                        id: 13,
-                        value: 'Curse'
-                    },
-                    {
-                        id: 14,
-                        value: 'Necromancy'
-                    },
-                    {
-                        id: 15,
-                        value: 'Corrupted Holy'
-                    },
-                    {
-                        id: 16,
-                        value: 'Chaos'
-                    },
-                    {
-                        id: 17,
-                        value: 'Void'
-                    }
-                ],
+                data: damageType,
                 hasError: false,
                 errors: [
                     {
@@ -644,40 +638,7 @@ const WeaponList = () => {
                 name: 'weapon type',
                 type: 'select',
                 value: getWeaponTypeId(weapon_type),
-                data: [
-                    {
-                        id: 1,
-                        value: 'Sword'
-                    },
-                    {
-                        id: 2,
-                        value: 'Spear'
-                    },
-                    {
-                        id: 3,
-                        value: 'Axe'
-                    },
-                    {
-                        id: 4,
-                        value: 'Dagger'
-                    },
-                    {
-                        id: 5,
-                        value: 'Staff'
-                    },
-                    {
-                        id: 6,
-                        value: 'Bow'
-                    },
-                    {
-                        id: 7,
-                        value: 'Fist'
-                    },
-                    {
-                        id: 8,
-                        value: 'Other'
-                    }
-                ],
+                data: weaponType,
                 hasError: false,
                 errors: [
                     {
@@ -714,7 +675,13 @@ const WeaponList = () => {
 
     }
 
-
+    const orderBy = (a, b) => {
+        if (a.name < b.name)
+            return -1
+        if (a.name > b.name)
+            return 1
+        return 0
+    }
     const getPassives = async () => {
         fetch(data.api_url+'passive/get_weapon', {
             method: 'GET',
@@ -739,11 +706,10 @@ const WeaponList = () => {
                 'Authorization': localStorage.getItem('token_auth')
             }
         }).then(response => response.json().then(item => {
-                setWeaponsJson(item)
+                setWeaponsJson(item.sort(orderBy))
             }
         ))
     }
-
 
     useEffect(_ => {
 
