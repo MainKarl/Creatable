@@ -64,6 +64,50 @@ def get_passive():
         return jsonify(list)
     else: 
         return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })
+@app.route("/passive/get_weapon", methods=['GET'])
+def get_weapon_passive():
+    if verify_token(request.headers.get('Authorization')):
+        list_passives = passives.query.filter(passives.passive_type == 'Weapon').all()
+        list = []
+        passive: passives
+        for passive in list_passives:
+            list.append(passive.get_passive())
+        return jsonify(list)
+    else:
+        return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })
+@app.route("/passive/get_armor", methods=['GET'])
+def get_armor_passive():
+    if verify_token(request.headers.get('Authorization')):
+        list_passives = passives.query.filter(passives.passive_type == 'Armor').all()
+        list = []
+        passive: passives
+        for passive in list_passives:
+            list.append(passive.get_passive())
+        return jsonify(list)
+    else:
+        return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })
+@app.route("/passive/get_class", methods=['GET'])
+def get_class_passive():
+    if verify_token(request.headers.get('Authorization')):
+        list_passives = passives.query.filter(passives.passive_type == 'Class').all()
+        list = []
+        passive: passives
+        for passive in list_passives:
+            list.append(passive.get_passive())
+        return jsonify(list)
+    else:
+        return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })
+@app.route("/passive/get_skill", methods=['GET'])
+def get_skill_passive():
+    if verify_token(request.headers.get('Authorization')):
+        list_passives = passives.query.filter(passives.passive_type == 'Skill').all()
+        list = []
+        passive: passives
+        for passive in list_passives:
+            list.append(passive.get_passive())
+        return jsonify(list)
+    else:
+        return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })
 
 @app.route("/armor/get", methods=['GET'])
 def get_armor():
@@ -258,7 +302,6 @@ def levelup_character(id: int):
         })
     else: 
         return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })
-
 @app.route("/character/change_type", methods=['POST'])
 def change_type_character():
     token = request.headers.get('Authorization')

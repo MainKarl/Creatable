@@ -20,6 +20,7 @@ import Register from './Pages/User/Register'
 
 import Layout from './Components/Layout'
 import CharacterList from './Pages/Characters/CharacterList'
+import WeaponList from './Pages/Weapons/WeaponList'
 
 const Index = () => {
   return (
@@ -31,6 +32,7 @@ const Index = () => {
       </Route>
       <Route key={ 'normalLayout'} path={ "/" } element={ <Layout /> }>
         <Route key={ 'characters' } path="characters" element={ <CharacterList /> } />
+        <Route key={ 'weapons' } path="/weapons" element={ <WeaponList /> } />
       </Route>
     </Routes>
   </HashRouter>

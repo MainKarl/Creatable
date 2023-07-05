@@ -716,10 +716,32 @@ const WeaponList = () => {
 
 
     const getPassives = async () => {
-        
+        fetch(data.api_url+'passive/get_weapon', {
+            method: 'GET',
+            mode: 'cors',
+            cache: 'default',
+            redirect: 'manual',
+            headers: {
+                'Authorization': localStorage.getItem('token_auth')
+            }
+        }).then(response => response.json().then(item => {
+                setPassives(item)
+            }
+        ))
     }
     const getWeapons = async () => {
-
+        fetch(data.api_url+'weapon/get', {
+            method: 'GET',
+            mode: 'cors',
+            cache: 'default',
+            redirect: 'manual',
+            headers: {
+                'Authorization': localStorage.getItem('token_auth')
+            }
+        }).then(response => response.json().then(item => {
+                setWeaponsJson(item)
+            }
+        ))
     }
 
 
