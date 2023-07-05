@@ -665,7 +665,6 @@ const CharacterList = () => {
     }
 
     useEffect(() => {
-        console.log(pageFilter)
         setCharacters(charactersJson.filter(verifyCharacter))
     }, [pageFilter])
     useEffect(() => {
