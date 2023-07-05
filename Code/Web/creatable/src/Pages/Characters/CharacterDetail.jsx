@@ -54,7 +54,7 @@ const CharacterDetail = ({ data, onChangeCharacter, callRest, callLevelUp, delet
             setState(state-1)
     }
     const [stateMessage] = useState([
-        'general info',
+        'general',
         'stats',
         'magic',
         'weapons',

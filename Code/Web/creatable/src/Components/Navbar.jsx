@@ -21,9 +21,10 @@ const Navbar = () => {
     return (
         <Box
           bg={ useColorModeValue(data.colors[0].darkestbackgroundcolor, data.colors[1].darkestbackgroundcolor) }
-          w={ '100%' }>
+          w={ '100%' }
+          h={ '20vh' }>
             <Flex
-              h={ 32 }
+              h={ '100%' }
               alignItems={ 'center' }
               justifyContent={ 'space-between' }>
                 <HStack w={ '20%' }>

@@ -1,13 +1,28 @@
 import React, { useState, useEffect, useRef } from "react"
 import {
     Box,
+    Button,
+    Divider,
     Flex,
+    HStack,
+    IconButton,
+    Input,
+    NumberDecrementStepper,
+    NumberIncrementStepper,
+    NumberInput,
+    NumberInputField,
+    NumberInputStepper,
+    SimpleGrid,
+    Text,
+    VStack,
     useColorModeValue,
     useDisclosure
 } from '@chakra-ui/react'
 import CustomDrawer from "../../Components/CustomDrawer"
 import { PageChanger } from "../../Components/PageChanger"
 import CustomAlertDialog from "../../Components/CustomAlertDialog"
+import { AddIcon } from "@chakra-ui/icons"
+import CustomFilterSelect from "../../Components/CustomFilterSelect"
 
 const WeaponList = () => {
     let data = require('../../data.json')
@@ -22,6 +37,44 @@ const WeaponList = () => {
     const [weapons, setWeapons] = useState([])
     const [passives, setPassives] = useState([])
     const [weaponType] = useState([
+        {
+            id: 1,
+            value: 'Sword'
+        },
+        {
+            id: 2,
+            value: 'Spear'
+        },
+        {
+            id: 3,
+            value: 'Axe'
+        },
+        {
+            id: 4,
+            value: 'Dagger'
+        },
+        {
+            id: 5,
+            value: 'Staff'
+        },
+        {
+            id: 6,
+            value: 'Bow'
+        },
+        {
+            id: 7,
+            value: 'Fist'
+        },
+        {
+            id: 8,
+            value: 'Other'
+        }
+    ])
+    const [fWeaponType] = useState([
+        {
+            id: 0,
+            value: 'None'
+        },
         {
             id: 1,
             value: 'Sword'
@@ -125,7 +178,111 @@ const WeaponList = () => {
             value: 'Void'
         }
     ])
+    const [fDamageType] = useState([
+        {
+            id: 0,
+            value: 'None'
+        },
+        {
+            id: 1,
+            value: 'Physical'
+        },
+        {
+            id: 2,
+            value: 'Arcane'
+        },
+        {
+            id: 3,
+            value: 'Heat'
+        },
+        {
+            id: 4,
+            value: 'Lava'
+        },
+        {
+            id: 5,
+            value: 'Liquid'
+        },
+        {
+            id: 6,
+            value: 'Ice'
+        },
+        {
+            id: 7,
+            value: 'Wind'
+        },
+        {
+            id: 8,
+            value: 'Lightning'
+        },
+        {
+            id: 9,
+            value: 'Nature'
+        },
+        {
+            id: 10,
+            value: 'Poison'
+        },
+        {
+            id: 11,
+            value: 'Holy'
+        },
+        {
+            id: 12,
+            value: 'Space'
+        },
+        {
+            id: 13,
+            value: 'Curse'
+        },
+        {
+            id: 14,
+            value: 'Necromancy'
+        },
+        {
+            id: 15,
+            value: 'Corrupted Holy'
+        },
+        {
+            id: 16,
+            value: 'Chaos'
+        },
+        {
+            id: 17,
+            value: 'Void'
+        }
+    ])
     const [weaponRank] = useState([
+        {
+            id: 1,
+            value: 'E'
+        },
+        {
+            id: 2,
+            value: 'D'
+        },
+        {
+            id: 3,
+            value: 'C'
+        },
+        {
+            id: 4,
+            value: 'B'
+        },
+        {
+            id: 5,
+            value: 'A'
+        },
+        {
+            id: 6,
+            value: 'S'
+        }
+    ])
+    const [fWeaponRank] = useState([
+        {
+            id: 0,
+            value: 'None'
+        },
         {
             id: 1,
             value: 'E'
@@ -353,7 +510,7 @@ const WeaponList = () => {
 
     const verifyWeapon = (item) => { return verifyFilter(item) && verifyPage() }
     const verifyFilter = (item) => {
-        if (searchString !== '' && !String(item.name).includes(searchString))
+        if (searchString !== '' && !String(item.name).toUpperCase().includes(searchString.toUpperCase()))
             return false
         if (getWeaponTypeValue(filterWeaponType) !== 'None' && item.weapon_type !== getWeaponTypeValue(filterWeaponType))
             return false
@@ -377,7 +534,7 @@ const WeaponList = () => {
         return true
     }
     const verifyFilterPC = (item) => {
-        if (searchString !== '' && !String(item.name).includes(searchString))
+        if (searchString !== '' && !String(item.name).toUpperCase().includes(searchString.toUpperCase()))
             return false
         if (getWeaponTypeValue(filterWeaponType) !== 'None' && item.weapon_type !== getWeaponTypeValue(filterWeaponType))
             return false
@@ -492,6 +649,7 @@ const WeaponList = () => {
             {
                 name: 'damage type',
                 type: 'select',
+                actual: '-- Select a damage type --',
                 value: 0,
                 data: damageType,
                 hasError: false,
@@ -506,6 +664,7 @@ const WeaponList = () => {
             {
                 name: 'weapon type',
                 type: 'select',
+                actual: '-- Select a weapon type --',
                 value: 0,
                 data: weaponType,
                 hasError: false,
@@ -712,10 +871,10 @@ const WeaponList = () => {
     }
 
     useEffect(_ => {
-
+        setWeapons(weaponsJson.filter(verifyWeapon))
     }, [pageFilter])
     useEffect(_ => {
-
+        setWeapons(weaponsJson.filter(verifyWeapon))
     }, [weaponsJson])
     useEffect(_ => {
         setPageFilter(1)
@@ -728,10 +887,284 @@ const WeaponList = () => {
         <Box
           w={ '100%' }
           h={ '100%' }
-          minH={ '87vh' }
+          minH={ '80vh' }
           bgColor={ backgroundColor }>
             <Flex padding={ 0 }>
-
+                <VStack
+                  w={ '15%' }
+                  h={ '80vh' }
+                  overflow={ 'scroll' }
+                  position={ 'relative' }
+                  bgColor={ sbackgroundColor }
+                  css={{
+                    '&::-webkit-scrollbar': {
+                        width: '15px',
+                        height: '100%'
+                    },
+                    '&::-webkit-scrollbar-track': {
+                        background: sbackgroundColor,
+                    },
+                    '&::-webkit-scrollbar-thumb': {
+                        backgroundColor: inputBackgroundColor,
+                        borderRadius: '20px',
+                        border: `3px solid ${sbackgroundColor}`
+                    },
+                  }}>
+                    <Text 
+                      w={ '80%' } 
+                      ml={ 'auto' } 
+                      mr={ 'auto' }
+                      mt={ '1.5%' }
+                      textAlign={ 'center' }
+                      fontSize={ '18px' }
+                      fontWeight={ 'bold' }>
+                        Filtrage
+                    </Text>
+                    <Divider color={ alternateTextColor } w={ '85%' } mr={ 'auto' } ml={ 'auto' } />
+                    <VStack w={ '100%' }>
+                        <HStack w={ '100%' } textAlign={ 'left' }>
+                            <HStack w={ '5%' } />
+                            <Text w={ '95%' } fontSize={ '17px' }>Search</Text>
+                        </HStack>
+                        <HStack w={ '100%' }>
+                            <HStack w={ '5%' } />
+                            <Input
+                              w={ '85%' }
+                              type={ 'text' }
+                              bgColor={ inputBackgroundColor }
+                              borderColor={ inputBorderColor }
+                              onChange={ value => setSearchString(value.target.value) } />
+                        </HStack>
+                    </VStack>
+                    <VStack w={ '100%' }>
+                        <HStack w={ '100%' } textAlign={ 'left' }>
+                            <HStack w={ '5%' } />
+                            <Text w={ '95%' } fontSize={ '17px' }>Damage</Text>
+                        </HStack>
+                        <HStack w={ '100%' }>
+                            <HStack w={ '5%' } />
+                            <Text w={ '15%' } fontSize={ '15px' } color={ alternateTextColor }>Min</Text>
+                            <NumberInput
+                              w={ '70%' }
+                              defaultValue={ minDamage }
+                              min={ -100 }
+                              max={ 250 }
+                              color={ alternateTextColor }
+                              borderColor={ alternateTextColor }
+                              onChange={ value => setMinDamage(value) }>
+                                <NumberInputField />
+                                <NumberInputStepper borderColor={ alternateTextColor }>
+                                    <NumberIncrementStepper borderColor={ alternateTextColor } />
+                                    <NumberDecrementStepper borderColor={ alternateTextColor } />
+                                </NumberInputStepper>
+                            </NumberInput>
+                            <HStack w={ '5%' } />
+                        </HStack>
+                        <HStack w={ '100%' }>
+                            <HStack w={ '5%' } />
+                            <Text w={ '15%' } fontSize={ '15px' } color={ alternateTextColor }>Max</Text>
+                            <NumberInput
+                              w={ '70%' }
+                              defaultValue={ minDamage }
+                              min={ -100 }
+                              max={ 250 }
+                              color={ alternateTextColor }
+                              borderColor={ alternateTextColor }
+                              onChange={ value => setMaxDamage(value) }>
+                                <NumberInputField />
+                                <NumberInputStepper borderColor={ alternateTextColor }>
+                                    <NumberIncrementStepper borderColor={ alternateTextColor } />
+                                    <NumberDecrementStepper borderColor={ alternateTextColor } />
+                                </NumberInputStepper>
+                            </NumberInput>
+                            <HStack w={ '5%' } />
+                        </HStack>
+                    </VStack>
+                    <VStack w={ '100%' }>
+                        <HStack w={ '100%' } textAlign={ 'left' }>
+                            <HStack w={ '5%' } />
+                            <Text w={ '95%' } fontSize={ '17px' }>Accuracy</Text>
+                        </HStack>
+                        <HStack w={ '100%' }>
+                            <HStack w={ '5%' } />
+                            <Text w={ '15%' } fontSize={ '15px' } color={ alternateTextColor }>Min</Text>
+                            <NumberInput
+                              w={ '70%' }
+                              defaultValue={ minDamage }
+                              min={ -100 }
+                              max={ 1000 }
+                              color={ alternateTextColor }
+                              borderColor={ alternateTextColor }
+                              onChange={ value => setMinAccuracy(value) }>
+                                <NumberInputField />
+                                <NumberInputStepper borderColor={ alternateTextColor }>
+                                    <NumberIncrementStepper borderColor={ alternateTextColor } />
+                                    <NumberDecrementStepper borderColor={ alternateTextColor } />
+                                </NumberInputStepper>
+                            </NumberInput>
+                            <HStack w={ '5%' } />
+                        </HStack>
+                        <HStack w={ '100%' }>
+                            <HStack w={ '5%' } />
+                            <Text w={ '15%' } fontSize={ '15px' } color={ alternateTextColor }>Max</Text>
+                            <NumberInput
+                              w={ '70%' }
+                              defaultValue={ minDamage }
+                              min={ -100 }
+                              max={ 1000 }
+                              color={ alternateTextColor }
+                              borderColor={ alternateTextColor }
+                              onChange={ value => setMaxAccuracy(value) }>
+                                <NumberInputField />
+                                <NumberInputStepper borderColor={ alternateTextColor }>
+                                    <NumberIncrementStepper borderColor={ alternateTextColor } />
+                                    <NumberDecrementStepper borderColor={ alternateTextColor } />
+                                </NumberInputStepper>
+                            </NumberInput>
+                            <HStack w={ '5%' } />
+                        </HStack>
+                    </VStack>
+                    <VStack w={ '100%' }>
+                        <HStack w={ '100%' } textAlign={ 'left' }>
+                            <HStack w={ '5%' } />
+                            <Text w={ '95%' } fontSize={ '17px' }>Crit</Text>
+                        </HStack>
+                        <HStack w={ '100%' }>
+                            <HStack w={ '5%' } />
+                            <Text w={ '15%' } fontSize={ '15px' } color={ alternateTextColor }>Min</Text>
+                            <NumberInput
+                              w={ '70%' }
+                              defaultValue={ minDamage }
+                              min={ -100 }
+                              max={ 100 }
+                              color={ alternateTextColor }
+                              borderColor={ alternateTextColor }
+                              onChange={ value => setMinCrit(value) }>
+                                <NumberInputField />
+                                <NumberInputStepper borderColor={ alternateTextColor }>
+                                    <NumberIncrementStepper borderColor={ alternateTextColor } />
+                                    <NumberDecrementStepper borderColor={ alternateTextColor } />
+                                </NumberInputStepper>
+                            </NumberInput>
+                            <HStack w={ '5%' } />
+                        </HStack>
+                        <HStack w={ '100%' }>
+                            <HStack w={ '5%' } />
+                            <Text w={ '15%' } fontSize={ '15px' } color={ alternateTextColor }>Max</Text>
+                            <NumberInput
+                              w={ '70%' }
+                              defaultValue={ minDamage }
+                              min={ -100 }
+                              max={ 100 }
+                              color={ alternateTextColor }
+                              borderColor={ alternateTextColor }
+                              onChange={ value => setMaxCrit(value) }>
+                                <NumberInputField />
+                                <NumberInputStepper borderColor={ alternateTextColor }>
+                                    <NumberIncrementStepper borderColor={ alternateTextColor } />
+                                    <NumberDecrementStepper borderColor={ alternateTextColor } />
+                                </NumberInputStepper>
+                            </NumberInput>
+                            <HStack w={ '5%' } />
+                        </HStack>
+                    </VStack>
+                    <VStack w={ '100%' }>
+                        <HStack w={ '100%' } textAlign={ 'left' }>
+                            <HStack w={ '5%' } />
+                            <Text w={ '95%' } fontSize={ '17px' }>Weapon Type</Text>
+                        </HStack>
+                        <HStack w={ '100%' }>
+                            <HStack w={ '5%' } />
+                            <HStack w={ '85%' }>
+                                <CustomFilterSelect
+                                  value={ getWeaponTypeValue(filterWeaponType) }
+                                  list={ fWeaponType }
+                                  onClick={ value => setFilterWeaponType(value) } />
+                            </HStack>
+                        </HStack>
+                    </VStack>
+                    <VStack w={ '100%' }>
+                        <HStack w={ '100%' } textAlign={ 'left' }>
+                            <HStack w={ '5%' } />
+                            <Text w={ '95%' } fontSize={ '17px' }>Weapon Rank</Text>
+                        </HStack>
+                        <HStack w={ '100%' }>
+                            <HStack w={ '5%' } />
+                            <HStack w={ '85%' }>
+                                <CustomFilterSelect
+                                  value={ getRankValue(filterWeaponRank) }
+                                  list={ fWeaponRank }
+                                  onClick={ value => setFilterWeaponRank(value) } />
+                            </HStack>
+                        </HStack>
+                    </VStack>
+                    <VStack w={ '100%' }>
+                        <HStack w={ '100%' } textAlign={ 'left' }>
+                            <HStack w={ '5%' } />
+                            <Text w={ '95%' } fontSize={ '17px' }>Damage Type</Text>
+                        </HStack>
+                        <HStack w={ '100%' }>
+                            <HStack w={ '5%' } />
+                            <HStack w={ '85%' }>
+                                <CustomFilterSelect
+                                  value={ getDamageTypeValue(filterDamageType) }
+                                  list={ fDamageType }
+                                  onClick={ value => setFilterDamageType(value) } />
+                            </HStack>
+                        </HStack>
+                    </VStack>
+                    <HStack w={ '90%' } pt={ '5%' } pb={ '5%' } ml={ 'auto' } mr={ 'auto' }>
+                        <Button w={ '100%' } colorScheme={ 'orange' } onClick={ filterWeapon }>Filter</Button>
+                    </HStack>
+                </VStack>
+                <VStack
+                  w={ '85%' }
+                  h={ '80vh' }
+                  overflow={ 'scroll' }
+                  position={ 'relative' }
+                  color={ textColor }
+                  padding={ '2%' }
+                  css={{
+                    '&::-webkit-scrollbar': {
+                        width: '15px',
+                        height: '100%'
+                    },
+                    '&::-webkit-scrollbar-track': {
+                        background: sbackgroundColor,
+                    },
+                    '&::-webkit-scrollbar-thumb': {
+                        backgroundColor: inputBackgroundColor,
+                        borderRadius: '20px',
+                        border: `3px solid ${sbackgroundColor}`
+                    },
+                  }}>
+                    <HStack w={'100%'}>
+                        <Text
+                          w={ '100%' }
+                          textAlign={ 'center' }
+                          fontSize={ '24px' }
+                          fontWeight={ 'bold' }>
+                            Weapon
+                            <IconButton colorScheme={ 'whatsapp' } ml={ '1%' } icon={ <AddIcon /> } onClick={ _ => clickCreate() } />
+                        </Text>
+                    </HStack>
+                    <HStack w={ '100%' }>
+                        <Divider color={ alternateTextColor } />
+                    </HStack>
+                    <VStack w={ '100%' }>
+                        <SimpleGrid
+                          w={ '100%' }
+                          h={ '100%' }
+                          columns={ 2 }
+                          spacing={ 5 }>
+                            { weapons.map(weapon => (
+                                    <Text>{ weapon.name }</Text>
+                                ))
+                            }
+                        </SimpleGrid>
+                        <PageChanger changePage={ changePage } filteredItems={ weaponsJson.filter(verifyFilterPC) } pageFilter={ pageFilter } itemsPerPage={ 4 } />
+                    </VStack>
+                </VStack>
             </Flex>
             { seeCreate &&
                 <CustomDrawer

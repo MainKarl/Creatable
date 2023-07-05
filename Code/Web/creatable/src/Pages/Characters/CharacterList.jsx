@@ -682,14 +682,29 @@ const CharacterList = () => {
         <Box
           w={ '100%' }
           h={ '100%' }
-          minH={ '87vh' }
           bgColor={ backgroundColor }>
             <Flex
               padding={ '0' }>
                 <VStack
                   w={' 15%' }
-                  minH={ '87vh' }
-                  bgColor={ sbackgroundColor }>
+                  h={ '80vh' }
+                  overflow={ 'scroll' }
+                  position={ 'relative' }
+                  bgColor={ sbackgroundColor }
+                  css={{
+                    '&::-webkit-scrollbar': {
+                        width: '15px',
+                        height: '100%'
+                    },
+                    '&::-webkit-scrollbar-track': {
+                        background: sbackgroundColor,
+                    },
+                    '&::-webkit-scrollbar-thumb': {
+                        backgroundColor: inputBackgroundColor,
+                        borderRadius: '20px',
+                        border: `3px solid ${sbackgroundColor}`
+                    },
+                  }}>
                     <Text 
                       w={ '80%' } 
                       ml={ 'auto' } 
@@ -779,10 +794,27 @@ const CharacterList = () => {
                         <Button w={ '100%' } colorScheme={ 'orange' } onClick={ filterCharacter }>Filter</Button>
                     </HStack>
                 </VStack>
-                <VStack 
-                  w={ '80%' }
+                <VStack
+                  w={ '85%' }
+                  h={ '80vh' }
+                  overflow={ 'scroll' }
+                  position={ 'relative' }
                   color={ textColor }
-                  padding={ '2%' }>
+                  padding={ '2%' }
+                  css={{
+                    '&::-webkit-scrollbar': {
+                        width: '15px',
+                        height: '100%'
+                    },
+                    '&::-webkit-scrollbar-track': {
+                        background: sbackgroundColor,
+                    },
+                    '&::-webkit-scrollbar-thumb': {
+                        backgroundColor: inputBackgroundColor,
+                        borderRadius: '20px',
+                        border: `3px solid ${sbackgroundColor}`
+                    },
+                  }}>
                     <HStack 
                       w={'100%'}>
                         <Text
@@ -817,7 +849,6 @@ const CharacterList = () => {
                         <PageChanger changePage={ changePage } filteredItems={ charactersJson.filter(verifyFilterForPageChanger) } pageFilter={ pageFilter } itemsPerPage={ 4 } />       
                     </VStack>
                 </VStack>
-                <HStack w={ '5%' } />
             </Flex>
             { seeDrawer && 
                 <CustomDrawer

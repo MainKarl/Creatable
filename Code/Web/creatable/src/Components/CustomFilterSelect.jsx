@@ -41,8 +41,8 @@ const CustomFilterSelect = ({ value, list, onClick }) => {
                 }
             </HStack>
             { visibility && 
-                <VStack 
-                  w={ '13.5%' } 
+                <VStack
+                  w={ '80%' } 
                   zIndex={ 100 }
                   overflow={ 'auto' }
                   maxH={ '150px' }
