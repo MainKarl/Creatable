@@ -49,7 +49,6 @@ const WeaponDetail = ({ data, modifyWeapon, deleteWeapon }) => {
     const [passives, setPassives] = useState([])
 
     useEffect(() => {
-        console.log(data)
         setId(data.weapon_id)
         setName(data.name)
         setImg(data.img)
@@ -182,7 +181,8 @@ const WeaponDetail = ({ data, modifyWeapon, deleteWeapon }) => {
                                     </HStack>
                                     <HStack w={ '40%' }  bgColor={ backgroundColor } borderRadius={ '20px' }>
                                         <Center w={ '100%' } h={ '100%' }>
-                                            <Text fontSize={ 21 }>{ damage }</Text>
+                                            <Text fontSize={ 21 } mr={ '6px' }>{ damage }</Text>
+                                            <CustomIcon isize={ 21 } type={ damageType } />
                                         </Center>
                                     </HStack>
                                 </HStack>

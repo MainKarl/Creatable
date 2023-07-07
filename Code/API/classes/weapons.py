@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, Float
 from sqlalchemy.orm import relationship
 
-from classes.passives import passives
+from classes.passives import passives as Passives
 from constants import get_weapon_passive_table, get_db
 from fonctions import get_join_passive, download_image, get_extension
 
@@ -55,7 +55,7 @@ class weapons(get_db().Model):
         }
 
     def add_strength(self):
-        passive: passives
+        passive: Passives
         for passive in self.passives:
             match passive.name:
                 case 'Strength+I':
@@ -80,7 +80,7 @@ class weapons(get_db().Model):
                     return 10
         return 0
     def add_defense(self):
-        passive: passives
+        passive: Passives
         for passive in self.passives:
             match passive.name:
                 case 'Defense+I':
@@ -105,7 +105,7 @@ class weapons(get_db().Model):
                     return 10
         return 0
     def add_magic(self):
-        passive: passives
+        passive: Passives
         for passive in self.passives:
             match passive.name:
                 case 'Magic+I':
@@ -130,7 +130,7 @@ class weapons(get_db().Model):
                     return 10
         return 0
     def add_resistance(self):
-        passive: passives
+        passive: Passives
         for passive in self.passives:
             match passive.name:
                 case 'Resistance+I':
@@ -155,7 +155,7 @@ class weapons(get_db().Model):
                     return 10
         return 0
     def add_speed(self):
-        passive: passives
+        passive: Passives
         for passive in self.passives:
             match passive.name:
                 case 'Speed+I':
@@ -180,7 +180,7 @@ class weapons(get_db().Model):
                     return 10
         return 0
     def add_skill(self):
-        passive: passives
+        passive: Passives
         for passive in self.passives:
             match passive.name:
                 case 'Skill+I':
@@ -205,7 +205,7 @@ class weapons(get_db().Model):
                     return 10
         return 0
     def add_luck(self):
-        passive: passives
+        passive: Passives
         for passive in self.passives:
             match passive.name:
                 case 'Luck+I':
@@ -230,7 +230,7 @@ class weapons(get_db().Model):
                     return 10
         return 0
     def add_magic_damage(self):
-        passive: passives
+        passive: Passives
         for passive in self.passives:
             match passive.name:
                 case 'Magic Damage+I':
@@ -254,9 +254,13 @@ class weapons(get_db().Model):
                 case 'Magic Damage+X':
                     return 10
         return 0
-
+    def add_passive(self, passive: int):
+        self.passives.append(Passives.query.filter(Passives.id == passive).first())
+        
     def can_crit(self):
         if self.passives.has(name='Cannot Crit'):
             return False
         else:
             return True
+
+

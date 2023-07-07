@@ -691,31 +691,32 @@ const WeaponList = () => {
         createOnOpen()
     }
     const createWeapon = async (list) => {
-
+        const obj = {
+            method: 'POST',
+            headers: {
+                'Authorization': localStorage.getItem('token_auth')
+            },
+            body: JSON.stringify({ img: list[0].value, name: list[1].value, damage: list[2].value, accuracy: list[3].value, crit: list[4].value, price: list[5].value, rank: getRankValue(list[6].value), damage_type: getDamageTypeValue(list[7].value), weapon_type: getWeaponTypeValue(list[8].value), passives: String(list[9].value) })
+        }
+        fetch(data.api_url+'weapon/create', obj).then(response => {
+            response.json().then(item => {
+                setSeeCreate(false)
+                createOnClose()
+                console.log(item)
+                getWeapons()
+            })
+        })
     }
-    const clickModify = (id, name, damage, accuracy, crit, price, rank, damage_type, weapon_type, wpassives, img) => {
+    const clickModify = (id, name, damage, accuracy, crit, price, rank, damage_type, weapon_type, wpassives) => {
         let filteredPassives = ""
         wpassives.map(passive => {
             if (filteredPassives.length === 0)
-                filteredPassives = passive.id
+                filteredPassives = passive.passive_id
             else
-                filteredPassives += ";"+passive.id
+                filteredPassives += ";"+passive.passive_id
         })
         setModifyId(id)
         setModifyData([
-            {
-                name: 'img',
-                type: 'img',
-                value: img,
-                hasError: false,
-                errors: [
-                    {
-                        name: 'NULL',
-                        message: 'The image cannot be null.',
-                        status: false
-                    }
-                ]
-            },
             {
                 name: 'name',
                 type: 'text',
@@ -822,7 +823,21 @@ const WeaponList = () => {
         modifyOnOpen()
     }
     const modifyWeapon = async (list) => {
-
+        const obj = {
+            method: 'POST',
+            headers: {
+                'Authorization': localStorage.getItem('token_auth')
+            },
+            body: JSON.stringify({ id: modifyId, name: list[0].value, damage: list[1].value, accuracy: list[2].value, crit: list[3].value, price: list[4].value, rank: getRankValue(list[5].value), damage_type: getDamageTypeValue(list[6].value), weapon_type: getWeaponTypeValue(list[7].value), passives: String(list[8].value) })
+        }
+        fetch(data.api_url+'weapon/modify', obj).then(response => {
+            response.json().then(item => {
+                setSeeModify(false)
+                modifyOnClose()
+                console.log(item)
+                getWeapons()
+            })
+        })
     }
     const clickDelete = (id, name) => {
         setDeleteId(id)
@@ -832,7 +847,19 @@ const WeaponList = () => {
         deleteOnOpen()
     }
     const deleteWeapon = async () => {
-
+        const obj = {
+            method: 'POST',
+            headers: {
+                'Authorization': localStorage.getItem('token_auth')
+            },
+            body: JSON.stringify({ id: deleteId })
+        }
+        fetch(data.api_url+'weapon/delete', obj).then(response => response.json().then(item => {
+            console.log(item)
+            setSeeDelete(false)
+            deleteOnClose()
+            getWeapons()
+        }))
     }
 
     const orderBy = (a, b) => {

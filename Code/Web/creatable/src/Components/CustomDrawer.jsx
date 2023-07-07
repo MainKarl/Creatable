@@ -47,7 +47,12 @@ const CustomDrawer = ({ nData, item, type, isOpen, onClose, onSubmit }) => {
         await setSubmitProps(list)
     }
 
-    const getValue = (cItem) => { return submitProps.map((item) => { if (item.name === cItem) return item.value }) }
+    const getValue = (cItem) => {
+        return submitProps.map((item) => { 
+            if (item.name === cItem) 
+                return String(item.value)
+        })
+    }
     const getElementSelected = (data, name, backup) => {
         const nName = submitProps.find(item => item.name === name)
         if (nName === undefined)
@@ -130,6 +135,7 @@ const CustomDrawer = ({ nData, item, type, isOpen, onClose, onSubmit }) => {
                                       type={ 'text' }
                                       backgroundColor={ inputBackgroundColor }
                                       borderColor={ inputBorderColor }
+                                      value={ item.value }
                                       onChange={ event => onChangeProps(event.target.value, item.name) } />    
                                 }
                                 { item.type === 'img' &&
@@ -139,17 +145,18 @@ const CustomDrawer = ({ nData, item, type, isOpen, onClose, onSubmit }) => {
                                           backgroundColor={ inputBackgroundColor }
                                           borderColor={ inputBorderColor }
                                           boxSize={ 'sm' } 
-                                          ml={ 'auto' } 
-                                          mr={ 'auto' } 
-                                          mb={ '1%' } 
+                                          ml={ 'auto' }
+                                          mr={ 'auto' }
+                                          mb={ '1%' }
                                           borderRadius={ 'full' } 
-                                          src={ getValue('image') } 
+                                          src={ getValue(item.name) } 
                                           fallbackSrc={ 'http://144.217.14.182/img/notFound.jpg' } />
                                         <InputGroup>
                                             <Input
                                               type={ 'text' }
                                               backgroundColor={ inputBackgroundColor }
                                               borderColor={ inputBorderColor }
+                                              value={ item.value }
                                               onChange={ event => onChangeProps(event.target.value, item.name) } />
                                         </InputGroup>
                                     </>

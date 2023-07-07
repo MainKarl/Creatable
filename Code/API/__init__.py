@@ -1,6 +1,14 @@
 from flask import request, jsonify, Response
 from sqlalchemy import *
 from flask_cors import CORS
+import logging
+logging.basicConfig(
+    level=logging.ERROR,
+    handlers=[
+        logging.FileHandler('api.log'),
+        logging.StreamHandler()
+    ],
+    format="%(asctime)s [%(levelname)-5.5s]  %(message)s")
 
 from classes.armors import armors
 from classes.characters import characters
@@ -150,6 +158,68 @@ def get_list_weapon():
         return jsonify(list)
     else: 
         return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })    
+@app.route("/weapon/create", methods=['POST'])
+def create_weapon():
+    if verify_token(request.headers.get('Authorization')):
+        try:
+            data = request.get_json(force=True)
+            weapon = weapons(data['name'], data['damage'], data['accuracy'], data['crit'], data['price'], data['rank'], data['damage_type'], data['weapon_type'], data['img'])
+            if data['passives'] != '':
+                passive: int
+                for passive in str(data['passives']).split(';'):
+                    weapon.add_passive(passive)
+            db.session.add(weapon)
+            db.session.commit()
+            name = data['name']
+            return jsonify({
+                'status': 'success',
+                'message': f'{name} successfully created'
+            })
+        except Exception:
+            logging.exception('')
+    else: 
+        return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })
+@app.route("/weapon/delete", methods=['POST'])
+def delete_weapon():
+    token = request.headers.get('Authorization')
+    if verify_token(token) and get_role_id(token) == 1:
+        data = request.get_json(force=True)
+        weapon = weapons.query.filter(weapons.id == data['id']).one()
+        db.session.delete(weapon)
+        db.session.commit()
+        return jsonify({
+            'status': 'success',
+            'message': 'Weapon successfully deleted'
+        })
+    else: 
+        return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })  
+@app.route("/weapon/modify", methods=['POST'])
+def modify_weapon():
+    token = request.headers.get('Authorization')
+    if verify_token(token) and get_role_id(token) == 1:
+        data = request.get_json(force=True)
+        weapon: weapons
+        weapon = weapons.query.filter(weapons.id == data['id']).one()
+        weapon.name = data['name']
+        weapon.damage = data['damage']
+        weapon.accuracy = data['accuracy']
+        weapon.crit = data['crit']
+        weapon.price = data['price']
+        weapon.rank = data['rank']
+        weapon.damage_type = data['damage_type']
+        weapon.weapon_type = data['weapon_type']
+        weapon.passives.clear()
+        if data['passives'] != '':
+            passive: int
+            for passive in str(data['passives']).split(';'):
+                weapon.add_passive(passive)
+        db.session.commit()
+        return jsonify({
+            'status': 'success',
+            'message': 'weapon successfully modified'
+        })
+    else: 
+        return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })          
 
 @app.route("/class/get", methods=['GET'])
 def get_class():
