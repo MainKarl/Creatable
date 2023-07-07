@@ -23,6 +23,7 @@ import { PageChanger } from "../../Components/PageChanger"
 import CustomAlertDialog from "../../Components/CustomAlertDialog"
 import { AddIcon } from "@chakra-ui/icons"
 import CustomFilterSelect from "../../Components/CustomFilterSelect"
+import WeaponDetail from "./WeaponDetail"
 
 const WeaponList = () => {
     let data = require('../../data.json')
@@ -1157,8 +1158,8 @@ const WeaponList = () => {
                           h={ '100%' }
                           columns={ 2 }
                           spacing={ 5 }>
-                            { weapons.map(weapon => (
-                                    <Text>{ weapon.name }</Text>
+                            { weapons.map((weapon) => (
+                                    <WeaponDetail key={ weapon.weapon_id } data={ weapon } modifyWeapon={ clickModify } deleteWeapon={ clickDelete } />
                                 ))
                             }
                         </SimpleGrid>
