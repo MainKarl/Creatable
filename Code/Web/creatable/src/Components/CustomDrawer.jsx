@@ -38,6 +38,8 @@ const CustomDrawer = ({ nData, item, type, isOpen, onClose, onSubmit }) => {
     let alternateTextColor = useColorModeValue(gData.colors[0].textalternatecolor1, gData.colors[1].textalternatecolor1)
 
     const onChangeProps = async (nValue, cItem) => {
+        console.log(typeof(nValue))
+        console.log(cItem+' = '+nValue)
         var list = submitProps.map((item) => {
             if (item.name === cItem)
                 return { ...item, value: nValue }
@@ -49,7 +51,7 @@ const CustomDrawer = ({ nData, item, type, isOpen, onClose, onSubmit }) => {
 
     const getValue = (cItem) => {
         return submitProps.map((item) => { 
-            if (item.name === cItem) 
+            if (item.name === cItem)
                 return String(item.value)
         })
     }
@@ -135,7 +137,7 @@ const CustomDrawer = ({ nData, item, type, isOpen, onClose, onSubmit }) => {
                                       type={ 'text' }
                                       backgroundColor={ inputBackgroundColor }
                                       borderColor={ inputBorderColor }
-                                      value={ item.value }
+                                      defaultValue={ item.value }
                                       onChange={ event => onChangeProps(event.target.value, item.name) } />    
                                 }
                                 { item.type === 'img' &&
@@ -156,7 +158,6 @@ const CustomDrawer = ({ nData, item, type, isOpen, onClose, onSubmit }) => {
                                               type={ 'text' }
                                               backgroundColor={ inputBackgroundColor }
                                               borderColor={ inputBorderColor }
-                                              value={ item.value }
                                               onChange={ event => onChangeProps(event.target.value, item.name) } />
                                         </InputGroup>
                                     </>
