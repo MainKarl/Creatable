@@ -18,10 +18,10 @@ import {
     useColorModeValue,
     useDisclosure
 } from '@chakra-ui/react'
+import { AddIcon } from "@chakra-ui/icons"
 import CustomDrawer from "../../Components/CustomDrawer"
 import { PageChanger } from "../../Components/PageChanger"
 import CustomAlertDialog from "../../Components/CustomAlertDialog"
-import { AddIcon } from "@chakra-ui/icons"
 import CustomFilterSelect from "../../Components/CustomFilterSelect"
 import WeaponDetail from "./WeaponDetail"
 
