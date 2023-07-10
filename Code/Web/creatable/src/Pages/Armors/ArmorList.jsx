@@ -75,10 +75,20 @@ const ArmorList = () => {
             return false
         if (maxPower !== 0 && item.power > maxPower)
             return false
+        itemCounter++
+        return true
+    }
+    const verifyFilterPC = (item) => {
+        if (searchString !== '' && !String(item.name).toUpperCase().includes(searchString.toUpperCase()))
+            return false
+        if (minPower !== 0 && item.power < minPower)
+            return false
+        if (maxPower !== 0 && item.power > maxPower)
+            return false
         return true
     }
     const verifyPage = () => {
-        if (itemCounter > (pageFilter - 1) * 4 && itemCounter <= pageFilter * 4)
+        if (itemCounter > (pageFilter - 1) * 6 && itemCounter <= pageFilter * 6)
             return true
         return false
     }
@@ -289,16 +299,175 @@ const ArmorList = () => {
           minH={ '80vh' }
           bgColor={ backgroundColor }>
             <Flex padding={ 0 }>
-                
+                <VStack
+                  w={ '15%' }
+                  h={ '80vh' }
+                  overflow={ 'scroll' }
+                  position={ 'relative' }
+                  bgColor={ sbackgroundColor }
+                  css={{
+                    '&::-webkit-scrollbar': {
+                        width: '15px',
+                        height: '100%'
+                    },
+                    '&::-webkit-scrollbar-track': {
+                        background: sbackgroundColor,
+                    },
+                    '&::-webkit-scrollbar-thumb': {
+                        backgroundColor: inputBackgroundColor,
+                        borderRadius: '20px',
+                        border: `3px solid ${sbackgroundColor}`
+                    },
+                  }}>
+                    <Text 
+                      w={ '80%' } 
+                      ml={ 'auto' } 
+                      mr={ 'auto' }
+                      mt={ '1.5%' }
+                      textAlign={ 'center' }
+                      fontSize={ '18px' }
+                      fontWeight={ 'bold' }>
+                        Filtering
+                    </Text>
+                    <Divider color={ alternateTextColor } w={ '85%' } mr={ 'auto' } ml={ 'auto' } />
+                    <VStack w={ '100%' }>
+                        <HStack w={ '100%' } textAlign={ 'left' }>
+                            <HStack w={ '5%' } />
+                            <Text w={ '95%' } fontSize={ '17px' }>Search</Text>
+                        </HStack>
+                        <HStack w={ '100%' }>
+                            <HStack w={ '5%' } />
+                            <Input
+                              w={ '85%' }
+                              type={ 'text' }
+                              bgColor={ inputBackgroundColor }
+                              borderColor={ inputBorderColor }
+                              onChange={ value => setSearchString(value.target.value) } />
+                        </HStack>
+                    </VStack>
+                    <VStack w={ '100%' }>
+                        <HStack w={ '100%' } textAlign={ 'left' }>
+                            <HStack w={ '5%' } />
+                            <Text w={ '95%' } fontSize={ '17px' }>Power</Text>
+                        </HStack>
+                        <HStack w={ '100%' }>
+                            <HStack w={ '5%' } />
+                            <Text w={ '15%' } fontSize={ '15px' } color={ alternateTextColor }>Min</Text>
+                            <NumberInput
+                              w={ '70%' }
+                              defaultValue={ minPower }
+                              min={ -100 }
+                              max={ 250 }
+                              color={ alternateTextColor }
+                              borderColor={ alternateTextColor }
+                              onChange={ value => setMinPower(value) }>
+                                <NumberInputField />
+                                <NumberInputStepper borderColor={ alternateTextColor }>
+                                    <NumberIncrementStepper borderColor={ alternateTextColor } />
+                                    <NumberDecrementStepper borderColor={ alternateTextColor } />
+                                </NumberInputStepper>
+                            </NumberInput>
+                            <HStack w={ '5%' } />
+                        </HStack>
+                        <HStack w={ '100%' }>
+                            <HStack w={ '5%' } />
+                            <Text w={ '15%' } fontSize={ '15px' } color={ alternateTextColor }>Max</Text>
+                            <NumberInput
+                              w={ '70%' }
+                              defaultValue={ maxPower }
+                              min={ -100 }
+                              max={ 250 }
+                              color={ alternateTextColor }
+                              borderColor={ alternateTextColor }
+                              onChange={ value => setMaxPower(value) }>
+                                <NumberInputField />
+                                <NumberInputStepper borderColor={ alternateTextColor }>
+                                    <NumberIncrementStepper borderColor={ alternateTextColor } />
+                                    <NumberDecrementStepper borderColor={ alternateTextColor } />
+                                </NumberInputStepper>
+                            </NumberInput>
+                            <HStack w={ '5%' } />
+                        </HStack>
+                    </VStack>
+                    <HStack w={ '90%' } pt={ '5%' } pb={ '5%' } ml={ 'auto' } mr={ 'auto' }>
+                        <Button w={ '100%' } colorScheme={ 'orange' } onClick={ filterArmor }>Filter</Button>
+                    </HStack>
+                </VStack>
+                <VStack
+                  w={ '85%' }
+                  h={ '80vh' }
+                  overflow={ 'scroll' }
+                  position={ 'relative' }
+                  color={ textColor }
+                  padding={ '2%' }
+                  css={{
+                    '&::-webkit-scrollbar': {
+                        width: '15px',
+                        height: '100%'
+                    },
+                    '&::-webkit-scrollbar-track': {
+                        background: sbackgroundColor,
+                    },
+                    '&::-webkit-scrollbar-thumb': {
+                        backgroundColor: inputBackgroundColor,
+                        borderRadius: '20px',
+                        border: `3px solid ${sbackgroundColor}`
+                    },
+                  }}>
+                    <HStack w={'100%'}>
+                        <Text
+                          w={ '100%' }
+                          textAlign={ 'center' }
+                          fontSize={ '24px' }
+                          fontWeight={ 'bold' }>
+                            Armor
+                            <IconButton colorScheme={ 'whatsapp' } ml={ '1%' } icon={ <AddIcon /> } onClick={ _ => clickCreate() } />
+                        </Text>
+                    </HStack>
+                    <HStack w={ '100%' }>
+                        <Divider color={ alternateTextColor } />
+                    </HStack>
+                    <VStack w={ '100%' }>
+                        <SimpleGrid
+                          w={ '100%' }
+                          h={ '100%' }
+                          columns={ 3 }
+                          spacing={ 5 }>
+                            { armors.map(armor => (
+                                    <Text>{ armor.name }</Text>
+                                ))
+                            }
+                        </SimpleGrid>
+                        <PageChanger changePage={ changePage } filteredItems={ armorsJson.filter(verifyFilterPC) } pageFilter={ pageFilter } itemsPerPage={ 6 } />
+                    </VStack>
+                </VStack>
             </Flex>
             { seeCreate &&
-                <></>
+                <CustomDrawer
+                  nData={ createData }
+                  item={ 'armor' }
+                  type={ 'create' }
+                  isOpen={ createIsOpen }
+                  onClose={ createOnClose }
+                  onSubmit={ createArmor } />
             }
             { seeModify &&
-                <></>
+                <CustomDrawer
+                  nData={ modifyData }
+                  item={ 'armor' }
+                  type={ 'modify' }
+                  isOpen={ modifyIsOpen }
+                  onClose={ modifyOnClose }
+                  onSubmit={ modifyArmor } />
             }
             { seeDelete &&
-                <></>
+                <CustomAlertDialog 
+                  isOpen={ deleteIsOpen }
+                  message={ alertMessage }
+                  title={ alertTitle }
+                  ref={ alertRef }
+                  onCancel={ deleteOnClose }
+                  onSubmit={ deleteArmor } />
             }
         </Box>
     )

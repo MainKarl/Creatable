@@ -713,7 +713,7 @@ const CharacterList = () => {
                       textAlign={ 'center' }
                       fontSize={ '18px' }
                       fontWeight={ 'bold' }>
-                        Filtrage
+                        Filtering
                     </Text>
                     <Divider color={ alternateTextColor } w={ '85%' } mr={ 'auto' } ml={ 'auto' } />
                     <HStack

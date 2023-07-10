@@ -946,7 +946,7 @@ const WeaponList = () => {
                       textAlign={ 'center' }
                       fontSize={ '18px' }
                       fontWeight={ 'bold' }>
-                        Filtrage
+                        Filtering
                     </Text>
                     <Divider color={ alternateTextColor } w={ '85%' } mr={ 'auto' } ml={ 'auto' } />
                     <VStack w={ '100%' }>
