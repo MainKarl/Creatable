@@ -9,12 +9,11 @@ class statuses(get_db().Model):
     name = Column(String)
     characters = relationship('characters', secondary = get_character_status_table(), back_populates = 'statuses')
 
+    def __init__(self, name):
+        self.name = name
     def get(self):
         return {
             'id': self.id,
             'value': self.name,
             'selected': False
         }
-
-    def __init__(self, name):
-        self.name = name

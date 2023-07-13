@@ -21,6 +21,18 @@ class skills(get_db().Model):
     characters = relationship('characters', secondary = get_character_skill_table(), back_populates = 'skills')
     passives = relationship('passives', secondary = get_skill_passive_table(), back_populates = 'skills')
 
+    def __init__(self, name, power ,power_g, accuracy, accuracy_g, crit, crit_g, mana_usage, skill_type, skill_purpose, damage_type):
+        self.name = name
+        self.power = power
+        self.power_gain = power_g
+        self.accuracy = accuracy
+        self.accuracy_gain = accuracy_g
+        self.crit = crit
+        self.crit_gain = crit_g
+        self.mana_usage = mana_usage
+        self.skill_type = skill_type
+        self.skill_purpose = skill_purpose
+        self.damage_type = damage_type
     def get(self):
         return {
             'skill_id': self.id,
@@ -37,16 +49,3 @@ class skills(get_db().Model):
             'damage_type': self.damage_type,
             'passives': fonctions.get_join_passive(self.passives)
         }
-
-    def __init__(self, name, power ,power_g, accuracy, accuracy_g, crit, crit_g, mana_usage, skill_type, skill_purpose, damage_type):
-        self.name = name
-        self.power = power
-        self.power_gain = power_g
-        self.accuracy = accuracy
-        self.accuracy_gain = accuracy_g
-        self.crit = crit
-        self.crit_gain = crit_g
-        self.mana_usage = mana_usage
-        self.skill_type = skill_type
-        self.skill_purpose = skill_purpose
-        self.damage_type = damage_type

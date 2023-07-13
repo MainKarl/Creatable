@@ -38,6 +38,9 @@ class armors(get_db().Model):
             'selected': False
         }
 
+    def add_passive(self, \
+                    passive: int):
+        self.passives.append(pas.query.filter(pas.id == passive).first())
     def add_defense(self):
         if self.passives:
             item: pas

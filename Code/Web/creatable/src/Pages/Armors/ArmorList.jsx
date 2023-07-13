@@ -22,6 +22,7 @@ import { AddIcon } from "@chakra-ui/icons"
 import CustomDrawer from "../../Components/CustomDrawer"
 import { PageChanger } from "../../Components/PageChanger"
 import CustomAlertDialog from "../../Components/CustomAlertDialog"
+import ArmorDetail from "./ArmorDetail"
 
 const ArmorList = () => {
     let data = require('../../data.json')
@@ -145,7 +146,7 @@ const ArmorList = () => {
                 errors: []
             }
         ])
-        setSeeCreate(false)
+        setSeeCreate(true)
         createOnOpen()
     }
     const createArmor = async (list) => {
@@ -421,7 +422,7 @@ const ArmorList = () => {
                           fontSize={ '24px' }
                           fontWeight={ 'bold' }>
                             Armor
-                            <IconButton colorScheme={ 'whatsapp' } ml={ '1%' } icon={ <AddIcon /> } onClick={ _ => clickCreate() } />
+                            <IconButton colorScheme={ 'whatsapp' } ml={ '1%' } icon={ <AddIcon /> } onClick={ clickCreate } />
                         </Text>
                     </HStack>
                     <HStack w={ '100%' }>
@@ -434,7 +435,10 @@ const ArmorList = () => {
                           columns={ 3 }
                           spacing={ 5 }>
                             { armors.map(armor => (
-                                    <Text>{ armor.name }</Text>
+                                    <ArmorDetail 
+                                      data={ armor }
+                                      deleteArmor={ clickDelete }
+                                      modifyArmor={ clickModify } />
                                 ))
                             }
                         </SimpleGrid>

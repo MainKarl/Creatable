@@ -9,12 +9,11 @@ class types(get_db().Model):
     name = Column(String)
     characters = relationship('characters', secondary = get_character_type_table(), back_populates = 'types')
 
+    def __init__(self, name):
+        self.name = name
     def get(self):
         return {
             'id': self.id,
             'value': self.name,
             'selected': False
         }
-
-    def __init__(self, name):
-        self.name = name

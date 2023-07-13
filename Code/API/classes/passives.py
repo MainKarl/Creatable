@@ -15,6 +15,10 @@ class passives(get_db().Model):
     skills = relationship('skills', secondary = get_skill_passive_table(), back_populates = 'passives')
     characters = relationship('characters', secondary = get_character_passive_table(), back_populates = 'passives')
 
+    def __init__(self, name, description, passive_type):
+        self.name = name
+        self.description = description
+        self.passive_type = passive_type
     def get(self):
         return {
             'passive_id': self.id,
@@ -28,10 +32,6 @@ class passives(get_db().Model):
             'value': self.name,
             'selected': False
         }
-    
-    def __init__(self, name, description, passive_type):
-        self.name = name
-        self.description = description
-        self.passive_type = passive_type
+
 
 

@@ -98,7 +98,12 @@ class characters(get_db().Model):
     passives = relationship('passives', secondary = get_character_passive_table(), back_populates = 'characters')
     img = Column(String)
 
-    def __init__(self, name: str, race: str, class_id: int, user_id: int, img: str):
+    def __init__(self, \
+                 name: str, \
+                 race: str, \
+                 class_id: int, \
+                 user_id: int, \
+                 img: str):
         self.name = name
         self.race = race
         self.level = 1
@@ -217,13 +222,28 @@ class characters(get_db().Model):
             'img': self.img,
         }
 
-    def has_passive(self, vpassive):
-        for passive in self.passives:
-            if passive == vpassive:
-                return True
+    def has_passive(self, \
+                    vpassive: str):
+        if self.passives.has(name=vpassive):
+            return True
         return False
+    def has_passive_immunity(self):
+        return self.has_passive('Great Corruption Ythil')
+    def has_active_immunity(self):
+        return self.has_passive('Creator of Skills Tirmis')
+    def has_effective_immunity(self):
+        return self.has_passive('Conquest')
+    def has_illusion_immunity(self):
+        return self.has_passive('Protected Dream')
+    def has_mind_immunity(self):
+        return self.has_passive('Souless')
+    def has_resistance_immunity(self):
+        return self.has_passive('God-Slayer Yuuki')
+    def has_defensive_immunity(self):
+        return self.has_passive('True Dragon of Power Byleth')
 
-    def define_default_stat(self, class_id):
+    def define_default_stat(self, \
+                            class_id):
         classe = Classes.query.filter(Classes.id == class_id).one()
         
         self.hp = rnd.randrange(10, 20)
@@ -276,18 +296,22 @@ class characters(get_db().Model):
         elif total > 600:
             self.stat_rk = 'God'    
         self.rest()
-    def define_magic_rank(self, magic_rank):
+    def define_magic_rank(self, \
+                          magic_rank):
         self.magic_rk = magic_rank
         self.rest()
-    def define_spirit_rank(self, spirit_rank):
+    def define_spirit_rank(self, \
+                           spirit_rank):
         self.spirit_rk = spirit_rank
         self.rest()
-    def define_status(self, cstatus):
+    def define_status(self, \
+                      cstatus):
         status: int
         for status in str(cstatus).split(';'):
             self.add_status_effect(status)
     
-    def add_status_effect(self, status_id: int):
+    def add_status_effect(self, \
+                          status_id: int):
         new_status = statuses.query.filter(statuses.id == status_id).first()
         self.statuses.append(new_status)
         if new_status.name == 'Curse_HP':
@@ -384,12 +408,14 @@ class characters(get_db().Model):
             self.combat_skill = self.combat_skill*multiplier
             self.combat_luck = self.combat_luck*multiplier
             self.combat_mana = self.combat_mana*multiplier
-    def add_passives(self, passives: str):
+    def add_passives(self, \
+                     passives: str):
         passive: int
         for passive in str(passives).split(';'):
             self.add_passive(passive)
         self.rest()
-    def add_passive(self, passive: int):
+    def add_passive(self, \
+                    passive: int):
         new_passive = passives.query.filter(passives.id == passive).first()
         self.passives.append(new_passive)
         if new_passive.name == 'Heroic Desire':
@@ -472,6 +498,8 @@ class characters(get_db().Model):
             self.mana_growth += 100
         elif new_passive.name == 'Magicless Asta':
             self.strength_growth += 200
+            self.magic = 0
+            self.magic_growth = 0
             self.mana = 0
             self.mana_growth = 0
         elif new_passive.name == 'Defense+':
@@ -741,25 +769,28 @@ class characters(get_db().Model):
         self.mana_growth = mana_growth
         self.rest()
         self.define_stat_rank()
-    def change_class(self, class_id):
+    def change_class(self, \
+                     class_id):
         oClass = Classes.query.filter(Classes.id == self.class_id).one()
         nClass = Classes.query.filter(Classes.id == class_id).one()
         self.hp_growth -= oClass.hp_growth - nClass.hp_growth
         self.strength_growth -= oClass.strength_growth - nClass.strength_growth
         self.defense_growth -= oClass.defense_growth - nClass.defense_growth
-        self.magic_growth -= oClass.magic_growth - nClass.magic_growth
         self.resistance_growth -= oClass.resistance_growth - nClass.resistance_growth
         self.speed_growth -= oClass.speed_growth - nClass.speed_growth
         self.skill_growth -= oClass.skill_growth - nClass.skill_growth
         self.luck_growth -= oClass.luck_growth - nClass.luck_growth
         if self.has_passive(passives.query.filter(passives.name == 'Magicless Asta').one()):
+            self.magic_growth = 0
             self.mana_growth = 0
         else:
+            self.magic_growth -= oClass.magic_growth - nClass.magic_growth
             self.mana_growth -= oClass.mana_growth - nClass.mana_growth
         self.class_id = nClass.id
         self.level = 1
         self.rest()
-    def change_weapon(self, weapon_id):
+    def change_weapon(self, \
+                      weapon_id):
         oa = weapons.query.filter(weapons.id == self.weapon_id).one()
         na = weapons.query.filter(weapons.id == weapon_id).one()
         self.strength += na.add_strength() - oa.add_strength()
@@ -771,7 +802,8 @@ class characters(get_db().Model):
         self.luck += na.add_luck() - oa.add_luck()
         self.weapon_id = na.id
         self.rest()
-    def change_armor(self, armor_id):
+    def change_armor(self, \
+                     armor_id):
         oa = armors.query.filter(armors.id == self.armor_id).one()
         na = armors.query.filter(armors.id == armor_id).one()
         self.defense += na.add_defense() - oa.add_defense()
@@ -779,7 +811,15 @@ class characters(get_db().Model):
         self.speed += na.add_speed() - oa.add_speed()
         self.armor_id = na.id
         self.rest()
-    def change_weapon_rank(self, sword_rank, spear_rank, axe_rank, dagger_rank, staff_rank, bow_rank, fist_rank, other_rank):
+    def change_weapon_rank(self, \
+                           sword_rank, \
+                           spear_rank, \
+                           axe_rank, \
+                           dagger_rank, \
+                           staff_rank, \
+                           bow_rank, \
+                           fist_rank, \
+                           other_rank):
         self.sword_lvl = sword_rank
         self.spear_lvl = spear_rank
         self.axe_lvl = axe_rank

@@ -54,6 +54,9 @@ class weapons(get_db().Model):
             'selected': False
         }
 
+    def add_passive(self, \
+                    passive: int):
+        self.passives.append(Passives.query.filter(Passives.id == passive).first())
     def add_strength(self):
         passive: Passives
         for passive in self.passives:
@@ -229,7 +232,19 @@ class weapons(get_db().Model):
                 case 'Luck+X':
                     return 10
         return 0
-    def add_magic_damage(self):
+
+    def has_passive(self, \
+                    passive: str):
+        if self.passives.has(name=passive):
+            return True
+        return False
+    def can_crit(self):
+        return not self.has_passive('Cannot Crit')
+    def is_magical(self):
+        return self.has_passive('Magical Weapon')
+    def is_double(self):
+        return self.has_passive('Two Attack')
+    def get_magic_damage(self):
         passive: Passives
         for passive in self.passives:
             match passive.name:
@@ -254,13 +269,24 @@ class weapons(get_db().Model):
                 case 'Magic Damage+X':
                     return 10
         return 0
-    def add_passive(self, passive: int):
-        self.passives.append(Passives.query.filter(Passives.id == passive).first())
-        
-    def can_crit(self):
-        if self.passives.has(name='Cannot Crit'):
-            return False
-        else:
-            return True
-
-
+    def get_lifesteal(self, \
+                      damage: int, \
+                      is_crit: bool):
+        if self.has_passive('50 Lifesteal'):
+            return damage/2
+        if self.has_passive('100 Lifesteal'):
+            return damage
+        if self.has_passive('50 Crit Lifesteal') and is_crit:
+            return damage/2
+        if self.has_passive('100 Crit Lifesteal') and is_crit:
+            return damage
+    # def get_effectivness(self, \
+    #                      attacker: Characters, \
+    #                      defender: Characters):
+    #     multiplier = 1
+    #     if not defender.has_effective_immunity() or attacker.has_passive_immunity():
+    #         type: Types
+    #         for type in defender.types:
+    #             if self.has_passive('Effective '+type.name):
+    #                 multiplier+=0.5
+    #     return multiplier

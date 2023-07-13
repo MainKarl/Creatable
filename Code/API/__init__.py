@@ -137,6 +137,62 @@ def get_list_armor():
         return jsonify(list)
     else: 
         return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })
+@app.route('/armor/create', methods=['POST'])
+def create_armor():
+    if verify_token(request.headers.get('Authorization')):
+        try:
+            data = request.get_json(force=True)
+            armor = armors(data['name'], data['power'], data['img'])
+            if data['passives'] != '':
+                passive: int
+                for passive in str(data['passives']).split(';'):
+                    armor.add_passive(passive)
+            db.session.add(armor)
+            db.session.commit()
+            name = data['name']
+            return jsonify({
+                'status': 'success',
+                'message': f'{name} successfully created'
+            })
+        except Exception:
+            logging.exception('')
+    else: 
+        return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })
+@app.route('/armor/delete', methods=['POST'])
+def delete_armor():
+    token = request.headers.get('Authorization')
+    if verify_token(token) and get_role_id(token) == 1:
+        data = request.get_json(force=True)
+        armor = armors.query.filter(armors.id == data['id']).one()
+        db.session.delete(armor)
+        db.session.commit()
+        return jsonify({
+            'status': 'success',
+            'message': 'Armor successfully deleted'
+        })
+    else: 
+        return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })  
+@app.route('/armor/modify', methods=['POST'])
+def modify_armor():
+    token = request.headers.get('Authorization')
+    if verify_token(token) and get_role_id(token) == 1:
+        data = request.get_json(force=True)
+        armor: armors
+        armor = armors.query.filter(armors.id == data['id']).one()
+        armor.name = data['name']
+        armor.power = data['power']
+        armor.passives.clear()
+        if data['passives'] != '':
+            passive: int
+            for passive in str(data['passives']).split(';'):
+                armor.add_passive(passive)
+        db.session.commit()
+        return jsonify({
+            'status': 'success',
+            'message': 'Armor successfully modified'
+        })
+    else: 
+        return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })          
 
 @app.route("/weapon/get", methods=['GET'])
 def get_weapon():
@@ -216,7 +272,7 @@ def modify_weapon():
         db.session.commit()
         return jsonify({
             'status': 'success',
-            'message': 'weapon successfully modified'
+            'message': 'Weapon successfully modified'
         })
     else: 
         return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })          

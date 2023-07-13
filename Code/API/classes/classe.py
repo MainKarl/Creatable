@@ -22,6 +22,19 @@ class classe(get_db().Model):
     characters = relationship('characters', backref='classes', lazy=True)
     passives = relationship('passives', secondary = get_classe_passive_table(), back_populates = 'classes')
 
+    def __init__(self, name, hp_g, strength_g, defense_g, magic_g, resistance_g, speed_g, skill_g, luck_g, mana_g, class_serie, predecessor):
+        self.name = name
+        self.hp_growth = hp_g
+        self.strength_growth = strength_g
+        self.defense_growth = defense_g
+        self.magic_growth = magic_g
+        self.resistance_growth = resistance_g
+        self.speed_growth = speed_g
+        self.skill_growth = skill_g
+        self.luck_growth = luck_g
+        self.mana_growth = mana_g
+        self.class_serie = class_serie
+        self.predecessor = predecessor
     def get(self):
         return {
             'class_id': self.id,
@@ -38,25 +51,10 @@ class classe(get_db().Model):
             'class_serie': self.class_serie,
             'predecessor': self.predecessor,
             'passives': get_join_passive(self.passives)
-        }
-    
+        }   
     def get_simplified(self):
         return {
             'id': self.id,
             'value': self.name,
             'selected': False
         }
-
-    def __init__(self, name, hp_g, strength_g, defense_g, magic_g, resistance_g, speed_g, skill_g, luck_g, mana_g, class_serie, predecessor):
-        self.name = name
-        self.hp_growth = hp_g
-        self.strength_growth = strength_g
-        self.defense_growth = defense_g
-        self.magic_growth = magic_g
-        self.resistance_growth = resistance_g
-        self.speed_growth = speed_g
-        self.skill_growth = skill_g
-        self.luck_growth = luck_g
-        self.mana_growth = mana_g
-        self.class_serie = class_serie
-        self.predecessor = predecessor
