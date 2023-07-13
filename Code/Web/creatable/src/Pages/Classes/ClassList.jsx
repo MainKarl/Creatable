@@ -1,7 +1,17 @@
 import React, { useState, useEffect } from "react"
-import { 
+import {
+    Box,
+    Flex,
+    HStack,
+    VStack,
+    Text,
+    Divider,
+    Input,
+    Button,
     useColorModeValue 
 } from "@chakra-ui/react"
+import CustomFilterSelect from "../../Components/CustomFilterSelect"
+import { PageChanger } from "../../Components/PageChanger"
 
 const ClassList = () => {
     let data = require('../../data.json')
@@ -60,32 +70,6 @@ const ClassList = () => {
             value: 'Drakeling'
         },
     ])
-    const getClassSerieId = (value) => {
-        switch (value) {
-            case 'None':
-                return 0
-            case 'Militia':
-                return 1
-            case 'Fighter':
-                return 2
-            case 'Skirmisher':
-                return 3
-            case 'Bowman':
-                return 4
-            case 'Medic':
-                return 5
-            case 'Apprentice':
-                return 6
-            case 'Monster':
-                return 7
-            case 'Demon':
-                return 8
-            case 'Beastman':
-                return 9
-            case 'Drakeling':
-                return 10
-        }
-    }
     const getClassSerieValue = (id) => {
         switch (id) {
             case 0:
@@ -105,8 +89,10 @@ const ClassList = () => {
             case 7:
                 return 'Monster'
             case 8:
-                return 'Beastman'
+                return 'Demon'
             case 9:
+                return 'Beastman'
+            case 10:
                 return 'Drakeling'
         }
     }
@@ -135,6 +121,11 @@ const ClassList = () => {
         if (itemCounter > (pageFilter - 1) * 10 && itemCounter <= pageFilter * 10)
             return true
         return false
+    }
+    const filterClass = () => {
+        setPageFilter(1)
+        resetItemCounter()
+        setClasses(classesJson.filter(verifyClass))
     }
 
     const [pageFilter, setPageFilter] = useState(1)
@@ -182,8 +173,117 @@ const ClassList = () => {
     }, [])
 
     return (
-        <>
-        </>
+        <Box
+          w={ '100%' }
+          h={ '100%' }
+          minH={ '80vh' }
+          bgColor={ backgroundColor }>
+            <Flex padding={ 0 }>
+                <VStack
+                  w={ '15%' }
+                  h={ '80vh' }
+                  overflow={ 'scroll' }
+                  position={ 'relative' }
+                  bgColor={ sbackgroundColor }
+                  css={{
+                    '&::-webkit-scrollbar': {
+                        width: '15px',
+                        height: '100%'
+                    },
+                    '&::-webkit-scrollbar-track': {
+                        background: sbackgroundColor,
+                    },
+                    '&::-webkit-scrollbar-thumb': {
+                        backgroundColor: inputBackgroundColor,
+                        borderRadius: '20px',
+                        border: `3px solid ${sbackgroundColor}`
+                    },
+                  }}>
+                    <Text 
+                      w={ '80%' } 
+                      ml={ 'auto' } 
+                      mr={ 'auto' }
+                      mt={ '1.5%' }
+                      textAlign={ 'center' }
+                      fontSize={ '18px' }
+                      fontWeight={ 'bold' }>
+                        Filtering
+                    </Text>
+                    <Divider color={ alternateTextColor } w={ '85%' } mr={ 'auto' } ml={ 'auto' } />
+                    <VStack w={ '100%' }>
+                        <HStack w={ '100%' } textAlign={ 'left' }>
+                            <HStack w={ '5%' } />
+                            <Text w={ '95%' } fontSize={ '17px' }>Search</Text>
+                        </HStack>
+                        <HStack w={ '100%' }>
+                            <HStack w={ '5%' } />
+                            <Input
+                              w={ '85%' }
+                              type={ 'text' }
+                              bgColor={ inputBackgroundColor }
+                              borderColor={ inputBorderColor }
+                              onChange={ value => setSearchString(value.target.value) } />
+                        </HStack>
+                    </VStack>
+                    <VStack w={ '100%' }>
+                        <HStack w={ '100%' } textAlign={ 'left' }>
+                            <HStack w={ '5%' } />
+                            <Text w={ '95%' } fontSize={ '17px' }>Class Series</Text>
+                        </HStack>
+                        <HStack w={ '100%' }>
+                            <HStack w={ '5%' } />
+                            <HStack w={ '85%' }>
+                                <CustomFilterSelect
+                                    value={ getClassSerieValue(filterClassSeries) }
+                                    list={ classSeries }
+                                    onClick={ value => setFilterClassSeries(value) } />
+                            </HStack>
+                        </HStack>
+                    </VStack>
+                    <HStack w={ '90%' } pt={ '5%' } pb={ '5%' } ml={ 'auto' } mr={ 'auto' }>
+                        <Button w={ '100%' } colorScheme={ 'orange' } onClick={ filterClass }>Filter</Button>
+                    </HStack>
+                </VStack>
+                <VStack
+                  w={ '85%' }
+                  h={ '80vh' }
+                  overflow={ 'scroll' }
+                  position={ 'relative' }
+                  color={ textColor }
+                  padding={ '2%' }
+                  css={{
+                    '&::-webkit-scrollbar': {
+                        width: '15px',
+                        height: '100%'
+                    },
+                    '&::-webkit-scrollbar-track': {
+                        background: sbackgroundColor,
+                    },
+                    '&::-webkit-scrollbar-thumb': {
+                        backgroundColor: inputBackgroundColor,
+                        borderRadius: '20px',
+                        border: `3px solid ${sbackgroundColor}`
+                    },
+                  }}>
+                    <HStack w={'100%'}>
+                        <Text
+                          w={ '100%' }
+                          textAlign={ 'center' }
+                          fontSize={ '24px' }
+                          fontWeight={ 'bold' }>
+                            Weapon
+                        </Text>
+                    </HStack>
+                    <HStack w={ '100%' }>
+                        <Divider color={ alternateTextColor } />
+                    </HStack>
+                    <VStack w={ '100%' }>
+
+                        <PageChanger changePage={ changePage } filteredItems={ classesJson.filter(verifyFilterPC) } pageFilter={ pageFilter } itemsPerPage={ 10 } />
+                    </VStack>
+                </VStack>
+            </Flex>
+        </Box>
     )
 }
 

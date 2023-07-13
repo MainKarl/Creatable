@@ -22,6 +22,7 @@ import Layout from './Components/Layout'
 import CharacterList from './Pages/Characters/CharacterList'
 import WeaponList from './Pages/Weapons/WeaponList'
 import ArmorList from './Pages/Armors/ArmorList'
+import ClassList from './Pages/Classes/ClassList'
 
 const Index = () => {
   return (
@@ -35,6 +36,7 @@ const Index = () => {
         <Route key={ 'characters' } path="characters" element={ <CharacterList /> } />
         <Route key={ 'weapons' } path="/weapons" element={ <WeaponList /> } />
         <Route key={ 'armors' } path="/armors" element={ <ArmorList /> } />
+        <Route keys={ 'classes' } path="/classes" element={ <ClassList /> } />
       </Route>
     </Routes>
   </HashRouter>
