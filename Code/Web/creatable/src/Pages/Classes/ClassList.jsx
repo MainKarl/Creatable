@@ -280,7 +280,7 @@ const ClassList = () => {
                           textAlign={ 'center' }
                           fontSize={ '24px' }
                           fontWeight={ 'bold' }>
-                            Weapon
+                            Class
                         </Text>
                     </HStack>
                     <HStack w={ '100%' }>
