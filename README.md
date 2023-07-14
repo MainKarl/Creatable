@@ -25,8 +25,6 @@ npm run start
 
 ## ToDo
 
-* manage weapons [get_weapon, filter_weapon, modify_weapon, delete_weapon, create_weapon]
-* manage armors [get_armor, filter_armor, modify_armor, delete_armor, create_armor]
-* manage passives [get_passive, filter_passive]
+* manage passives [add_passive]
 * manage skills [get_skill, filter_skill, modify_skill, delete_skill, create_skill]
 * manage combat
