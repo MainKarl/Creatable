@@ -1,6 +1,7 @@
-import { Box, Button, Divider, Flex, Input, VStack } from "@chakra-ui/react";
+import { Box, Button, Divider, Flex, HStack, Input, Table, TableContainer, Tbody, Text, Th, Thead, Tr, VStack, useColorModeValue } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
 import CustomFilterSelect from "../../Components/CustomFilterSelect";
+import { PageChanger } from "../../Components/PageChanger";
 
 const PassiveList = () => {
     let data = require('../../data.json')
@@ -78,8 +79,6 @@ const PassiveList = () => {
                 return 'Skill'
             case 5:
                 return 'Other'
-            case _:
-                return 'None'
         }
     }
     const getTypeId = (value) => {
@@ -96,8 +95,6 @@ const PassiveList = () => {
                 return 4
             case 'Other':
                 return 5
-            case _:
-                return 0
         }
     }
     const verifyPassive = (item) => { return verifyFilter(item) && verifyPage() }
@@ -227,21 +224,74 @@ const PassiveList = () => {
                     <VStack w={ '100%' }>
                         <HStack w={ '100%' } textAlign={ 'left' }>
                             <HStack w={ '5%' } />
-                            <Text w={ '95%' } fontSize={ '17px' }>Class Series</Text>
+                            <Text w={ '95%' } fontSize={ '17px' }>Passives Types</Text>
                         </HStack>
                         <HStack w={ '100%' }>
                             <HStack w={ '5%' } />
                             <HStack w={ '85%' }>
                                 <CustomFilterSelect
-                                    value={ getTypeValue(filterClassSeries) }
+                                    value={ getTypeValue(filterType) }
                                     list={ ftypes }
                                     onClick={ value => setFilterType(value) } />
                             </HStack>
                         </HStack>
                     </VStack>
                     <HStack w={ '90%' } pt={ '5%' } pb={ '5%' } ml={ 'auto' } mr={ 'auto' }>
-                        <Button w={ '100%' } colorScheme={ 'orange' } onClick={ filterClass }>Filter</Button>
+                        <Button w={ '100%' } colorScheme={ 'orange' } onClick={ filterPassive }>Filter</Button>
                     </HStack>    
+                </VStack>
+                <VStack
+                  w={ '85%' }
+                  h={ '80vh' }
+                  overflow={ 'scroll' }
+                  position={ 'relative' }
+                  color={ textColor }
+                  padding={ '2%' }
+                  css={{
+                    '&::-webkit-scrollbar': {
+                        width: '15px',
+                        height: '100%'
+                    },
+                    '&::-webkit-scrollbar-track': {
+                        background: sbackgroundColor,
+                    },
+                    '&::-webkit-scrollbar-thumb': {
+                        backgroundColor: inputBackgroundColor,
+                        borderRadius: '20px',
+                        border: `3px solid ${sbackgroundColor}`
+                    },
+                  }}>
+                    <HStack w={'100%'}>
+                        <Text
+                          w={ '100%' }
+                          textAlign={ 'center' }
+                          fontSize={ '24px' }
+                          fontWeight={ 'bold' }>
+                            Passive
+                        </Text>
+                    </HStack>
+                    <HStack w={ '100%' }>
+                        <Divider color={ alternateTextColor } />
+                    </HStack>
+                    <VStack w={ '100%' }>
+                        <TableContainer w={ '100%' }>
+                            <Table variant={ 'unstyled' } size={ 'lg' }>
+                                <Thead>
+                                    <Tr>
+                                        <Th>name</Th>
+                                        <Th>description</Th>
+                                        <Th>passive type</Th>
+                                    </Tr>
+                                </Thead>
+                                <Tbody>
+                                    {
+                                        
+                                    }
+                                </Tbody>
+                            </Table>
+                        </TableContainer>
+                        <PageChanger changePage={ changePage } filteredItems={ passivesJson.filter(verifyFilterPC) } pageFilter={ pageFilter } itemsPerPage={ 12 } />
+                    </VStack>
                 </VStack>
             </Flex>
         </Box>
