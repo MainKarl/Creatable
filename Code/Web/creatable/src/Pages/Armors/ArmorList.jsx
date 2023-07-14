@@ -41,7 +41,7 @@ const ArmorList = () => {
     let itemCounter = 0
     const resetItemCounter = () => { itemCounter = 0 }
     const changePage = (pageNumber, lists) => {
-        if (pageNumber > 0 && lists.length > ((pageNumber - 1) * 4)) {
+        if (pageNumber > 0 && lists.length > ((pageNumber - 1) * 6)) {
             window.scrollTo(0, 0)
             setPageFilter(pageNumber)
         }

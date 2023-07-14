@@ -8,10 +8,19 @@ import {
     Divider,
     Input,
     Button,
-    useColorModeValue 
+    useColorModeValue,
+    Table,
+    Thead,
+    Tbody,
+    Tfoot,
+    Tr,
+    Th,
+    Td,
+    TableContainer
 } from "@chakra-ui/react"
 import CustomFilterSelect from "../../Components/CustomFilterSelect"
 import { PageChanger } from "../../Components/PageChanger"
+import ClassDetail from "./ClassDetail"
 
 const ClassList = () => {
     let data = require('../../data.json')
@@ -110,9 +119,9 @@ const ClassList = () => {
         return true
     }
     const verifyFilterPC = (item) => {
-        if (searchString !== '' && !String(item.name).toUpperCase().includes(searchString.toUpperCase()))
-            if (searchString !== '' && !String(item.predecessor).toUpperCase().includes(searchString.toUpperCase()))
-                return false
+        if ((searchString !== '' && !String(item.name).toUpperCase().includes(searchString.toUpperCase())) ||
+            (searchString !== '' && !String(item.predecessor).toUpperCase().includes(searchString.toUpperCase())))
+            return false
         if (filterClassSeries !== 0 && item.class_serie !== getClassSerieValue(filterClassSeries))
             return false
         return true
@@ -132,7 +141,7 @@ const ClassList = () => {
     let itemCounter = 0
     const resetItemCounter = () => { itemCounter = 0 }
     const changePage = (pageNumber, lists) => {
-        if (pageNumber > 0 && lists.length > ((pageNumber - 1) * 4)) {
+        if (pageNumber > 0 && lists.length > ((pageNumber - 1) * 10)) {
             window.scrollTo(0, 0)
             setPageFilter(pageNumber)
         }
@@ -278,7 +287,28 @@ const ClassList = () => {
                         <Divider color={ alternateTextColor } />
                     </HStack>
                     <VStack w={ '100%' }>
-
+                        <TableContainer w={ '100%' }>
+                            <Table variant={ 'unstyled' } size={ 'lg' }>
+                                <Thead>
+                                    <Tr>
+                                        <Th>name</Th>
+                                        <Th>hp</Th>
+                                        <Th>str | mag</Th>
+                                        <Th>def | res</Th>
+                                        <Th>spd | skl</Th>
+                                        <Th>lck | man</Th>
+                                        <Th>predecessor</Th>
+                                        <Th>passives</Th>
+                                    </Tr>
+                                </Thead>
+                                <Tbody>
+                                    { classes.map(item => (
+                                            <ClassDetail data={ item } />
+                                        ))
+                                    }
+                                </Tbody>
+                            </Table>
+                        </TableContainer>
                         <PageChanger changePage={ changePage } filteredItems={ classesJson.filter(verifyFilterPC) } pageFilter={ pageFilter } itemsPerPage={ 10 } />
                     </VStack>
                 </VStack>

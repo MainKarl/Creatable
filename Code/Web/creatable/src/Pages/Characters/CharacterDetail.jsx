@@ -1311,7 +1311,6 @@ const CharacterDetail = ({ data, onChangeCharacter, callRest, callLevelUp, delet
     }
 
     useEffect(() => {
-        console.log(data)
         setId(data.character_id)
         setName(data.name)
         setLevel(data.level)

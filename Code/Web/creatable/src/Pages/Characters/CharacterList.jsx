@@ -286,7 +286,6 @@ const CharacterList = () => {
         }
         fetch(data.api_url + 'character/create', obj).then(response => {
             response.json().then(item => {
-                console.log(item)
                 getCharacters()
             })
         })
@@ -589,7 +588,6 @@ const CharacterList = () => {
             }
         }
         fetch(data.api_url + 'character/get', obj).then(response => response.json().then(items => {
-            console.log(typeof(items))
             setCharactersJson(items.sort(orderBy))
         }))
     }
