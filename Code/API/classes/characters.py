@@ -221,6 +221,11 @@ class characters(get_db().Model):
             'passives': get_join_passive(self.passives),
             'img': self.img,
         }
+    def get_simplified(self):
+        return {
+            'id': self.id,
+            'value': self.name
+        }
 
     def has_passive(self, \
                     vpassive: str):

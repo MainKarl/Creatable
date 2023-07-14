@@ -24,6 +24,7 @@ import WeaponList from './Pages/Weapons/WeaponList'
 import ArmorList from './Pages/Armors/ArmorList'
 import ClassList from './Pages/Classes/ClassList'
 import PassiveList from './Pages/Passives/PassiveList'
+import BattleAnalysis from './Pages/Characters/BattleAnalysis'
 
 const Index = () => {
   return (
@@ -39,6 +40,7 @@ const Index = () => {
         <Route key={ 'armors' } path="/armors" element={ <ArmorList /> } />
         <Route keys={ 'classes' } path="/classes" element={ <ClassList /> } />
         <Route keys={ 'passives' } path="/passives" element={ <PassiveList /> } />
+        <Route keys={ 'battle' } path="/battle" element={ <BattleAnalysis /> } />
       </Route>
     </Routes>
   </HashRouter>

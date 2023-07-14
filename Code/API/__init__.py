@@ -347,6 +347,17 @@ def get_character(id: int):
             return jsonify(characters.query.filter(characters.id == id and characters.id == get_user_id(token)).join(types, characters.types, isouter=True).join(statuses, characters.statuses, isouter=True).join(skills, characters.skills, isouter=True).join(passives, characters.passives, isouter=True).one().get())
     else:
         return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })
+@app.route("/character/get_list", methods=['GET'])
+def get_list_character():
+    if verify_token(request.headers.get('Authorization')):
+        list = []
+        list_characters = characters.query.all()
+        character: characters
+        for character in list_characters:
+            list.append(character.get_simplified())
+        return jsonify(list)
+    else:
+        return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })
 @app.route("/character/get_passive/<int:id>", methods=['GET'])
 def get_passive_character(id: int):
     token = request.headers.get('Authorization')

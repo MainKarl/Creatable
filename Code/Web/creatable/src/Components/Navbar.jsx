@@ -9,8 +9,12 @@ import {
     Image,
     Button,
     Icon,
+    Menu,
+    MenuButton,
+    MenuList,
+    MenuItem
 } from '@chakra-ui/react';
-import { MoonIcon, SunIcon } from "@chakra-ui/icons";
+import { ChevronDownIcon, MoonIcon, SunIcon } from "@chakra-ui/icons";
 import { FiLogOut } from 'react-icons/fi';
 let data = require('../data.json');
 
@@ -122,6 +126,39 @@ const Navbar = () => {
                             Skill
                         </Button>
                     </Link>
+                    <Menu>
+                      <MenuButton
+                        as={Button} 
+                        rightIcon={ <ChevronDownIcon /> } 
+                        bgColor={ useColorModeValue(data.colors[0].darkerbackgroundcolor2, data.colors[1].darkerbackgroundcolor2) }
+                        color={ useColorModeValue(data.colors[0].textalternatecolor1, data.colors[1].textalternatecolor1) }>
+                          More
+                      </MenuButton>
+                      <MenuList
+                        bgColor={ useColorModeValue(data.colors[0].darkerbackgroundcolor2, data.colors[1].darkerbackgroundcolor2) }
+                        borderWidth={ 0 }>
+                        <MenuItem 
+                          color={ useColorModeValue(data.colors[0].textalternatecolor1, data.colors[1].textalternatecolor1) }
+                          bgColor={ useColorModeValue(data.colors[0].darkerbackgroundcolor2, data.colors[1].darkerbackgroundcolor2) }>
+                          <Link
+                            draggable={ false }
+                            to={ '/battle' }
+                            state={{ create: false }}>
+                              Combat
+                          </Link>
+                        </MenuItem>
+                        <MenuItem
+                          color={ useColorModeValue(data.colors[0].textalternatecolor1, data.colors[1].textalternatecolor1) }
+                          bgColor={ useColorModeValue(data.colors[0].darkerbackgroundcolor2, data.colors[1].darkerbackgroundcolor2) }>
+                          <Link
+                            draggable={ false }
+                            to={ '/info' }
+                            state={{ create: false }}>
+                              Information
+                          </Link>
+                        </MenuItem>
+                      </MenuList>
+                    </Menu>
                 </HStack>
                 <HStack 
                   w={'15%'}
