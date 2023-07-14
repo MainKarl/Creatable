@@ -2,6 +2,7 @@ import { Box, Button, Divider, Flex, HStack, Input, Table, TableContainer, Tbody
 import React, { useState, useEffect } from "react";
 import CustomFilterSelect from "../../Components/CustomFilterSelect";
 import { PageChanger } from "../../Components/PageChanger";
+import PassiveDetail from "./PassiveDetail";
 
 const PassiveList = () => {
     let data = require('../../data.json')
@@ -280,12 +281,12 @@ const PassiveList = () => {
                                     <Tr>
                                         <Th>name</Th>
                                         <Th>description</Th>
-                                        <Th>passive type</Th>
                                     </Tr>
                                 </Thead>
                                 <Tbody>
-                                    {
-                                        
+                                    { passives.map(passive => (
+                                            <PassiveDetail data={ passive } />
+                                        ))
                                     }
                                 </Tbody>
                             </Table>

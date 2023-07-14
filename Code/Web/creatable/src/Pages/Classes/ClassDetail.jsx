@@ -23,7 +23,6 @@ const ClassDetail = ({ data }) => {
     let textColor = useColorModeValue(gdata.colors[0].textcolor, gdata.colors[1].textcolor)
     let alternateTextColor = useColorModeValue(gdata.colors[0].textalternatecolor1, gdata.colors[1].textalternatecolor1)
 
-    const [id, setId] = useState(0)
     const [name, setName] = useState('')
     const [hp, setHp] = useState(0)
     const [strength, setStrength] = useState(0)
@@ -39,7 +38,6 @@ const ClassDetail = ({ data }) => {
     const [passives, setPassives] = useState([])
 
     useEffect(() => {
-        setId(data.id)
         setName(data.name)
         setHp(data.hp_growth)
         setStrength(data.strength_growth)
