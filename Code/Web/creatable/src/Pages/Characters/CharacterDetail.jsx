@@ -1243,7 +1243,7 @@ const CharacterDetail = ({ data, onChangeCharacter, callRest, callLevelUp, delet
         })
     }
     const clickPassive = () => {
-        fetch(gdata.api_url+'/character/get_passive/'+id, {
+        fetch(gdata.api_url+'character/get_passive/'+id, {
             method: 'GET',
             mode: 'cors',
             cache: 'default',

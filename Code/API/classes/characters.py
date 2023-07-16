@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, Mapped
 import random as rnd
 
 from classes.classe import classe as Classes
@@ -8,7 +8,7 @@ from classes.types import types
 from classes.skills import skills
 from classes.weapons import weapons
 from classes.armors import armors
-from classes.passives import passives
+from classes.passives import passives as Passives
 from constants import get_character_skill_table, get_character_passive_table, get_character_status_table, get_character_type_table, get_db
 from fonctions import get_extension, download_image, get_join_type, get_join_status, get_join_passive, get_join_skill
 
@@ -95,7 +95,7 @@ class characters(get_db().Model):
     types = relationship('types', secondary = get_character_type_table(), back_populates = 'characters')
     statuses = relationship('statuses', secondary = get_character_status_table(), back_populates = 'characters')
     skills = relationship('skills', secondary = get_character_skill_table(), back_populates = 'characters')
-    passives = relationship('passives', secondary = get_character_passive_table(), back_populates = 'characters')
+    passives: Mapped[list[Passives]] =  relationship('passives', secondary = get_character_passive_table(), back_populates = 'characters')
     img = Column(String)
 
     def __init__(self, \
@@ -229,7 +229,9 @@ class characters(get_db().Model):
 
     def has_passive(self, \
                     vpassive: str):
-        if self.passives.has(name=vpassive):
+        passive: Passives
+        passive = Passives.query.filter(Passives.name == vpassive).first()
+        if passive in self.passives:
             return True
         return False
     def has_passive_immunity(self):
@@ -421,7 +423,7 @@ class characters(get_db().Model):
         self.rest()
     def add_passive(self, \
                     passive: int):
-        new_passive = passives.query.filter(passives.id == passive).first()
+        new_passive = Passives.query.filter(Passives.id == passive).first()
         self.passives.append(new_passive)
         if new_passive.name == 'Heroic Desire':
             self.hp_growth += 5
@@ -785,7 +787,7 @@ class characters(get_db().Model):
         self.speed_growth -= oClass.speed_growth - nClass.speed_growth
         self.skill_growth -= oClass.skill_growth - nClass.skill_growth
         self.luck_growth -= oClass.luck_growth - nClass.luck_growth
-        if self.has_passive(passives.query.filter(passives.name == 'Magicless Asta').one()):
+        if self.has_passive('Magicless Asta'):
             self.magic_growth = 0
             self.mana_growth = 0
         else:

@@ -368,11 +368,19 @@ def get_passive_character(id: int):
         list = []
         passive: passives
         for passive in list_passives:
-            if character.has_passive(passive) == False:
+            if not character.has_passive(passive.name):
                 list.append(passive.get_passive())
         return jsonify(list)
     else:
         return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })        
+@app.route("/character/get_analysis", methods=['GET'])
+def get_analysis_character():
+    if verify_token(request.headers.get('Authorization')):
+        list = []
+        
+        return jsonify(list)
+    else:
+        return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })
 @app.route("/character/create", methods=['POST'])
 def create_character():
     token = request.headers.get('Authorization')

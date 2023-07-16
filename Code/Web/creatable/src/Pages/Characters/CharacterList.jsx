@@ -713,20 +713,23 @@ const CharacterList = () => {
                       fontWeight={ 'bold' }>
                         Filtering
                     </Text>
-                    <Divider color={ alternateTextColor } w={ '85%' } mr={ 'auto' } ml={ 'auto' } />
-                    <HStack
-                      w={ '90%' }
-                      textAlign={'left'}>
-                        <Text
-                          fontSize={ '17px' }>
-                            Level
-                        </Text>
-                    </HStack>
-                    <VStack w={ '90%' } ml={ 'auto' } mr={ 'auto' } pb={ '5%' }>
+                    <Divider color={ alternateTextColor } w={ '85%' } mr={ 'auto' } ml={ 'auto' } />                   
+                    <VStack w={ '100%' } pb={ '5%' }>
+                        <HStack
+                          w={ '100%' }
+                          textAlign={ 'left' }>
+                            <HStack w={ '5%' } />
+                            <Text
+                              fontSize={ '17px' }
+                              w={ '95%' }>
+                                Level
+                            </Text>
+                        </HStack>
                         <HStack w={ '100%' }>
+                            <HStack w={ '5%' } />
                             <Text w={ '15%' } fontSize={ '15px' } color={ alternateTextColor }>Min</Text>
                             <NumberInput 
-                              w={ '85%' } 
+                              w={ '70%' } 
                               defaultValue={ minLevel }
                               min={ 0 } 
                               max={ 999 } 
@@ -739,11 +742,13 @@ const CharacterList = () => {
                                     <NumberDecrementStepper borderColor={ alternateTextColor } />
                                 </NumberInputStepper>
                             </NumberInput>
+                            <HStack w={ '5%' } />
                         </HStack>
                         <HStack w={ '100%' }>
+                            <HStack w={ '5%' } />
                             <Text w={ '15%' } fontSize={ '15px' } color={ alternateTextColor }>Max</Text>
                             <NumberInput 
-                              w={ '85%' }
+                              w={ '70%' }
                               defaultValue={ maxLevel } 
                               min={ 0 } 
                               max={ 999 }
@@ -756,38 +761,53 @@ const CharacterList = () => {
                                     <NumberDecrementStepper borderColor={ alternateTextColor } />
                                 </NumberInputStepper>
                             </NumberInput>
+                            <HStack w={ '5%' } />
                         </HStack>
                     </VStack>
-                    <HStack
-                      w={ '90%' }
-                      textAlign={'left'}>
-                        <Text
-                          fontSize={ '17px' }>
-                            Race
-                        </Text>
-                    </HStack>
-                    <HStack w={ '90%' } ml={ 'auto' } mr={ 'auto' } pb={ '5%' }>
-                        <CustomFilterSelect
-                          value={ getRace(filterRace) }
-                          list={ races }
-                          onClick={ event => setFilterRace(event) } />
-                    </HStack>
-                    <HStack
-                      w={ '90%' }
-                      textAlign={'left'}>
-                        <Text
-                          fontSize={ '17px' }>
-                            Types
-                        </Text>
-                    </HStack>
-                    <HStack w={ '90%' } ml={ 'auto' } mr={ 'auto' } pb={ '5%' }>
-                        {/* <CustomMultiSelect 
-                          message={ '-- Select a Type --' }
-                          list={  }
-                          selectedList={ }
-                          onAdd={ }
-                          onRemove={ } /> */}
-                    </HStack>
+                    <VStack w={ '100%' } pb={ '5%' }>
+                        <HStack
+                          w={ '100%' }
+                          textAlign={ 'left' }>
+                            <HStack w={ '5%' } />
+                            <Text
+                              fontSize={ '17px' }
+                              w={ '95%' }>
+                                Race
+                            </Text>
+                        </HStack>
+                        <HStack w={ '100%' }>
+                            <HStack w={ '5%' } />
+                            <HStack w={ '85%' }>
+                                <CustomFilterSelect
+                                  value={ getRace(filterRace) }
+                                  list={ races }
+                                  onClick={ event => setFilterRace(event) } />
+                            </HStack>
+                        </HStack>
+                    </VStack>
+                    <VStack w={ '100%' } pb={ '5%' }>
+                        <HStack
+                          w={ '100%' }
+                          textAlign={'left'}>
+                            <HStack w={ '5%' } />
+                            <Text
+                              w={ '95%' }
+                              fontSize={ '17px' }>
+                                Types
+                            </Text>
+                        </HStack>
+                        <HStack w={ '100%'}>
+                            <HStack w={ '5%' } />
+                            <HStack w={ '85%' }>
+                                {/* <CustomMultiSelect 
+                                  message={ '-- Select a Type --' }
+                                  list={  }
+                                  selectedList={ }
+                                  onAdd={ }
+                                  onRemove={ } /> */}
+                            </HStack>
+                        </HStack>
+                    </VStack>
                     <HStack w={ '90%' } ml={ 'auto' } mr={ 'auto' } pb={ '5%' }>
                         <Button w={ '100%' } colorScheme={ 'orange' } onClick={ filterCharacter }>Filter</Button>
                     </HStack>
