@@ -13,6 +13,7 @@ import {
   CSSReset
 } from '@chakra-ui/react'
 import themes from './theme'
+import { MathJaxContext } from 'better-react-mathjax'
 
 import AccountLayout from './Components/AccountLayout'
 import Login from './Pages/User/Login'
@@ -25,6 +26,7 @@ import ArmorList from './Pages/Armors/ArmorList'
 import ClassList from './Pages/Classes/ClassList'
 import PassiveList from './Pages/Passives/PassiveList'
 import BattleAnalysis from './Pages/Characters/BattleAnalysis'
+import InformationPage from './Pages/Other/InformationPage'
 
 const Index = () => {
   return (
@@ -41,6 +43,7 @@ const Index = () => {
         <Route keys={ 'classes' } path="/classes" element={ <ClassList /> } />
         <Route keys={ 'passives' } path="/passives" element={ <PassiveList /> } />
         <Route keys={ 'battle' } path="/battle" element={ <BattleAnalysis /> } />
+        <Route keys={ 'information' } path="/information" element={ <InformationPage /> } />
       </Route>
     </Routes>
   </HashRouter>
@@ -53,9 +56,11 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
       <ColorModeProvider>
-        <CSSReset />
-        <ColorModeScript initialColorMode={ themes.config.initialColorMode } />
-        <Index />
+        <MathJaxContext>
+          <CSSReset />
+          <ColorModeScript initialColorMode={ themes.config.initialColorMode } />
+          <Index />
+        </MathJaxContext>
       </ColorModeProvider>
     </ThemeProvider>
   </React.StrictMode>

@@ -12,7 +12,8 @@ import {
     Menu,
     MenuButton,
     MenuList,
-    MenuItem
+    MenuItem,
+    Text
 } from '@chakra-ui/react';
 import { ChevronDownIcon, MoonIcon, SunIcon } from "@chakra-ui/icons";
 import { FiLogOut } from 'react-icons/fi';
@@ -137,25 +138,37 @@ const Navbar = () => {
                       <MenuList
                         bgColor={ useColorModeValue(data.colors[0].darkerbackgroundcolor2, data.colors[1].darkerbackgroundcolor2) }
                         borderWidth={ 0 }>
-                        <MenuItem 
+                        <MenuItem
+                          w={ '100%' }
+                          h={ '100%' }
                           color={ useColorModeValue(data.colors[0].textalternatecolor1, data.colors[1].textalternatecolor1) }
                           bgColor={ useColorModeValue(data.colors[0].darkerbackgroundcolor2, data.colors[1].darkerbackgroundcolor2) }>
-                          <Link
-                            draggable={ false }
-                            to={ '/battle' }
-                            state={{ create: false }}>
-                              Combat
-                          </Link>
+                          <Text w={ '100%' } h={ '100%' }>
+                            <Link
+                              draggable={ false }
+                              to={ '/battle' }
+                              state={{ create: false }}>
+                                <Text w={ '100%' } h={ '100%' }>
+                                  Combat
+                                </Text>
+                            </Link>
+                          </Text>
                         </MenuItem>
                         <MenuItem
+                          w={ '100%' }
+                          h={ '100%' }
                           color={ useColorModeValue(data.colors[0].textalternatecolor1, data.colors[1].textalternatecolor1) }
                           bgColor={ useColorModeValue(data.colors[0].darkerbackgroundcolor2, data.colors[1].darkerbackgroundcolor2) }>
-                          <Link
-                            draggable={ false }
-                            to={ '/info' }
-                            state={{ create: false }}>
-                              Information
-                          </Link>
+                          <Text w={ '100%' } h={ '100%' }>
+                            <Link
+                              draggable={ false }
+                              to={ '/information' }
+                              state={{ create: false }}>
+                                <Text w={ '100%' } h={ '100%' }>
+                                  Information
+                                </Text>
+                            </Link>
+                          </Text>
                         </MenuItem>
                       </MenuList>
                     </Menu>
