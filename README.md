@@ -8,7 +8,7 @@ A electron application that manage roleplaying characters and other aspect of th
 
 First hand, you need [nodejs](https://nodejs.org/en) to run the application.
 
-To install the application go into the folder Code/Web/creatable and run the install.bat file. Alternatively, these commands must be executed:
+To install the application go into the folder Code/Web/creatable and run the *install.bat* and *build.bat* file. Alternatively, these commands must be executed:
 
 ```shell
 npm install
@@ -17,7 +17,7 @@ npm run build
 
 ## Utilisation
 
-To start the application go into the folder Code/Web/creatable and run the executable.bat file. Alternatively, this command must be executed:
+To start the application go into the folder Code/Web/creatable and run the *executable.bat* file. Alternatively, this command must be executed:
 
 ```shell
 npm run start

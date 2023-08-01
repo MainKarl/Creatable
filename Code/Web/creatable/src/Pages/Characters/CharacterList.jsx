@@ -73,6 +73,42 @@ const CharacterList = () => {
         {
             id: 9,
             value: 'Dragonoid'
+        },
+        {
+            id: 10,
+            value: 'Khajiit'
+        },
+        {
+            id: 11,
+            value: 'Yuan-Ti'
+        },
+        {
+            id: 12,
+            value: 'Aarakocra'
+        },
+        {
+            id: 13,
+            value: 'Rakshasa'
+        },
+        {
+            id: 14,
+            value: 'Leonin'
+        },
+        {
+            id: 15,
+            value: 'Minotaur'
+        },
+        {
+            id: 16,
+            value: 'Kuo-Toa'
+        },
+        {
+            id: 17,
+            value: 'Mothkin'
+        },
+        {
+            id: 18,
+            value: 'Beast'
         }
     ])
     const [filterRace, setFilterRace] = useState(0)
@@ -151,6 +187,42 @@ const CharacterList = () => {
                 {
                     id: 9,
                     value: 'Dragonoid'
+                },
+                {
+                    id: 10,
+                    value: 'Khajiit'
+                },
+                {
+                    id: 11,
+                    value: 'Yuan-Ti'
+                },
+                {
+                    id: 12,
+                    value: 'Aarakocra'
+                },
+                {
+                    id: 13,
+                    value: 'Rakshasa'
+                },
+                {
+                    id: 14,
+                    value: 'Leonin'
+                },
+                {
+                    id: 15,
+                    value: 'Minotaur'
+                },
+                {
+                    id: 16,
+                    value: 'Kuo-Toa'
+                },
+                {
+                    id: 17,
+                    value: 'Mothkin'
+                },
+                {
+                    id: 18,
+                    value: 'Beast'
                 }
             ],
             hasError: false,
@@ -235,6 +307,24 @@ const CharacterList = () => {
                 return 'Monster'
             case 9:
                 return 'Dragonoid'
+            case 10:
+                return 'Khajiit'
+            case 11:
+                return 'Yuan-Ti'
+            case 12:
+                return 'Aarakocra'
+            case 13:
+                return 'Rakshasa'
+            case 14:
+                return 'Leonin'
+            case 15:
+                return 'Minotaur'
+            case 16:
+                return 'Kuo-Toa'
+            case 17:
+                return 'Mothkin'
+            case 18:
+                return 'Beast'
             default:
                 return 'None'
         }

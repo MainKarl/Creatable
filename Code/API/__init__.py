@@ -377,7 +377,13 @@ def get_passive_character(id: int):
 def get_analysis_character():
     if verify_token(request.headers.get('Authorization')):
         list = []
-        
+        #character_1: characters
+        #character_1 = characters.query.filter(characters.id == char_1).one()
+
+        #character_2: characters
+        #character_2 = characters.query.filter(characters.id == char_2).one()
+
+
         return jsonify(list)
     else:
         return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })
