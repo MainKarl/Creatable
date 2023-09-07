@@ -55,9 +55,9 @@ class weapons(get_db().Model):
         }
 
     def add_passive(self, \
-                    passive: int):
+                    passive: int) -> None:
         self.passives.append(Passives.query.filter(Passives.id == passive).first())
-    def add_strength(self):
+    def add_strength(self) -> int:
         passive: Passives
         for passive in self.passives:
             match passive.name:
@@ -82,7 +82,7 @@ class weapons(get_db().Model):
                 case 'Strength+X':
                     return 10
         return 0
-    def add_defense(self):
+    def add_defense(self) -> int:
         passive: Passives
         for passive in self.passives:
             match passive.name:
@@ -107,7 +107,7 @@ class weapons(get_db().Model):
                 case 'Defense+X':
                     return 10
         return 0
-    def add_magic(self):
+    def add_magic(self) -> int:
         passive: Passives
         for passive in self.passives:
             match passive.name:
@@ -132,7 +132,7 @@ class weapons(get_db().Model):
                 case 'Magic+X':
                     return 10
         return 0
-    def add_resistance(self):
+    def add_resistance(self) -> int:
         passive: Passives
         for passive in self.passives:
             match passive.name:
@@ -157,7 +157,7 @@ class weapons(get_db().Model):
                 case 'Resistance+X':
                     return 10
         return 0
-    def add_speed(self):
+    def add_speed(self) -> int:
         passive: Passives
         for passive in self.passives:
             match passive.name:
@@ -182,7 +182,7 @@ class weapons(get_db().Model):
                 case 'Speed+X':
                     return 10
         return 0
-    def add_skill(self):
+    def add_skill(self) -> int:
         passive: Passives
         for passive in self.passives:
             match passive.name:
@@ -207,7 +207,7 @@ class weapons(get_db().Model):
                 case 'Skill+X':
                     return 10
         return 0
-    def add_luck(self):
+    def add_luck(self) -> int:
         passive: Passives
         for passive in self.passives:
             match passive.name:
@@ -234,17 +234,19 @@ class weapons(get_db().Model):
         return 0
 
     def has_passive(self, \
-                    passive: str):
-        if self.passives.has(name=passive):
+                    vpassive: str) -> bool:
+        passive: Passives
+        passive = Passives.query.filter(Passives.name == vpassive).first()
+        if passive in self.passives:
             return True
         return False
-    def can_crit(self):
+    def can_crit(self)-> bool:
         return not self.has_passive('Cannot Crit')
-    def is_magical(self):
+    def is_magical(self) -> bool:
         return self.has_passive('Magical Weapon')
-    def is_double(self):
+    def is_double(self) -> bool:
         return self.has_passive('Two Attack')
-    def get_magic_damage(self):
+    def get_magic_damage(self) -> int:
         passive: Passives
         for passive in self.passives:
             match passive.name:
@@ -271,15 +273,16 @@ class weapons(get_db().Model):
         return 0
     def get_lifesteal(self, \
                       damage: int, \
-                      is_crit: bool):
-        if self.has_passive('50 Lifesteal'):
-            return damage/2
-        if self.has_passive('100 Lifesteal'):
-            return damage
+                      is_crit: bool) -> int:
         if self.has_passive('50 Crit Lifesteal') and is_crit:
             return damage/2
         if self.has_passive('100 Crit Lifesteal') and is_crit:
             return damage
+        if self.has_passive('50 Lifesteal'):
+            return damage/2
+        if self.has_passive('100 Lifesteal'):
+            return damage
+        return 0
     # def get_effectivness(self, \
     #                      attacker: Characters, \
     #                      defender: Characters):

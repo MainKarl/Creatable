@@ -186,7 +186,7 @@ const CustomIcon = ({ type, isize }) => {
             case 'Physical':
                 setRicon(<GiSpinningSword size={ isize } />)
                 break
-            case 'Corrupted_Holy':
+            case 'Corrupted Holy':
                 setRicon(<GiPentacle size={ isize } />)
                 break
             case 'Chaos':

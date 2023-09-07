@@ -48,13 +48,11 @@ def verify_image(file_name: str, extension: str):
         index += 1
 
     return image_name
-
 def download_image(url: str, file_name: str, extension: str):
     urlLink = "/var/www/html/img/" + verify_image(file_name, extension)
     url_path = "http://144.217.14.182/img/" + verify_image(file_name, extension)
     urllib.request.urlretrieve(url, urlLink)
     return url_path.replace("/", "//")
-
 def get_extension(url: str):
     file_name = url[url.rfind("/"):]
     return file_name[file_name.rfind("."):]
@@ -68,7 +66,6 @@ def verify_token(token):
             return False
     else:
         return False
-
 def get_user_id(token):
     if token:
         resp = us.decode_auth_token(token)
@@ -78,7 +75,6 @@ def get_user_id(token):
             return 0
     else:
         return 0
-    
 def get_role_id(token):
     if token:
         resp = us.decode_role_auth_token(token)

@@ -21,6 +21,7 @@ from classes.users import users
 from classes.weapons import weapons
 from constants import get_app, get_db
 from fonctions import get_user_id, get_role_id, verify_token
+from battle_fonctions import get_character_ba_accuracy, get_character_ba_crit, get_character_ba_number_of_attack, get_character_ba_damage
 
 #region Constants
 app = get_app()
@@ -377,13 +378,61 @@ def get_passive_character(id: int):
 def get_analysis_character():
     if verify_token(request.headers.get('Authorization')):
         list = []
-        #character_1: characters
-        #character_1 = characters.query.filter(characters.id == char_1).one()
+        char_1 = request.headers.get('Attacker')
+        char_2 = request.headers.get('Defender')
+        attCloseAlly = request.headers.get('attackerCloseAlly')
+        defCloseAlly = request.headers.get('defenderCloseAlly')
+        isNight = request.headers.get('isNight')
+        isOutdoor = request.headers.get('isOutdoor')
+        canRetaliate = request.headers.get('canRetaliate')
+        attIsInspired = request.headers.get('attackerIsInspired')
+        defIsInspired = request.headers.get('defenderIsInspired')
+        tileAway = request.headers.get('tileAway')
 
-        #character_2: characters
-        #character_2 = characters.query.filter(characters.id == char_2).one()
+        character_1: characters
+        character_1 = characters.query.filter(characters.id == char_1).one()
+        weapon_1: weapons
+        weapon_1 = weapons.query.filter(weapons.id == character_1.weapon_id).one()
+
+        character_2: characters
+        character_2 = characters.query.filter(characters.id == char_2).one()
+        weapon_2: weapons
+        weapon_2 = weapons.query.filter(weapons.id == character_2.weapon_id).one()
+        
+        attack_character_1 = []
+        attack_character_1.append({
+            'name': 'Basic Attack',
+            'number_of_attack': get_character_ba_number_of_attack(character_1, character_2),
+            'damage': get_character_ba_damage(character_1, character_2, True, isOutdoor, tileAway, weapon_1.is_magical()),
+            'accuracy': get_character_ba_accuracy(character_1, character_2, attIsInspired, defIsInspired, attCloseAlly, defCloseAlly, True, weapon_1.is_magical(), isOutdoor, isNight, tileAway),
+            'crit': get_character_ba_crit(character_1, character_2, attCloseAlly, True, weapon_1.is_magical())
+        })
 
 
+
+        attack_character_2 = []
+        attack_character_2.append({
+            'name': 'Basic Attack',
+            'number_of_attack': get_character_ba_number_of_attack(character_2, character_1),
+            'damage': get_character_ba_damage(character_2, character_1, False, isOutdoor, tileAway, weapon_2.is_magical()),
+            'accuracy': get_character_ba_accuracy(character_2, character_1, defIsInspired, attIsInspired, defCloseAlly, attCloseAlly, False, weapon_2.is_magical(), isOutdoor, isNight, tileAway),
+            'crit': get_character_ba_crit(character_2, character_1, defCloseAlly, False, weapon_2.is_magical())
+        })
+
+
+
+        list.append({
+            'name': character_1.name,
+            'hp': character_1.combat_hp,
+            'img': character_1.img,
+            'attacks': attack_character_1
+        })
+        list.append({
+            'name': character_2.name,
+            'hp': character_2.combat_hp,
+            'img': character_2.img,
+            'attacks': attack_character_2
+        })
         return jsonify(list)
     else:
         return jsonify({ 'status': 'failure', 'message': 'Permission denied...' })

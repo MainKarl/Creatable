@@ -231,396 +231,404 @@ class characters(get_db().Model):
         weapon = weapons.query.filter(weapons.id == self.weapon_id).one()
         return weapon.weapon_type
     def get_weapon_rank_hit_bonus(self):
-        if (self.get_weapon_type('Sword')):
-            match self.sword_lvl:
-                case 'E':
-                    return 0
-                case 'D':
-                    return 10
-                case 'C':
-                    return 10
-                case 'B':
-                    return 20
-                case 'A':
-                    return 20
-                case 'S':
-                    return 30
-        if (self.get_weapon_type('Spear')):
-            match self.spear_lvl:
-                case 'E':
-                    return 0
-                case 'D':
-                    return 10
-                case 'C':
-                    return 10
-                case 'B':
-                    return 20
-                case 'A':
-                    return 20
-                case 'S':
-                    return 30
-        if (self.get_weapon_type('Axe')):
-            match self.axe_lvl:
-                case 'E':
-                    return 0
-                case 'D':
-                    return 10
-                case 'C':
-                    return 10
-                case 'B':
-                    return 20
-                case 'A':
-                    return 20
-                case 'S':
-                    return 30
-        if (self.get_weapon_type('Dagger')):
-            match self.dagger_lvl:
-                case 'E':
-                    return 0
-                case 'D':
-                    return 10
-                case 'C':
-                    return 10
-                case 'B':
-                    return 20
-                case 'A':
-                    return 20
-                case 'S':
-                    return 30
-        if (self.get_weapon_type('Staff')):
-            match self.staff_lvl:
-                case 'E':
-                    return 0
-                case 'D':
-                    return 10
-                case 'C':
-                    return 10
-                case 'B':
-                    return 20
-                case 'A':
-                    return 20
-                case 'S':
-                    return 30
-        if (self.get_weapon_type('Bow')):
-            match self.bow_lvl:
-                case 'E':
-                    return 0
-                case 'D':
-                    return 10
-                case 'C':
-                    return 10
-                case 'B':
-                    return 20
-                case 'A':
-                    return 20
-                case 'S':
-                    return 30
-        if (self.get_weapon_type('Fist')):
-            match self.fist_lvl:
-                case 'E':
-                    return 0
-                case 'D':
-                    return 10
-                case 'C':
-                    return 10
-                case 'B':
-                    return 20
-                case 'A':
-                    return 20
-                case 'S':
-                    return 30
-        if (self.get_weapon_type('Other')):
-            match self.other_lvl:
-                case 'E':
-                    return 0
-                case 'D':
-                    return 10
-                case 'C':
-                    return 10
-                case 'B':
-                    return 20
-                case 'A':
-                    return 20
-                case 'S':
-                    return 30
+        match (self.get_weapon_type()):
+            case 'Sword':
+                match self.sword_lvl:
+                    case 'E':
+                        return 0
+                    case 'D':
+                        return 10
+                    case 'C':
+                        return 10
+                    case 'B':
+                        return 20
+                    case 'A':
+                        return 20
+                    case 'S':
+                        return 30
+            case 'Spear':
+                match self.spear_lvl:
+                    case 'E':
+                        return 0
+                    case 'D':
+                        return 10
+                    case 'C':
+                        return 10
+                    case 'B':
+                        return 20
+                    case 'A':
+                        return 20
+                    case 'S':
+                        return 30
+            case 'Axe':
+                match self.axe_lvl:
+                    case 'E':
+                        return 0
+                    case 'D':
+                        return 10
+                    case 'C':
+                        return 10
+                    case 'B':
+                        return 20
+                    case 'A':
+                        return 20
+                    case 'S':
+                        return 30
+            case 'Dagger':
+                match self.dagger_lvl:
+                    case 'E':
+                        return 0
+                    case 'D':
+                        return 10
+                    case 'C':
+                        return 10
+                    case 'B':
+                        return 20
+                    case 'A':
+                        return 20
+                    case 'S':
+                        return 30
+            case 'Staff':
+                match self.staff_lvl:
+                    case 'E':
+                        return 0
+                    case 'D':
+                        return 10
+                    case 'C':
+                        return 10
+                    case 'B':
+                        return 20
+                    case 'A':
+                        return 20
+                    case 'S':
+                        return 30
+            case 'Bow':
+                match self.bow_lvl:
+                    case 'E':
+                        return 0
+                    case 'D':
+                        return 10
+                    case 'C':
+                        return 10
+                    case 'B':
+                        return 20
+                    case 'A':
+                        return 20
+                    case 'S':
+                        return 30
+            case 'Fist':
+                match self.fist_lvl:
+                    case 'E':
+                        return 0
+                    case 'D':
+                        return 10
+                    case 'C':
+                        return 10
+                    case 'B':
+                        return 20
+                    case 'A':
+                        return 20
+                    case 'S':
+                        return 30
+            case 'Other':
+                match self.other_lvl:
+                    case 'E':
+                        return 0
+                    case 'D':
+                        return 10
+                    case 'C':
+                        return 10
+                    case 'B':
+                        return 20
+                    case 'A':
+                        return 20
+                    case 'S':
+                        return 30                      
     def get_weapon_rank_damage_bonus(self):
-        if (self.get_weapon_type('Sword')):
-            match self.sword_lvl:
-                case 'E':
-                    return 0
-                case 'D':
-                    return 5
-                case 'C':
-                    return 5
-                case 'B':
-                    return 10
-                case 'A':
-                    return 10
-                case 'S':
-                    return 15
-        if (self.get_weapon_type('Spear')):
-            match self.spear_lvl:
-                case 'E':
-                    return 0
-                case 'D':
-                    return 5
-                case 'C':
-                    return 5
-                case 'B':
-                    return 10
-                case 'A':
-                    return 10
-                case 'S':
-                    return 15
-        if (self.get_weapon_type('Axe')):
-            match self.axe_lvl:
-                case 'E':
-                    return 0
-                case 'D':
-                    return 5
-                case 'C':
-                    return 5
-                case 'B':
-                    return 10
-                case 'A':
-                    return 10
-                case 'S':
-                    return 15
-        if (self.get_weapon_type('Dagger')):
-            match self.dagger_lvl:
-                case 'E':
-                    return 0
-                case 'D':
-                    return 5
-                case 'C':
-                    return 5
-                case 'B':
-                    return 10
-                case 'A':
-                    return 10
-                case 'S':
-                    return 15
-        if (self.get_weapon_type('Staff')):
-            match self.staff_lvl:
-                case 'E':
-                    return 0
-                case 'D':
-                    return 5
-                case 'C':
-                    return 5
-                case 'B':
-                    return 10
-                case 'A':
-                    return 10
-                case 'S':
-                    return 15
-        if (self.get_weapon_type('Bow')):
-            match self.bow_lvl:
-                case 'E':
-                    return 0
-                case 'D':
-                    return 5
-                case 'C':
-                    return 5
-                case 'B':
-                    return 10
-                case 'A':
-                    return 10
-                case 'S':
-                    return 15
-        if (self.get_weapon_type('Fist')):
-            match self.fist_lvl:
-                case 'E':
-                    return 0
-                case 'D':
-                    return 5
-                case 'C':
-                    return 5
-                case 'B':
-                    return 10
-                case 'A':
-                    return 10
-                case 'S':
-                    return 15
-        if (self.get_weapon_type('Other')):
-            match self.other_lvl:
-                case 'E':
-                    return 0
-                case 'D':
-                    return 5
-                case 'C':
-                    return 5
-                case 'B':
-                    return 10
-                case 'A':
-                    return 10
-                case 'S':
-                    return 15
+        match (self.get_weapon_type()):
+            case 'Sword':
+                match self.sword_lvl:
+                    case 'E':
+                        return 0
+                    case 'D':
+                        return 5
+                    case 'C':
+                        return 5
+                    case 'B':
+                        return 10
+                    case 'A':
+                        return 10
+                    case 'S':
+                        return 15
+            case 'Spear':
+                match self.spear_lvl:
+                    case 'E':
+                        return 0
+                    case 'D':
+                        return 5
+                    case 'C':
+                        return 5
+                    case 'B':
+                        return 10
+                    case 'A':
+                        return 10
+                    case 'S':
+                        return 15
+            case 'Axe':
+                match self.axe_lvl:
+                    case 'E':
+                        return 0
+                    case 'D':
+                        return 5
+                    case 'C':
+                        return 5
+                    case 'B':
+                        return 10
+                    case 'A':
+                        return 10
+                    case 'S':
+                        return 15
+            case 'Dagger':
+                match self.dagger_lvl:
+                    case 'E':
+                        return 0
+                    case 'D':
+                        return 5
+                    case 'C':
+                        return 5
+                    case 'B':
+                        return 10
+                    case 'A':
+                        return 10
+                    case 'S':
+                        return 15
+            case 'Staff':
+                match self.staff_lvl:
+                    case 'E':
+                        return 0
+                    case 'D':
+                        return 5
+                    case 'C':
+                        return 5
+                    case 'B':
+                        return 10
+                    case 'A':
+                        return 10
+                    case 'S':
+                        return 15
+            case 'Bow':
+                match self.bow_lvl:
+                    case 'E':
+                        return 0
+                    case 'D':
+                        return 5
+                    case 'C':
+                        return 5
+                    case 'B':
+                        return 10
+                    case 'A':
+                        return 10
+                    case 'S':
+                        return 15
+            case 'Fist':
+                match self.fist_lvl:
+                    case 'E':
+                        return 0
+                    case 'D':
+                        return 5
+                    case 'C':
+                        return 5
+                    case 'B':
+                        return 10
+                    case 'A':
+                        return 10
+                    case 'S':
+                        return 15
+            case 'Other':
+                match self.other_lvl:
+                    case 'E':
+                        return 0
+                    case 'D':
+                        return 5
+                    case 'C':
+                        return 5
+                    case 'B':
+                        return 10
+                    case 'A':
+                        return 10
+                    case 'S':
+                        return 15
 
     def has_passive(self, \
-                    vpassive: str):
+                    vpassive: str) -> bool:
         passive: Passives
         passive = Passives.query.filter(Passives.name == vpassive).first()
         if passive in self.passives:
             return True
         return False
-    def has_passive_immunity(self):
-        return self.has_passive('Great Corruption Ythil')
-    def has_active_immunity(self):
-        return self.has_passive('Creator of Skills Tirmis')
-    def has_effective_immunity(self):
-        return self.has_passive('Conquest')
-    def has_illusion_immunity(self):
-        return self.has_passive('Protected Dream')
-    def has_mind_immunity(self):
-        return self.has_passive('Souless')
-    def has_resistance_immunity(self):
-        return self.has_passive('God-Slayer Yuuki')
-    def has_defensive_immunity(self):
-        return self.has_passive('True Dragon of Power Byleth')
-    def has_type(self, name: str):
+    def has_type(self, \
+                 name: str) -> bool:
         type: types
         type = types.query.filter(types.name == name).first()
         if type in self.types:
             return True
         return False
+    def has_passive_immunity(self) -> bool:
+        return self.has_passive('Great Corruption Ythil')
+    def has_active_immunity(self) -> bool:
+        return self.has_passive('Creator of Skills Tirmis')
+    def has_effective_immunity(self) -> bool:
+        return self.has_passive('Conquest')
+    def has_resistance_immunity(self) -> bool:
+        return self.has_passive('God-Slayer Yuuki')
+    def has_defensive_immunity(self) -> bool:
+        return self.has_passive('True Dragon of Power Byleth')
+    def has_double_immunity(self) -> bool:
+        return self.has_passive('Wary Fighter')
+    def has_illusion_immunity(self) -> bool:
+        return self.has_passive('Protected Dream')
+    def has_mind_immunity(self) -> bool:
+        return self.has_passive('Souless')
 
-    
-    def get_character_avoid(self, character_2, inspired: bool, close_to_ally: bool, is_outdoor: bool, is_initiating: bool, tile_away: int, is_magic: bool, is_night: bool):
-        avoid = (self.speed * 3 + self.luck) / 2
-        if not character_2.has_passive_immunity():
-            if self.has_passive('SwordBreaker') and character_2.get_weapon_type() == 'Sword':
-                avoid += 50
-            if inspired:
-                avoid += 10
-            if self.has_passive('Inspiration') and close_to_ally:
-                avoid += 15
-            if self.has_passive('Air superiority') and character_2.has_type('Flying'):
-                avoid += 30
-            if self.has_passive('Outdoor Fighter') and is_outdoor:
-                avoid += 10
-            if self.has_passive('Slayer') and not character_2.has_type('Humanoid'):
-                avoid += 15
-            if self.has_passive('Duelist Blow') and is_initiating:
-                avoid += 10
-            if self.has_passive('Avoid+'):
-                avoid += 10
-            if self.has_passive('Beast Killer') and character_2.has_type('Mounted'):
-                avoid += 25
-            if self.has_passive('Quick Burn'):
-                avoid += 15
-            if self.has_passive('Fly Breaker') and character_2.has_type('Flying'):
-                avoid += 10
-            if self.has_passive('Dagger Breaker') and character_2.get_weapon_type() == 'Dagger':
-                avoid += 50
-            if self.has_passive('Magic Breaker') and is_magic:
-                avoid += 20
-            if self.has_passive('Underdog') and character_2.level > self.level:
-                avoid += 10
-            if self.has_passive('Dead Creature') and character_2.has_type('Voidoid'):
-                avoid += 20
-            if self.has_passive('Dead Creature') and character_2.has_type('Holy'):
-                avoid -= 20
-            if self.has_passive('Untouchable') and not is_magic:
-                avoid += 50
-            if self.has_passive('Creature of the Void') and character_2.has_type('Holy'):
-                avoid += 20
-            if self.has_passive('Creature of the Void') and (character_2.has_type('Monster') or character_2.has_type('Undead') or character_2.has_type('Demonoid')):
-                avoid -= 20
-            if self.has_passive('Fly Mobility'):
-                avoid += 15
-            if self.has_passive('Nocture Creature') and is_night:
-                avoid += 10
-        if not self.has_passive_immunity():
-            if character_2.has_passive('Heartseeker') and tile_away <= 5:
-                avoid -= 20
-            if character_2.has_passive('Angel Blessing'):
-                avoid -= .5*self.dark_lvl
-            if character_2.has_passive('Fear of the Void'):
-                avoid -= 15
-        return avoid
-    def get_character_crit_avoid(self, character_2):
-        crit_avoid = self.luck
-        if not character_2.has_passive_immunity():
-            if self.has_passive('Veteran Intuition'):
-                crit_avoid += 15
-        return crit_avoid
-    def get_character_accuracy(self, character_2, inspired: bool, close_to_ally: bool, is_outdoor: bool, is_initiating: bool, is_magic: bool, is_night: bool):
-        weapon: weapons
-        weapon = weapons.query.filter(weapons.id == self.weapon_id).one()
-        hit = weapon.accuracy + (self.skill * 3 + self.luck / 2) + self.get_weapon_rank_hit_bonus()
-        if not character_2.has_passive_immunity():
-            if self.has_passive('SwordBreaker') and character_2.get_weapon_type() == 'Sword':
-                hit += 50
-            if self.has_passive('Inspiring') and inspired:
-                hit += 10
-            if self.has_passive('Inspiration') and close_to_ally:
-                hit += 15
-            if self.has_passive('Gamble'):
-                hit -= 5
-            if self.has_passive('Air superiority') and character_2.has_type('Flying'):
-                hit += 30
-            if self.has_passive('Outdoor Fighter') and is_outdoor:
-                hit += 10
-            if self.has_passive('Slayer') and not character_2.has_type('Humanoid'):
-                hit += 15
-            if self.has_passive('No Honor') and close_to_ally:
-                hit += 15
-            if self.has_passive('Prescience') and is_initiating:
-                hit += 10
-            if self.has_passive('Beast Killer') and character_2.has_type('Mounted'):
-                hit += 25
-            if self.has_passive('Quick Burn'):
-                hit += 15
-            if self.has_passive('Fly Breaker') and character_2.has_type('Flying'):
-                hit += 30
-            if self.has_passive('Certain Blow') and is_initiating:
-                hit += 40
-            if self.has_passive('Dagger Breaker') and character_2.get_weapon_type() == 'Dagger':
-                hit += 50
-            if self.has_passive('Magic Breaker') and is_magic:
-                hit += 20
-            if self.has_passive('Underdog') and character_2.level > self.level:
-                hit += 10
-            if self.has_passive('Dead Creature') and character_2.has_type('Voidoid'):
-                hit += 20
-            if self.has_passive('Dead Creature') and character_2.has_type('Holy'):
-                hit -= 20
-            if self.has_passive('Creature of the Void') and character_2.has_type('Holy'):
-                hit += 20
-            if self.has_passive('Creature of the Void') and (character_2.has_type('Monster') or character_2.has_type('Undead') or character_2.has_type('Demonoid')):
-                hit -= 20
-            if self.has_passive('Nocture Creature') and is_night:
-                hit += 10
-        
-        if not self.has_passive_immunity():
-            if character_2.has_passive('Angel Blessing'):
-                hit -= .5*self.dark_lvl
-            if character_2.has_passive('Fear of the Void'):
-                hit -= 15
-        return hit
-    def get_character_crit(self, character_2, close_to_ally: bool, is_initiating: bool, is_magic: bool):
-        weapon: weapons
-        weapon = weapons.query.filter(weapons.id == self.weapon_id).one()
-        crit = weapon.crit + (self.skill / 2)
-        if not character_2.has_passive_immunity():
-            if self.has_passive('Exemple'):
-                crit += 10
-            if self.has_passive('Gamble'):
-                crit += 10
-            if self.has_passive('Focus') and not close_to_ally:
-                crit += 10
-            if self.has_passive('Zeal'):
-                crit += 5
-            if self.has_passive('Enrage') and self.combat_hp <= self.hp:
-                crit += 10
-            if self.has_passive('Prescience') and is_initiating:
-                crit += 10
-            if self.has_passive('Demonic Luck') and self.combat_hp >= self.hp:
-                crit *= 1.5
-        if self.has_passive('God of Magic Asha') and is_magic:
-            crit += 15
-        return crit
+    def activate_arcane_burst(self) -> bool:
+        if self.has_passive('Arcane Burst') and rnd.randrange(0, 100) <= self.combat_skill:
+            return True
+        return False
+    def activate_lifetaker(self) -> bool:
+        if self.has_passive('Lifetaker') and rnd.randrange(0, 100) <= self.combat_luck:
+            return True
+        return False
+    def activate_sol(self) -> bool:
+        if self.has_passive('Sol') and rnd.randrange(0, 100) <= (self.combat_skill/3):
+            return True
+        return False
+    def activate_luna(self) -> bool:
+        if self.has_passive('Luna') and rnd.randrange(0, 100) <= (self.combat_skill/3):
+            return True
+        return False
+    def activate_aether(self) -> bool:
+        if self.has_passive('Aether') and rnd.randrange(0, 100) <= (self.combat_skill/6):
+            return True
+        return False
+    def activate_perfect_attack(self) -> bool:
+        if self.has_passive('Perfect Attack') and rnd.randrange(0, 100) <= self.combat_skill*1.25:
+            return True
+        return False
+    def activate_raikiri(self) -> bool:
+        if self.has_passive('Raikiri') and rnd.randrange(0, 100) <= (self.combat_skill/2):
+            return True
+        return False
+    def activate_astra(self) -> bool:
+        if self.has_passive('Astra') and rnd.randrange(0, 100) <= (self.combat_skill/4):
+            return True
+        return False
+    def activate_reminiscence_of_battle(self) -> bool:
+        if self.has_passive('Reminiscence of Battle') and rnd.randrange(0, 100) <= (self.combat_skill/2):
+            return True
+        return False
+    def activate_death_touch(self) -> bool:
+        if self.has_passive('Death Touch') and rnd.randrange(0, 100) <= (self.combat_skill/3):
+            return True
+        return False
+    def activate_ignis(self) -> bool:
+        if self.has_passive('Ignis') and rnd.randrange(0, 100) <= self.combat_skill:
+            return True
+        return False
+    def activate_lethality(self) -> bool:
+        if self.has_passive('Lethality') and rnd.randrange(0, 100) <= (self.combat_skill/8):
+            return True
+        return False
+    def activate_parry(self) -> bool:
+        if self.has_passive('Parry') and rnd.randrange(0, 100) <= (self.combat_skill/3):
+            return True
+        return False
+    def activate_miracle(self) -> bool:
+        if self.has_passive('Miracle') and rnd.randrange(0, 100) <= self.combat_luck:
+            return True
+        return False
+    def activate_aegis(self) -> bool:
+        if self.has_passive('Aegis') and rnd.randrange(0, 100) <= (self.combat_skill/3):
+            return True
+        return False
+    def activate_pavise(self) -> bool:
+        if self.has_passive('Pavise') and rnd.randrange(0, 100) <= (self.combat_skill/3):
+            return True
+        return False
+    def activate_instinct_of_survival(self) -> bool:
+        if self.has_passive('Instinct of Survival') and rnd.randrange(0, 100) <= self.combat_luck:
+            return True
+        return False
+    def activate_strike_back(self) -> bool:
+        if self.has_passive('Strike & Back') and rnd.randrange(0, 100) <= self.combat_speed:
+            return True
+        return False
+
+    def get_character_magic_resistance(self, \
+                                       magic: str) -> int:
+        match magic:
+            case 'Illusion':
+                return 1-(self.illusion_lvl*0.2/100)
+            case 'Mind':
+                return 1-(self.mind_lvl*0.2/100)
+            case 'Heat':
+                return 1-(self.heat_lvl*0.2/100)
+            case 'Lava':
+                return 1-(self.lava_lvl*0.2/100)
+            case 'Liquid':
+                return 1-(self.liquid_lvl*0.2/100)
+            case 'Ice':
+                return 1-(self.ice_lvl*0.2/100)
+            case 'Wind':
+                return 1-(self.wind_lvl*0.2/100)
+            case 'Lightning':
+                return 1-(self.lightning_lvl*0.2/100)
+            case 'Nature':
+                return 1-(self.nature_lvl*0.2/100)
+            case 'Poison':
+                return 1-(self.poison_lvl*0.2/100)
+            case 'Holy':
+                return 1-(self.holy_lvl*0.2/100)
+            case 'Space':
+                return 1-(self.space_lvl*0.2/100)
+            case 'Curse':
+                return 1-(self.curse_lvl*0.2/100)
+            case 'Necromancy':
+                return 1-(self.necromancy_lvl*0.2/100)
+            case _:
+                return 1
+    def get_character_magic_bonus(self, \
+                                  magic: str) -> int:
+            match magic:
+                case 'Illusion':
+                    return 1+(self.illusion_lvl/100)
+                case 'Mind':
+                    return 1+(self.mind_lvl/100)
+                case 'Heat':
+                    return 1+(self.heat_lvl/100)
+                case 'Lava':
+                    return 1+(self.lava_lvl/100)
+                case 'Liquid':
+                    return 1+(self.liquid_lvl/100)
+                case 'Ice':
+                    return 1+(self.ice_lvl/100)
+                case 'Wind':
+                    return 1+(self.wind_lvl/100)
+                case 'Lightning':
+                    return 1+(self.lightning_lvl/100)
+                case 'Nature':
+                    return 1+(self.nature_lvl/100)
+                case 'Poison':
+                    return 1+(self.poison_lvl/100)
+                case 'Holy':
+                    return 1+(self.holy_lvl/100)
+                case 'Space':
+                    return 1+(self.space_lvl/100)
+                case 'Curse':
+                    return 1+(self.curse_lvl/100)
+                case 'Necromancy':
+                    return 1+(self.necromancy_lvl/100)
+                case _:
+                    return 1
 
     def define_default_stat(self, \
                             class_id):
@@ -777,16 +785,14 @@ class characters(get_db().Model):
             elif self.spirit_rk == 'Dragon':
                 multiplier = 10
             elif self.spirit_rk == 'God':
-                multiplier = 50
+                multiplier = 20
 
-            self.combat_hp = self.combat_hp*multiplier
             self.combat_strength = self.combat_strength*multiplier
-            self.combat_defense = self.combat_defense*multiplier
+            self.combat_defense = self.combat_defense/2
             self.combat_magic = self.combat_magic*multiplier
-            self.combat_resistance = self.combat_resistance*multiplier
+            self.combat_resistance = self.combat_resistance/2
             self.combat_speed = self.combat_speed*multiplier
             self.combat_skill = self.combat_skill*multiplier
-            self.combat_luck = self.combat_luck*multiplier
             self.combat_mana = self.combat_mana*multiplier
     def add_passives(self, \
                      passives: str):

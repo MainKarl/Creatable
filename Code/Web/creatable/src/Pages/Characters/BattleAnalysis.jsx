@@ -40,6 +40,7 @@ const BattleAnalysis = () => {
         return characters.find(isSelectedChr1).value
     }
     const [character1, setCharacter1] = useState([])
+    
     const [selectedChr2, setSelectedChr2] = useState(0)
     const changeSelectedChr2 = (item) => {
         setSelectedChr2(item)
@@ -95,10 +96,18 @@ const BattleAnalysis = () => {
                 headers: {
                     'Authorization': localStorage.getItem('token_auth'),
                     'Attacker': selectedChr1,
-                    'Defender': selectedChr2
+                    'Defender': selectedChr2,
+                    'attackerCloseAlly': attackerCloseAlly,
+                    'defenderCloseAlly': defenderCloseAlly,
+                    'isNight': isNight,
+                    'isOutdoor': isOutdoor,
+                    'canRetaliate': canRetaliate,
+                    'attackerIsInspired': attackerIsInspired,
+                    'defenderIsInspired': defenderIsInspired,
+                    'tileAway': tileAway
                 }
             }
-            fetch(data.api_url+'character/get_analysis').then(response => response.json().then(item => {
+            fetch(data.api_url+'character/get_analysis', obj).then(response => response.json().then(item => {
                 console.log(item)
             }))
         }

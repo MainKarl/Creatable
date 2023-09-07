@@ -326,7 +326,7 @@ const CharacterDetail = ({ data, onChangeCharacter, callRest, callLevelUp, delet
             {
                 name: 'Resistance Growth',
                 type: 'number',
-                value: stats.hp,
+                value: state.resistance_growth,
                 min: 0,
                 max: 1000,
                 hasError: false,
