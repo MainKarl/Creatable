@@ -16,6 +16,7 @@ import {
 } from '@chakra-ui/react'
 import React, { useState, useEffect } from 'react'
 import CharacterSelection from '../../Components/CharacterSelection'
+import CharacterAnalysis from '../../Components/CharacterAnalysis'
 
 const BattleAnalysis = () => {
     const data = require('../../data.json')
@@ -40,6 +41,20 @@ const BattleAnalysis = () => {
         return characters.find(isSelectedChr1).value
     }
     const [character1, setCharacter1] = useState([])
+    const [atCharacter1, setAtCharacter1] = useState(0)
+    const changeAtCharacter1 = (move, max) => {
+        if (move === 0) {
+            if (atCharacter1 === 0)
+                setAtCharacter1(max)
+            else
+                setAtCharacter1(atCharacter1--)
+        } else {
+            if (atCharacter1 === max)
+                setAtCharacter1(0)
+            else
+                setAtCharacter1(atCharacter1++)
+        }
+    }
     
     const [selectedChr2, setSelectedChr2] = useState(0)
     const changeSelectedChr2 = (item) => {
@@ -53,6 +68,20 @@ const BattleAnalysis = () => {
         return characters.find(isSelectedChr2).value
     }
     const [character2, setCharacter2] = useState([])
+    const [atCharacter2, setAtCharacter2] = useState(0)
+    const changeAtCharacter2 = (move, max) => {
+        if (move === 0) {
+            if (atCharacter2 === 0)
+                setAtCharacter2(max)
+            else
+                setAtCharacter2(atCharacter1--)
+        } else {
+            if (atCharacter2 === max)
+                setAtCharacter2(0)
+            else
+                setAtCharacter2(atCharacter1++)
+        }
+    }
 
     const [tileAway, setTileAway] = useState(0)
     const [attackerCloseAlly, setAttackerCloseAlly] = useState(false)
@@ -108,7 +137,9 @@ const BattleAnalysis = () => {
                 }
             }
             fetch(data.api_url+'character/get_analysis', obj).then(response => response.json().then(item => {
-                console.log(item)
+                setCharacter1(item[0])
+                setCharacter2(item[1])
+                setAnalysisState(true)
             }))
         }
     }
@@ -163,7 +194,13 @@ const BattleAnalysis = () => {
                           list={ characters }
                           value={ getSelectedChr1() }
                           onClick={ event => changeSelectedChr1(event) } />
-                        
+                        { analysisState &&
+                            <CharacterAnalysis 
+                              data={ character1 }
+                              actualAttack={ atCharacter1 }
+                              enDamage={ character2.attacks[atCharacter2].damage }
+                              changeAttack={ (event) => changeAtCharacter1(event, character1.attacks.length) } />
+                        }
                     </VStack>
                 </Center>
             </VStack>
@@ -306,7 +343,13 @@ const BattleAnalysis = () => {
                           list={ characters }
                           value={ getSelectedChr2() }
                           onClick={ event => changeSelectedChr2(event) } />
-                        
+                        { analysisState &&
+                            <CharacterAnalysis
+                              data={ character2 }
+                              actualAttack={ atCharacter2 }
+                              enDamage={ character1.attacks[atCharacter1].damage }
+                              changeAttack={ (event) => changeAtCharacter2(event, character2.attacks.length) } />
+                        }
                     </VStack>
                 </Center>
             </VStack>
