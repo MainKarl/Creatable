@@ -283,13 +283,3 @@ class weapons(get_db().Model):
         if self.has_passive('100 Lifesteal'):
             return damage
         return 0
-    # def get_effectivness(self, \
-    #                      attacker: Characters, \
-    #                      defender: Characters):
-    #     multiplier = 1
-    #     if not defender.has_effective_immunity() or attacker.has_passive_immunity():
-    #         type: Types
-    #         for type in defender.types:
-    #             if self.has_passive('Effective '+type.name):
-    #                 multiplier+=0.5
-    #     return multiplier

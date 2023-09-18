@@ -8,7 +8,8 @@ import {
     Heading,
     Text,
     Divider,
-    Image
+    Image,
+    Badge
 } from '@chakra-ui/react'
 import { 
     ArrowLeftIcon, 
@@ -37,6 +38,7 @@ const CharacterAnalysis = ({ data, actualAttack, enDamage, changeAttack }) => {
     const [attack, setAttack] = useState([])
 
     useEffect(() => {
+        console.log(data)
         setName(data.name)
         setImg(data.img)
         setHP(data.hp)
@@ -51,7 +53,25 @@ const CharacterAnalysis = ({ data, actualAttack, enDamage, changeAttack }) => {
     return (
         <Box
           w={ '100%' }
-          m={ 3 }>
+          maxH={ '70vh' }
+          m={ 3 }
+          overflow={ 'scroll' }
+          position={ 'relative' }
+          bgColor={ backgroundColor }
+          css={{
+            '&::-webkit-scrollbar': {
+                width: '15px',
+                height: '100%'
+            },
+            '&::-webkit-scrollbar-track': {
+                background: sbackgroundColor,
+            },
+            '&::-webkit-scrollbar-thumb': {
+                backgroundColor: inputBackgroundColor,
+                borderRadius: '20px',
+                border: `3px solid ${sbackgroundColor}`
+            },
+          }}>
             <Center w={ '100%' } h={ '100%' }>
                 <VStack
                   w={ '100%' }
@@ -97,7 +117,13 @@ const CharacterAnalysis = ({ data, actualAttack, enDamage, changeAttack }) => {
                     </HStack>
                     <HStack w={ '100%' } p={ 2 }>
                         <Text textTransform={ 'uppercase' } w={ '20%' } ml={ '5%' }>Dmg:</Text>
-                        <Text w={ '15%' }>{ String(attack.damage) }</Text>
+                        <Text w={ '10%' }>{ String(attack.damage) }</Text>
+                        { attack.number_of_attack > 1 && (
+                                <Badge borderRadius={ 'full' } px={ 2 } colorScheme={ 'orange' }>
+                                    { "x"+String(attack.number_of_attack) }
+                                </Badge>
+                            )
+                        }
                     </HStack>
                     <HStack w={ '100%' } p={ 2 }>
                         <Text textTransform={ 'uppercase' } w={ '20%' } ml={ '5%' }>Acc:</Text>

@@ -2,6 +2,7 @@ from classes.characters import characters as chr
 from classes.weapons import weapons as weap
 from classes.armors import armors
 
+#region Checking Number of Attack
 def __get_character_number_of_attack(attacker: chr,\
                                    defender: chr) -> int:
     num = 1
@@ -9,8 +10,18 @@ def __get_character_number_of_attack(attacker: chr,\
             num *= 2
     if not defender.has_passive_immunity():
         if attacker.has_passive('Fast Hitter'):
-            num *= 2        
+            num *= 2
     return num
+
+def __get_weapon_number_of_attack(attacker: chr,\
+                                  defender: chr):
+    number = 1
+    if weap.query.filter(weap.id == attacker.weapon_id).one().is_double() and not defender.has_passive_immunity():
+        number *= 2
+    return number
+#endregion
+
+#region Checking Damage
 def __get_character_damage(attacker: chr,\
                            defender: chr,\
                            attacker_is_initiating: bool,\
@@ -68,10 +79,10 @@ def __get_character_bonus_damage_weapon(attacker: chr,\
         if attacker.has_passive('Fistfaire') and attacker.get_weapon_type() == 'Fist':
             damage += 10
     return damage
-def __get_character_damage_resistance(attacker:chr,\
-                                      defender:chr,\
-                                      attacker_is_initiating:bool,\
-                                      attack_is_magic: bool):
+def __get_character_damage_reduction(attacker:chr,\
+                                     defender:chr,\
+                                     attacker_is_initiating:bool,\
+                                     attack_is_magic: bool):
     res = 0
     if not defender.has_defensive_immunity():
         if attack_is_magic:
@@ -88,7 +99,106 @@ def __get_character_damage_resistance(attacker:chr,\
         if attacker.has_passive('Warding Blow') and attacker_is_initiating and attack_is_magic:
             res += 10
     res += armors.query.filter(armors.id == attacker.armor_id).one().power
+
+    
+
     return res
+def __get_character_effectiveness(attacker: chr,\
+                                  defender: chr) -> float:
+    multiplier = 1
+    if not defender.has_effective_immunity() and not defender.has_passive_immunity():
+        if attacker.has_passive('Beastbane') and defender.has_type('Beast'):
+            multiplier += .5
+        if attacker.has_passive('Wrymsbane') and defender.has_type('Dragonoid'):
+            multiplier += .5
+    if not defender.has_passive_immunity():
+        if attacker.has_passive('Hero of Heroes Godric') and defender.has_type('Demonoid') or defender.has_type('Monster') or defender.has_type('Undead'):
+            multiplier += 1
+        if attacker.has_passive('Great Liberator Xeno') and defender.has_type('Humanoid'):
+            multiplier += 1
+    return multiplier
+def __get_character_resistance(attacker: chr,\
+                               defender: chr,\
+                               attack_is_magic: bool,\
+                               type_damage: str):
+    resistance = 1
+    if not defender.has_passive_immunity() and not defender.has_resistance_immunity():
+        if attacker.has_passive('Ancient Resistance') and attack_is_magic:
+            resistance /= 2
+        if attacker.has_passive('Dark Art Protection') and type_damage == 'Dark':
+            resistance /= 2
+        if attacker.has_passive('Defensive Scale') and type_damage == 'Physical':
+            resistance /= 2
+        if attacker.has_passive('Magic Armor') and attack_is_magic:
+            resistance /= 2
+    if not defender.has_resistance_immunity():
+        if attacker.has_passive('God of Happiness Saraphiel'):
+            resistance /= 3
+    return resistance
+
+def __get_weapon_damage(attacker: chr,\
+                        defender: chr,\
+                        attack_is_magic: bool) -> int:
+    weapon = weap.query.filter(weap.id == attacker.weapon_id).one()
+    damage = weapon.damage
+    damage += attacker.get_weapon_rank_damage_bonus()
+    if attack_is_magic:
+        damage += weapon.get_magic_damage()
+    return int(damage)
+def __get_weapon_effectiveness(attacker: chr,\
+                               defender: chr) -> float:
+    weapon = weap.query.filter(weap.id == attacker.weapon_id).one()
+    multiplier = 1
+    if not defender.has_effective_immunity() and not defender.has_passive_immunity():
+        if weapon.has_passive('Effective Armored') and defender.has_type('Armored'):
+            multiplier += .5
+        if weapon.has_passive('Effective Beast') and defender.has_type('Beast'):
+            multiplier += .5
+        if weapon.has_passive('Effective Demonoid') and defender.has_type('Demonoid'):
+            multiplier += .5
+        if weapon.has_passive('Effective Dragonoid') and defender.has_type('Dragonoid'):
+            multiplier += .5
+        if weapon.has_passive('Effective Flying') and defender.has_type('Flying'):
+            multiplier += .5
+        if weapon.has_passive('Effective Humanoid') and defender.has_type('Humanoid'):
+            multiplier += .5
+        if weapon.has_passive('Effective Monster') and defender.has_type('Monster'):
+            multiplier += .5
+        if weapon.has_passive('Effective Mounted') and defender.has_type('Mounted'):
+            multiplier += .5
+        if weapon.has_passive('Effective Undead') and defender.has_type('Undead'):
+            multiplier += .5
+        if weapon.has_passive('Effective Void') and defender.has_type('Void'):
+            multiplier += .5
+    return multiplier
+
+def __get_natural_effectiveness(defender: chr,\
+                                type_damage: str) -> float:
+    multiplier = 1
+    if type_damage == 'Chaos' and defender.has_type('Humanoid'):
+        multiplier += .25
+    if type_damage == 'Holy' and defender.has_type('Monster'):
+        multiplier += .25
+    if type_damage == 'Holy' and defender.has_type('Demonoid'):
+        multiplier += .25
+    if type_damage == 'Holy' and defender.has_type('Undead'):
+        multiplier += .25
+    if type_damage == 'Curse' and defender.has_type('Void'):
+        multiplier += .25
+    if type_damage == 'Lightning' and defender.has_type('Dragonoid'):
+        multiplier += .25
+    if type_damage == 'Wind' and defender.has_type('Beast'):
+        multiplier += .25
+    if type_damage == 'Heat' and defender.has_type('Armored'):
+        multiplier += .25
+    if type_damage == 'Lightning' and defender.has_type('Flying'):
+        multiplier += .25
+    if type_damage == 'Void' or type_damage == 'Corrupted Holy' and defender.has_type('Holy'):
+        multiplier += .25
+    return multiplier
+#endregion
+
+#region Checking Accuracy
 def __get_character_avoid(attacker: chr,\
                         defender: chr,\
                         attacker_close_to_ally: bool,\
@@ -208,6 +318,15 @@ def __get_character_accuracy(attacker: chr,\
         if defender.has_passive('Fear of the Void'):
             hit -= 15
     return hit
+
+def __get_weapon_accuracy(attacker: chr):
+    accuracy = 0
+    accuracy += weap.query.filter(weap.id == attacker.weapon_id).one().accuracy 
+    accuracy += attacker.get_weapon_rank_hit_bonus()
+    return accuracy
+#endregion
+
+#region Checking Crit
 def __get_character_crit_avoid(attacker: chr,\
                              defender: chr) -> int:
     crit_avoid = attacker.luck
@@ -240,12 +359,19 @@ def __get_character_crit(attacker: chr,\
         crit += 15
     return crit
 
+def __get_weapon_crit(attacker: chr):
+    crit = 0
+    crit += weap.query.filter(weap.id == attacker.weapon_id).one().crit
+    if not weap.query.filter(weap.id == attacker.weapon_id).one().can_crit():
+        crit = 0
+    return crit
+#endregion
+
 def get_character_ba_number_of_attack(attacker: chr,\
                                       defender: chr) -> int:
     number = __get_character_number_of_attack(attacker, defender)
-    if weap.query.filter(weap.id == attacker.weapon_id).one().has_passive('Two Attack'):
-        number *= 2
-    if defender.has_double_immunity():
+    number = __get_weapon_number_of_attack(attacker, defender)
+    if defender.has_double_immunity() or attacker.has_double_immunity():
         number = 1
     return int(number)
 
@@ -256,9 +382,13 @@ def get_character_ba_damage(attacker: chr,\
                             tile_away: int,\
                             attack_is_magic: bool) -> int:
     damage = __get_character_damage(attacker, defender, attacker_is_initiating, is_outdoor, tile_away, attack_is_magic)
-    damage -= __get_character_damage_resistance(defender, attacker, not attacker_is_initiating, attack_is_magic)
+    damage -= __get_character_damage_reduction(defender, attacker, not attacker_is_initiating, attack_is_magic)
     damage += __get_character_bonus_damage_weapon(attacker, defender)
-    damage += weap.query.filter(weap.id == attacker.weapon_id).one().damage + attacker.get_weapon_rank_damage_bonus()
+    damage += __get_weapon_damage(attacker, defender, attack_is_magic)
+    damage *= __get_natural_effectiveness(defender, weap.query.filter(weap.id == attacker.weapon_id).one().damage_type)
+    damage *= __get_weapon_effectiveness(attacker, defender)
+    damage *= __get_character_effectiveness(attacker, defender)
+    damage *= __get_character_resistance(defender, attacker, attack_is_magic, weap.query.filter(weap.id == attacker.weapon_id).one().damage_type)
     if damage < 0:
         damage = 0
     return int(damage)
@@ -276,7 +406,7 @@ def get_character_ba_accuracy(attacker: chr,\
                               tile_away: int) -> int:
     accuracy = __get_character_accuracy(attacker, defender, attacker_is_inspired, attacker_close_to_ally, attacker_is_initiating, attack_is_magic, is_outdoor, is_night)
     accuracy -= __get_character_avoid(defender, attacker, defender_close_to_ally, is_outdoor, is_night, not attacker_is_initiating, defender_is_inspired, attack_is_magic, tile_away)
-    accuracy += weap.query.filter(weap.id == attacker.weapon_id).one().accuracy + attacker.get_weapon_rank_hit_bonus()
+    accuracy += __get_weapon_accuracy(attacker)
     if accuracy < 0:
         accuracy = 0
     if accuracy > 100:
@@ -290,7 +420,7 @@ def get_character_ba_crit(attacker: chr,\
                           attack_is_magic:bool) -> int:
     crit = __get_character_crit(attacker, defender, attacker_close_to_ally, attacker_is_initiating, attack_is_magic)
     crit -= __get_character_crit_avoid(defender, attacker)
-    crit += weap.query.filter(weap.id == attacker.weapon_id).one().crit
+    crit += __get_weapon_crit(attacker)
     if crit < 0:
         crit = 0
     return int(crit)

@@ -491,75 +491,75 @@ class characters(get_db().Model):
         return self.has_passive('Souless')
 
     def activate_arcane_burst(self) -> bool:
-        if self.has_passive('Arcane Burst') and rnd.randrange(0, 100) <= self.combat_skill:
+        if self.has_passive('Arcane Burst') and rnd.randrange(0, 100) <= self.combat_skill+self.get_skill_activation():
             return True
         return False
     def activate_lifetaker(self) -> bool:
-        if self.has_passive('Lifetaker') and rnd.randrange(0, 100) <= self.combat_luck:
+        if self.has_passive('Lifetaker') and rnd.randrange(0, 100) <= self.combat_luck+self.get_skill_activation():
             return True
         return False
     def activate_sol(self) -> bool:
-        if self.has_passive('Sol') and rnd.randrange(0, 100) <= (self.combat_skill/3):
+        if self.has_passive('Sol') and rnd.randrange(0, 100) <= (self.combat_skill/3)+self.get_skill_activation():
             return True
         return False
     def activate_luna(self) -> bool:
-        if self.has_passive('Luna') and rnd.randrange(0, 100) <= (self.combat_skill/3):
+        if self.has_passive('Luna') and rnd.randrange(0, 100) <= (self.combat_skill/3)+self.get_skill_activation():
             return True
         return False
     def activate_aether(self) -> bool:
-        if self.has_passive('Aether') and rnd.randrange(0, 100) <= (self.combat_skill/6):
+        if self.has_passive('Aether') and rnd.randrange(0, 100) <= (self.combat_skill/6)+self.get_skill_activation():
             return True
         return False
     def activate_perfect_attack(self) -> bool:
-        if self.has_passive('Perfect Attack') and rnd.randrange(0, 100) <= self.combat_skill*1.25:
+        if self.has_passive('Perfect Attack') and rnd.randrange(0, 100) <= self.combat_skill*1.25+self.get_skill_activation():
             return True
         return False
     def activate_raikiri(self) -> bool:
-        if self.has_passive('Raikiri') and rnd.randrange(0, 100) <= (self.combat_skill/2):
+        if self.has_passive('Raikiri') and rnd.randrange(0, 100) <= (self.combat_skill/2)+self.get_skill_activation():
             return True
         return False
     def activate_astra(self) -> bool:
-        if self.has_passive('Astra') and rnd.randrange(0, 100) <= (self.combat_skill/4):
+        if self.has_passive('Astra') and rnd.randrange(0, 100) <= (self.combat_skill/4)+self.get_skill_activation():
             return True
         return False
     def activate_reminiscence_of_battle(self) -> bool:
-        if self.has_passive('Reminiscence of Battle') and rnd.randrange(0, 100) <= (self.combat_skill/2):
+        if self.has_passive('Reminiscence of Battle') and rnd.randrange(0, 100) <= (self.combat_skill/2)+self.get_skill_activation():
             return True
         return False
     def activate_death_touch(self) -> bool:
-        if self.has_passive('Death Touch') and rnd.randrange(0, 100) <= (self.combat_skill/3):
+        if self.has_passive('Death Touch') and rnd.randrange(0, 100) <= (self.combat_skill/3)+self.get_skill_activation():
             return True
         return False
     def activate_ignis(self) -> bool:
-        if self.has_passive('Ignis') and rnd.randrange(0, 100) <= self.combat_skill:
+        if self.has_passive('Ignis') and rnd.randrange(0, 100) <= self.combat_skill+self.get_skill_activation():
             return True
         return False
     def activate_lethality(self) -> bool:
-        if self.has_passive('Lethality') and rnd.randrange(0, 100) <= (self.combat_skill/8):
+        if self.has_passive('Lethality') and rnd.randrange(0, 100) <= (self.combat_skill/8)+self.get_skill_activation():
             return True
         return False
     def activate_parry(self) -> bool:
-        if self.has_passive('Parry') and rnd.randrange(0, 100) <= (self.combat_skill/3):
+        if self.has_passive('Parry') and rnd.randrange(0, 100) <= (self.combat_skill/3)+self.get_skill_activation():
             return True
         return False
     def activate_miracle(self) -> bool:
-        if self.has_passive('Miracle') and rnd.randrange(0, 100) <= self.combat_luck:
+        if self.has_passive('Miracle') and rnd.randrange(0, 100) <= self.combat_luck+self.get_skill_activation():
             return True
         return False
     def activate_aegis(self) -> bool:
-        if self.has_passive('Aegis') and rnd.randrange(0, 100) <= (self.combat_skill/3):
+        if self.has_passive('Aegis') and rnd.randrange(0, 100) <= (self.combat_skill/3)+self.get_skill_activation():
             return True
         return False
     def activate_pavise(self) -> bool:
-        if self.has_passive('Pavise') and rnd.randrange(0, 100) <= (self.combat_skill/3):
+        if self.has_passive('Pavise') and rnd.randrange(0, 100) <= (self.combat_skill/3)+self.get_skill_activation():
             return True
         return False
     def activate_instinct_of_survival(self) -> bool:
-        if self.has_passive('Instinct of Survival') and rnd.randrange(0, 100) <= self.combat_luck:
+        if self.has_passive('Instinct of Survival') and rnd.randrange(0, 100) <= self.combat_luck+self.get_skill_activation():
             return True
         return False
     def activate_strike_back(self) -> bool:
-        if self.has_passive('Strike & Back') and rnd.randrange(0, 100) <= self.combat_speed:
+        if self.has_passive('Strike & Back') and rnd.randrange(0, 100) <= self.combat_speed+self.get_skill_activation():
             return True
         return False
 
@@ -629,6 +629,11 @@ class characters(get_db().Model):
                     return 1+(self.necromancy_lvl/100)
                 case _:
                     return 1
+    def get_skill_activation(self) -> int:
+        addition = 0
+        if self.has_passive('Duelist'):
+            addition += 15
+        return addition
 
     def define_default_stat(self, \
                             class_id):
